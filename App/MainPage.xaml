@@ -1,14 +1,55 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:App"
-             x:Class="App.MainPage">
+             x:Class="App.MainPage"
+             Title=""
+             BackgroundColor="#F2F2F2">
     <ContentPage.Resources>
         <local:GraphicsDrawable x:Key="drawable"/>
     </ContentPage.Resources>
-    <VerticalStackLayout>
-        <GraphicsView Drawable="{StaticResource drawable}"
-                HeightRequest="500"
-                WidthRequest="500" />
-    </VerticalStackLayout>
-
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackLayout
+            Grid.Row="0"
+            BackgroundColor="#2962FF"
+            Padding="16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    Grid.Column="0"
+                    Text="MultiFlap"
+                    TextColor="White"
+                    FontSize="24"
+                    FontAttributes="Bold" />
+                <StackLayout
+                    Grid.Column="1"
+                    Orientation="Horizontal"
+                    HorizontalOptions="EndAndExpand">
+                    <Button
+                        Text="Menu"
+                        TextColor="White"
+                        BackgroundColor="Transparent"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        Clicked="OnMenuClicked" 
+/>
+                </StackLayout>
+            </Grid>
+        </StackLayout>
+        <VerticalStackLayout
+            Grid.Row="1"
+            Padding="16">
+            <GraphicsView
+                x:Name="canvas"
+                Drawable="{StaticResource drawable}"
+                HeightRequest="600"
+                WidthRequest="400" />
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>
