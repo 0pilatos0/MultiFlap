@@ -11,6 +11,9 @@
 		public MainPage()
 		{
 			InitializeComponent();
+			var tapGestureRecognizer = new TapGestureRecognizer();
+			tapGestureRecognizer.Tapped += OnCanvasTapped;
+			canvas.GestureRecognizers.Add(tapGestureRecognizer);
 		}
 
 		protected override void OnAppearing()
@@ -38,6 +41,11 @@
 
 				await Task.Delay(TimeSpan.FromSeconds(1.0 / 60));
 			}
+		}
+
+		private void OnCanvasTapped(object sender, EventArgs e)
+		{
+			flappy.Jump();
 		}
 
 		//Main menu
