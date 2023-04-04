@@ -3,6 +3,11 @@
 	public partial class MainPage : ContentPage
 	{
 		private bool isRunning;
+		private Flappy flappy;
+
+		int _width = 400;
+		int _height = 600;
+
 		public MainPage()
 		{
 			InitializeComponent();
@@ -12,6 +17,8 @@
 		{
 			base.OnAppearing();
 			isRunning = true;
+			flappy = new Flappy(_width / 2, _height / 2);
+			canvas.Drawable = new GraphicsDrawable() { flappy = flappy };
 			RunGameLoop();
 		}
 
@@ -26,11 +33,14 @@
 			while (isRunning)
 			{
 				Console.WriteLine("Running game loop");
+				flappy.UpdatePosition();
+				canvas.Invalidate();
 
 				await Task.Delay(TimeSpan.FromSeconds(1.0 / 60));
 			}
 		}
 
+		//Main menu
 		private async void OnMenuClicked(object sender, EventArgs e)
 		{
 			string action = await DisplayActionSheet("Menu", "Cancel", null, "Option 1", "Option 2", "Option 3");
@@ -53,15 +63,25 @@
 
 	public class GraphicsDrawable : IDrawable
 	{
+		private int _height = 600;
+		private int _width = 400;
+		public Flappy flappy;
 
-		int _height = 600;
-		int _width = 400;
-		
+		public GraphicsDrawable()
+		{
+		}
+
 		public void Draw(ICanvas canvas, RectF dirtyRect)
 		{
 			canvas.FillColor = Colors.LightBlue;
-			canvas.FillRectangle(0,0, _width, _height);
+			canvas.FillRectangle(0, 0, _width, _height);
 
+			canvas.FillColor = Colors.Yellow;
+
+			if (flappy != null)
+			{
+				canvas.FillCircle(flappy.X, flappy.Y, 20);
+			}
 		}
 	}
 }
