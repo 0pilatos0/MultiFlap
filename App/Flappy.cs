@@ -8,29 +8,29 @@ namespace App
 {
 	public class Flappy
 	{
-		private const float Gravity = 0.2f;
-		private const float JumpSpeed = -5.0f;
+		public int X { get; private set; }
+		public int Y { get; private set; }
+		public int Velocity { get; private set; }
 
-		public float X { get; private set; }
-		public float Y { get; private set; }
-		private float velocityY;
+		private const int Gravity = 1;
+		private const int JumpVelocity = -15;
 
-		public Flappy(float x, float y)
+		public Flappy(int x, int y)
 		{
 			X = x;
 			Y = y;
-			velocityY = 0;
+			Velocity = 0;
 		}
 
 		public void UpdatePosition()
 		{
-			velocityY += Gravity;
-			Y += velocityY;
+			Velocity += Gravity;
+			Y += Velocity;
 		}
 
 		public void Jump()
 		{
-			velocityY = JumpSpeed;
+			Velocity = JumpVelocity;
 		}
 	}
 }

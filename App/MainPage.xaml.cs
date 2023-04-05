@@ -4,9 +4,12 @@
 	{
 		private bool isRunning;
 		private Flappy flappy;
+		private List<GreenPipe> pipes;
 
 		int _width = 400;
 		int _height = 600;
+
+		private int score;
 
 		public MainPage()
 		{
@@ -21,7 +24,9 @@
 			base.OnAppearing();
 			isRunning = true;
 			flappy = new Flappy(_width / 2, _height / 2);
-			canvas.Drawable = new GraphicsDrawable() { flappy = flappy };
+			pipes = new List<GreenPipe>();
+			pipes.Add(new GreenPipe(_width, 200, _height));
+			canvas.Drawable = new GraphicsDrawable() { flappy = flappy, _greenPipes = pipes };
 			RunGameLoop();
 		}
 
@@ -37,6 +42,32 @@
 			{
 				Console.WriteLine("Running game loop");
 				flappy.UpdatePosition();
+
+				if (score > 200)
+				{
+					foreach (var pipe in pipes)
+					{
+						pipe.UpdatePosition();
+					}
+				}
+
+				foreach (var pipe in pipes)
+				{
+					// Check for collision
+					if (flappy.X + 20 > pipe.X && flappy.X - 20 < pipe.X + 100)
+					{
+						if (flappy.Y - 20 < pipe.TopHeight || flappy.Y + 20 > pipe.TopHeight + pipe.GapSize)
+						{
+							isRunning = false;
+							await DisplayAlert("Game Over", $"Score: {score}", "OK");
+							return;
+						}
+					}
+				}
+
+				score++;
+
+
 				canvas.Invalidate();
 
 				await Task.Delay(TimeSpan.FromSeconds(1.0 / 60));
@@ -74,6 +105,7 @@
 		private int _height = 600;
 		private int _width = 400;
 		public Flappy flappy;
+		public List<GreenPipe> _greenPipes = new List<GreenPipe>();
 
 		public GraphicsDrawable()
 		{
@@ -84,12 +116,73 @@
 			canvas.FillColor = Colors.LightBlue;
 			canvas.FillRectangle(0, 0, _width, _height);
 
-			canvas.FillColor = Colors.Yellow;
+			// Draw the green pipes
+			canvas.FillColor = Colors.Green;
+			foreach (GreenPipe pipe in _greenPipes)
+			{
+				// Draw the top part of the pipe
+				canvas.FillRectangle(pipe.X, 0, 100, pipe.TopHeight);
 
+				// Draw the bottom part of the pipe
+				canvas.FillRectangle(pipe.X, pipe.TopHeight + pipe.GapSize, 100, pipe.BottomHeight);
+			}
+
+			// Draw the flappy bird
+			canvas.FillColor = Colors.Yellow;
 			if (flappy != null)
 			{
 				canvas.FillCircle(flappy.X, flappy.Y, 20);
 			}
 		}
+
+		public void Update(double deltaTime)
+		{
+			// Update the green pipes
+			foreach (GreenPipe pipe in _greenPipes)
+			{
+				pipe.UpdatePosition();
+			}
+		}
 	}
+
+
+	public class GreenPipe
+	{
+		public int X { get; private set; }
+		public int TopHeight { get; private set; }
+		public int BottomHeight { get; private set; }
+		public int GapSize { get; private set; }
+
+		private int _speed = 5;
+		private int _maxTopHeight = 400;
+		private int _minTopHeight = 200;
+		private int _minBottomHeight = 150;
+		private int _maxBottomHeight;
+
+		public GreenPipe(int x, int gapSize, int maxBottomHeight)
+		{
+			X = x;
+			GapSize = gapSize;
+			_maxBottomHeight = maxBottomHeight;
+			GenerateHeights();
+		}
+
+		public void UpdatePosition()
+		{
+			X -= _speed;
+			if (X < -100) // the pipe is off-screen
+			{
+				X = 500; // reset to the right side of the screen
+				GenerateHeights();
+			}
+		}
+
+		private void GenerateHeights()
+		{
+			Random random = new Random();
+			TopHeight = random.Next(_minTopHeight, _maxTopHeight - GapSize);
+			BottomHeight = _maxBottomHeight - (TopHeight + GapSize);
+		}
+	}
+
 }
