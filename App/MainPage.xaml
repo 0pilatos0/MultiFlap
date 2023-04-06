@@ -45,11 +45,18 @@
         <VerticalStackLayout
             Grid.Row="1"
             Padding="16">
+            <Label x:Name="ScoreLabel" Text="Score: 0" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+
             <GraphicsView
                 x:Name="canvas"
                 Drawable="{StaticResource drawable}"
                 HeightRequest="600"
                 WidthRequest="400" />
+            <Button
+                Text="Start"
+                FontSize="Large"
+                FontAttributes="Bold"
+                Clicked="OnStartClicked" />
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

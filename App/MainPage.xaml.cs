@@ -8,7 +8,6 @@
 
 		int _width = 400;
 		int _height = 600;
-
 		private int score;
 
 		public MainPage()
@@ -40,10 +39,9 @@
 		{
 			while (isRunning)
 			{
-				Console.WriteLine("Running game loop");
 				flappy.UpdatePosition();
 
-				if (score > 200)
+				if (score > 100)
 				{
 					foreach (var pipe in pipes)
 					{
@@ -65,7 +63,15 @@
 					}
 				}
 
+				if (flappy.Y < 0 || flappy.Y > _height)
+				{
+					isRunning = false;
+					await DisplayAlert("Game Over", $"Score: {score}", "OK");
+					return;
+				}
+
 				score++;
+				ScoreLabel.Text = $"Score: {score}";
 
 
 				canvas.Invalidate();
@@ -79,7 +85,6 @@
 			flappy.Jump();
 		}
 
-		//Main menu
 		private async void OnMenuClicked(object sender, EventArgs e)
 		{
 			string action = await DisplayActionSheet("Menu", "Cancel", null, "Option 1", "Option 2", "Option 3");
@@ -98,6 +103,16 @@
 			}
 		}
 
+		private async void OnStartClicked(object sender, EventArgs e)
+		{
+			isRunning = true;
+			score = 0;
+			flappy = new Flappy(_width / 2, _height / 2);
+			pipes = new List<GreenPipe>();
+			pipes.Add(new GreenPipe(_width, 200, _height));
+			canvas.Drawable = new GraphicsDrawable() { flappy = flappy, _greenPipes = pipes };
+			RunGameLoop();
+		}
 	}
 
 	public class GraphicsDrawable : IDrawable
@@ -184,5 +199,4 @@
 			BottomHeight = _maxBottomHeight - (TopHeight + GapSize);
 		}
 	}
-
 }
