@@ -1,6 +1,12 @@
-﻿namespace App
+﻿using App.GameObjects;
+using Microsoft.Maui.Graphics.Skia;
+using System.Reflection;
+using System.Resources;
+using IImage = Microsoft.Maui.Graphics.IImage;
+
+namespace App
 {
-	public partial class MainPage : ContentPage
+    public partial class MainPage : ContentPage
 	{
 		private bool isRunning;
 		private Flappy flappy;
@@ -21,12 +27,6 @@
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			isRunning = true;
-			flappy = new Flappy(_width / 2, _height / 2);
-			pipes = new List<GreenPipe>();
-			pipes.Add(new GreenPipe(_width, 200, _height));
-			canvas.Drawable = new GraphicsDrawable() { flappy = flappy, _greenPipes = pipes };
-			RunGameLoop();
 		}
 
 		protected override void OnDisappearing()
@@ -82,7 +82,10 @@
 
 		private void OnCanvasTapped(object sender, EventArgs e)
 		{
-			flappy.Jump();
+			if (isRunning)
+			{
+				flappy.Jump();
+			}
 		}
 
 		private async void OnMenuClicked(object sender, EventArgs e)
@@ -122,6 +125,7 @@
 		public Flappy flappy;
 		public List<GreenPipe> _greenPipes = new List<GreenPipe>();
 
+
 		public GraphicsDrawable()
 		{
 		}
@@ -149,54 +153,8 @@
 				canvas.FillCircle(flappy.X, flappy.Y, 20);
 			}
 		}
-
-		public void Update(double deltaTime)
-		{
-			// Update the green pipes
-			foreach (GreenPipe pipe in _greenPipes)
-			{
-				pipe.UpdatePosition();
-			}
-		}
 	}
 
 
-	public class GreenPipe
-	{
-		public int X { get; private set; }
-		public int TopHeight { get; private set; }
-		public int BottomHeight { get; private set; }
-		public int GapSize { get; private set; }
-
-		private int _speed = 5;
-		private int _maxTopHeight = 400;
-		private int _minTopHeight = 200;
-		private int _minBottomHeight = 150;
-		private int _maxBottomHeight;
-
-		public GreenPipe(int x, int gapSize, int maxBottomHeight)
-		{
-			X = x;
-			GapSize = gapSize;
-			_maxBottomHeight = maxBottomHeight;
-			GenerateHeights();
-		}
-
-		public void UpdatePosition()
-		{
-			X -= _speed;
-			if (X < -100) // the pipe is off-screen
-			{
-				X = 500; // reset to the right side of the screen
-				GenerateHeights();
-			}
-		}
-
-		private void GenerateHeights()
-		{
-			Random random = new Random();
-			TopHeight = random.Next(_minTopHeight, _maxTopHeight - GapSize);
-			BottomHeight = _maxBottomHeight - (TopHeight + GapSize);
-		}
-	}
+	
 }
