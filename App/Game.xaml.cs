@@ -109,12 +109,12 @@ public partial class Game : ContentPage
 		flappy = new Flappy(_width / 2, _height / 2);
 		pipes = new List<GreenPipe>();
 		pipes.Add(new GreenPipe(_width, 200, _height));
-		canvas.Drawable = new GraphicsDrawable() { flappy = flappy, _greenPipes = pipes };
+		canvas.Drawable = new Canvas() { flappy = flappy, _greenPipes = pipes };
 		RunGameLoop();
 	}
 }
 
-public class GraphicsDrawable : IDrawable
+public class Canvas : IDrawable
 {
 	private int _height = 600;
 	private int _width = 400;
@@ -122,31 +122,26 @@ public class GraphicsDrawable : IDrawable
 	public List<GreenPipe> _greenPipes = new List<GreenPipe>();
 
 
-	public GraphicsDrawable()
+	public Canvas()
 	{
 	}
 
 	public void Draw(ICanvas canvas, RectF dirtyRect)
 	{
+		if (canvas == null)
+			return;
+
+		// Draw background
 		canvas.FillColor = Colors.LightBlue;
 		canvas.FillRectangle(0, 0, _width, _height);
 
-		// Draw the green pipes
-		canvas.FillColor = Colors.Green;
+		//Draw Pipes
 		foreach (GreenPipe pipe in _greenPipes)
 		{
-			// Draw the top part of the pipe
-			canvas.FillRectangle(pipe.X, 0, 100, pipe.TopHeight);
-
-			// Draw the bottom part of the pipe
-			canvas.FillRectangle(pipe.X, pipe.TopHeight + pipe.GapSize, 100, pipe.BottomHeight);
+			pipe.Draw(canvas);
 		}
 
-		// Draw the flappy bird
-		canvas.FillColor = Colors.Yellow;
 		if (flappy != null)
-		{
-			canvas.FillCircle(flappy.X, flappy.Y, 20);
-		}
+			flappy.Draw(canvas);
 	}
 }

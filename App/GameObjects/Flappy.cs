@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace App.GameObjects
 {
-    public class Flappy
+    public class Flappy : IGameObject
     {
         public int X { get; private set; }
         public int Y { get; private set; }
@@ -33,5 +33,14 @@ namespace App.GameObjects
         {
             Velocity = JumpVelocity;
         }
-    }
+
+		public void Draw(ICanvas canvas)
+		{
+			canvas.FillColor = Colors.Yellow;
+			if (this != null)
+			{
+				canvas.FillCircle(X, Y, 20);
+			}
+		}
+	}
 }

@@ -6,7 +6,7 @@
              Title="Game"
              BackgroundColor="#F2F2F2">
     <ContentPage.Resources>
-        <local:GraphicsDrawable x:Key="drawable"/>
+        <local:Canvas x:Key="drawable"/>
     </ContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>

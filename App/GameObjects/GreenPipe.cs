@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace App.GameObjects
 {
-    public class GreenPipe
-    {
+	public class GreenPipe : IGameObject
+	{
         public int X { get; private set; }
         public int TopHeight { get; private set; }
         public int BottomHeight { get; private set; }
@@ -43,5 +43,12 @@ namespace App.GameObjects
             TopHeight = random.Next(_minTopHeight, _maxTopHeight - GapSize);
             BottomHeight = _maxBottomHeight - (TopHeight + GapSize);
         }
-    }
+
+		public void Draw(ICanvas canvas)
+		{
+			canvas.FillColor = Colors.Green;
+			canvas.FillRectangle(X, 0, 100, TopHeight);
+			canvas.FillRectangle(X, TopHeight + GapSize, 100, BottomHeight);
+		}
+	}
 }
