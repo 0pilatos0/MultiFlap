@@ -68,4 +68,10 @@
       </EmbeddedResource>
     </ItemGroup>
 
+    <ItemGroup>
+      <MauiXaml Update="Game.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+    </ItemGroup>
+
 </Project>

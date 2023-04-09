@@ -1,62 +1,29 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:App"
              x:Class="App.MainPage"
-             Title=""
              BackgroundColor="#F2F2F2">
-    <ContentPage.Resources>
-        <local:GraphicsDrawable x:Key="drawable"/>
-    </ContentPage.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <StackLayout
-            Grid.Row="0"
-            BackgroundColor="#2962FF"
-            Padding="16">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Label
-                    Grid.Column="0"
-                    Text="MultiFlap"
-                    TextColor="White"
-                    FontSize="24"
-                    FontAttributes="Bold" />
-                <StackLayout
-                    Grid.Column="1"
-                    Orientation="Horizontal"
-                    HorizontalOptions="EndAndExpand">
-                    <Button
-                        Text="Menu"
-                        TextColor="White"
-                        BackgroundColor="Transparent"
-                        FontSize="16"
-                        FontAttributes="Bold"
-                        Clicked="OnMenuClicked" 
-/>
-                </StackLayout>
-            </Grid>
-        </StackLayout>
-        <VerticalStackLayout
-            Grid.Row="1"
-            Padding="16">
-            <Label x:Name="ScoreLabel" Text="Score: 0" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
-
-            <GraphicsView
-                x:Name="canvas"
-                Drawable="{StaticResource drawable}"
-                HeightRequest="600"
-                WidthRequest="400" />
-            <Button
-                Text="Start"
-                FontSize="Large"
-                FontAttributes="Bold"
-                Clicked="OnStartClicked" />
-        </VerticalStackLayout>
-    </Grid>
+    <VerticalStackLayout>
+        <Label Text="Welcome to MultiFlap!" 
+               FontSize="Large" 
+               HorizontalTextAlignment="Center"
+               Margin="0,20,0,0"/>
+        <Label Text="How to play:" 
+               FontAttributes="Bold" 
+               Margin="0,20,0,10"/>
+        <Label Text="Tap the screen to make the bird flap its wings and avoid the obstacles." 
+               Margin="0,0,0,20"/>
+        <Button Text="Start Game" 
+                BackgroundColor="#4CAF50" 
+                TextColor="White" 
+                CornerRadius="8"
+                Margin="0,0,0,20"
+                Clicked="StartGameClicked"
+                />
+        <Label Text="High Score: 0" 
+               Margin="0,0,0,10"/>
+        <Button Text="Settings" 
+                BackgroundColor="#2196F3" 
+                TextColor="White" 
+                CornerRadius="8"/>
+    </VerticalStackLayout>
 </ContentPage>
