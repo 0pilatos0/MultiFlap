@@ -1,4 +1,5 @@
 using App.GameObjects;
+using Plugin.Maui.Audio;
 
 namespace App;
 
@@ -53,6 +54,8 @@ public partial class Game : ContentPage
 					if (flappy.Y - 20 < pipe.TopHeight || flappy.Y + 20 > pipe.TopHeight + pipe.GapSize)
 					{
 						isRunning = false;
+						var player2 = AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("gameOver.mp3"));
+						player2.Play();
 						await DisplayAlert("Game Over", $"Score: {score}", "OK");
 						return;
 					}
@@ -62,6 +65,8 @@ public partial class Game : ContentPage
 			if (flappy.Y < 0 || flappy.Y > _height)
 			{
 				isRunning = false;
+				var player2 = AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("gameOver.mp3"));
+				player2.Play();
 				await DisplayAlert("Game Over", $"Score: {score}", "OK");
 				return;
 			}
@@ -76,10 +81,16 @@ public partial class Game : ContentPage
 		}
 	}
 
-	private void OnCanvasTapped(object sender, EventArgs e)
+	private async void OnCanvasTapped(object sender, EventArgs e)
 	{
 		if (isRunning)
 		{
+			var player = AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("jump.mp3"));
+			player.Play();
+
+			//TODO CLEAN AUDIO PLAYERS ABOVE SOMEHOW
+
+
 			flappy.Jump();
 		}
 	}

@@ -1,5 +1,6 @@
 ﻿using App.GameObjects;
 using Microsoft.Maui.Graphics.Skia;
+using Plugin.Maui.Audio;
 using System.Reflection;
 using System.Resources;
 using IImage = Microsoft.Maui.Graphics.IImage;

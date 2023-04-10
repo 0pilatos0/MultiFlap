@@ -36,11 +36,10 @@ namespace App.GameObjects
 
 		public void Draw(ICanvas canvas)
 		{
+            if (this == null) return;
+         
 			canvas.FillColor = Colors.Yellow;
-			if (this != null)
-			{
-				canvas.FillCircle(X, Y, 20);
-			}
+			canvas.FillCircle(X, Y, 20);
 		}
 	}
 }
