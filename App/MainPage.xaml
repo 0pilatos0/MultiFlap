@@ -25,6 +25,26 @@
         <!-- Main content -->
         <StackLayout Grid.Row="1"
                      Margin="20">
+
+            <Label
+                x:Name="chatMessages"
+                FontSize="18"
+                HorizontalOptions="Center"
+                />
+
+            <Entry
+                x:Name="myChatMessage"
+                Placeholder="Type your message"
+                FontSize="18"
+                HorizontalOptions="Center"/>
+
+            <Button
+                x:Name="sendButton"
+                Text="send"
+                Clicked="sendButton_Clicked"
+                HorizontalOptions="Center"/>
+
+
             <Label Text="Welcome to MultiFlap!"
                    FontSize="Large"
                    HorizontalTextAlignment="Center"
