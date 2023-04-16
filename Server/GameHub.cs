@@ -7,9 +7,6 @@ namespace Server
 {
 	public class GameHub : Hub
 	{
-		private ConcurrentDictionary<string, Player> players = new ConcurrentDictionary<string, Player>();
-		private ConcurrentDictionary<string, Match> matches = new ConcurrentDictionary<string, Match>();
-
 		public override Task OnConnectedAsync()
 		{
 			var player = new Player()
@@ -19,32 +16,31 @@ namespace Server
 				Score = 0
 			};
 
-			lock (players)
-				players.TryAdd(player.ConnectionId, player);
+			GameData.Instance.Players.TryAdd(player.ConnectionId, player);
 
 			Clients.Caller.SendAsync("Initialize", player);
 
 			Console.WriteLine($"Player {player.ConnectionId} connected");
-			Console.WriteLine($"Player count: {players.Count}");
+			Console.WriteLine($"Player count: {GameData.Instance.Players.Count}");
 
 			return base.OnConnectedAsync();
 		}
 
 		public override Task OnDisconnectedAsync(Exception exception)
 		{
-			if (players.TryGetValue(Context.ConnectionId, out Player player))
+			if (GameData.Instance.Players.TryGetValue(Context.ConnectionId, out Player player))
 			{
-				if (player.MatchId != null && matches.TryGetValue(player.MatchId, out Match match))
+				if (player.MatchId != null && GameData.Instance.Matches.TryGetValue(player.MatchId, out Match match))
 				{
 					var opponentId = match.Players.FirstOrDefault(p => p.ConnectionId != player.ConnectionId)?.ConnectionId;
-					players[opponentId].MatchId = null;
+					GameData.Instance.Players[opponentId].MatchId = null;
 
-					matches.TryRemove(match.Id, out Match _);
+					GameData.Instance.Matches.TryRemove(match.Id, out Match _);
 
 					Clients.Client(opponentId).SendAsync("OpponentDisconnected");
 				}
 
-				players.TryRemove(player.ConnectionId, out Player _);
+				GameData.Instance.Players.TryRemove(player.ConnectionId, out Player _);
 			}
 
 			Console.WriteLine($"Player {Context.ConnectionId} disconnected");
@@ -55,8 +51,8 @@ namespace Server
 		public async Task StartMatchmaking()
 		{
 			Console.WriteLine($"Player {Context.ConnectionId} started matchmaking");
-			Console.WriteLine($"Player count: {players.Count}");
-			if (players.TryGetValue(Context.ConnectionId, out Player player))
+			Console.WriteLine($"Player count: {GameData.Instance.Players.Count}");
+			if (GameData.Instance.Players.TryGetValue(Context.ConnectionId, out Player player))
 			{
 				player.MatchId = null;
 				player.Y = 0;
@@ -78,12 +74,12 @@ namespace Server
 						Score = player.Score
 					});
 
-					matches.TryAdd(match.Id, match);
+					GameData.Instance.Matches.TryAdd(match.Id, match);
 
 					var opponentId = match.Players.FirstOrDefault(p => p.ConnectionId != player.ConnectionId)?.ConnectionId;
 
-					players[opponentId].MatchId = match.Id;
-					players[opponentId].IsLookingForMatch = false;
+					GameData.Instance.Players[opponentId].MatchId = match.Id;
+					GameData.Instance.Players[opponentId].IsLookingForMatch = false;
 
 					await Clients.Clients(new List<string>() { player.ConnectionId, opponentId }).SendAsync("MatchStarted", match.Players);
 				}
@@ -100,7 +96,7 @@ namespace Server
 
 		private Match FindMatch(Player player)
 		{
-			var match = matches.Values.FirstOrDefault(m => m.Players.Count == 1 && m.Players[0].ConnectionId != player.ConnectionId);
+			var match = GameData.Instance.Matches.Values.FirstOrDefault(m => m.Players.Count == 1 && m.Players[0].ConnectionId != player.ConnectionId);
 
 			if (match == null)
 			{
@@ -132,12 +128,12 @@ namespace Server
 
 		public async Task UpdatePlayerState(int y, int score)
 		{
-			if (players.TryGetValue(Context.ConnectionId, out Player player))
+			if (GameData.Instance.Players.TryGetValue(Context.ConnectionId, out Player player))
 			{
 				player.Y = y;
 				player.Score = score;
 
-				if (player.MatchId != null && matches.TryGetValue(player.MatchId, out Match match))
+				if (player.MatchId != null && GameData.Instance.Matches.TryGetValue(player.MatchId, out Match match))
 				{
 					match.Players = match.Players.Select(p =>
 					{
@@ -167,15 +163,15 @@ namespace Server
 
 		public async Task EndMatch()
 		{
-			if (players.TryGetValue(Context.ConnectionId, out Player player))
+			if (GameData.Instance.Players.TryGetValue(Context.ConnectionId, out Player player))
 			{
-				if (player.MatchId != null && matches.TryGetValue(player.MatchId, out Match match))
+				if (player.MatchId != null && GameData.Instance.Matches.TryGetValue(player.MatchId, out Match match))
 				{
 					var opponentId = match.Players.FirstOrDefault(p => p.ConnectionId != player.ConnectionId)?.ConnectionId;
 
-					players[opponentId].MatchId = null;
+					GameData.Instance.Players[opponentId].MatchId = null;
 
-					matches.TryRemove(match.Id, out Match removedMatch);
+					GameData.Instance.Matches.TryRemove(match.Id, out Match removedMatch);
 
 					await Clients.Clients(new List<string>() { player.ConnectionId, opponentId }).SendAsync("MatchEnded");
 				}
@@ -186,7 +182,7 @@ namespace Server
 
 		public async Task CancelMatchmaking()
 		{
-			if (players.TryGetValue(Context.ConnectionId, out Player player))
+			if (GameData.Instance.Players.TryGetValue(Context.ConnectionId, out Player player))
 			{
 				player.IsLookingForMatch = false;
 
