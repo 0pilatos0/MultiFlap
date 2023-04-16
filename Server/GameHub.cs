@@ -63,10 +63,12 @@ namespace Server
 
 				if (match == null)
 				{
+					Console.WriteLine($"Matchmaking started for player {player.ConnectionId}");
 					await Clients.Caller.SendAsync("MatchmakingStarted");
 				}
 				else
 				{
+					Console.WriteLine($"Match found for player {player.ConnectionId}");
 					match.Players.Add(new PlayerMatchInfo()
 					{
 						ConnectionId = player.ConnectionId,
@@ -82,24 +84,41 @@ namespace Server
 					GameData.Instance.Players[opponentId].IsLookingForMatch = false;
 
 					await Clients.Clients(new List<string>() { player.ConnectionId, opponentId }).SendAsync("MatchStarted", match.Players);
-				}
+					Console.WriteLine($"Match {match.Id} started");
 
-				Console.WriteLine($"Player {player.ConnectionId} started matchmaking");
+				}
 
 			}
 			else
 			{
 				Console.WriteLine($"Player {Context.ConnectionId} not found");
-
 			}
 		}
 
 		private Match FindMatch(Player player)
 		{
+			Console.WriteLine($"Finding match for player {player.ConnectionId}");
+
 			var match = GameData.Instance.Matches.Values.FirstOrDefault(m => m.Players.Count == 1 && m.Players[0].ConnectionId != player.ConnectionId);
 
 			if (match == null)
 			{
+				//create new match
+				match = new Match()
+				{
+					Id = Guid.NewGuid().ToString(),
+					Players = new List<PlayerMatchInfo>()
+					{
+						new PlayerMatchInfo()
+						{
+							ConnectionId = player.ConnectionId,
+							Y = player.Y,
+							Score = player.Score
+						}
+					}
+				};
+
+				GameData.Instance.Matches.TryAdd(match.Id, match);
 				return null;
 			}
 
@@ -123,7 +142,6 @@ namespace Server
 				}
 			};
 
-			Console.WriteLine($"Match {match.Id} found");
 		}
 
 		public async Task UpdatePlayerState(int y, int score)
