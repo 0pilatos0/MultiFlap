@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using System.Collections.Concurrent;
 using System.Numerics;
 using System.Text.RegularExpressions;
 
@@ -6,8 +7,8 @@ namespace Server
 {
 	public class GameHub : Hub
 	{
-		private Dictionary<string, Player> players = new Dictionary<string, Player>();
-		private Dictionary<string, Match> matches = new Dictionary<string, Match>();
+		private ConcurrentDictionary<string, Player> players = new ConcurrentDictionary<string, Player>();
+		private ConcurrentDictionary<string, Match> matches = new ConcurrentDictionary<string, Match>();
 
 		public override Task OnConnectedAsync()
 		{
@@ -18,9 +19,13 @@ namespace Server
 				Score = 0
 			};
 
-			players.Add(player.ConnectionId, player);
+			lock (players)
+				players.TryAdd(player.ConnectionId, player);
 
 			Clients.Caller.SendAsync("Initialize", player);
+
+			Console.WriteLine($"Player {player.ConnectionId} connected");
+			Console.WriteLine($"Player count: {players.Count}");
 
 			return base.OnConnectedAsync();
 		}
@@ -34,19 +39,23 @@ namespace Server
 					var opponentId = match.Players.FirstOrDefault(p => p.ConnectionId != player.ConnectionId)?.ConnectionId;
 					players[opponentId].MatchId = null;
 
-					matches.Remove(player.MatchId);
+					matches.TryRemove(match.Id, out Match _);
 
 					Clients.Client(opponentId).SendAsync("OpponentDisconnected");
 				}
 
-				players.Remove(Context.ConnectionId);
+				players.TryRemove(player.ConnectionId, out Player _);
 			}
+
+			Console.WriteLine($"Player {Context.ConnectionId} disconnected");
 
 			return base.OnDisconnectedAsync(exception);
 		}
 
 		public async Task StartMatchmaking()
 		{
+			Console.WriteLine($"Player {Context.ConnectionId} started matchmaking");
+			Console.WriteLine($"Player count: {players.Count}");
 			if (players.TryGetValue(Context.ConnectionId, out Player player))
 			{
 				player.MatchId = null;
@@ -69,7 +78,7 @@ namespace Server
 						Score = player.Score
 					});
 
-					matches.Add(match.Id, match);
+					matches.TryAdd(match.Id, match);
 
 					var opponentId = match.Players.FirstOrDefault(p => p.ConnectionId != player.ConnectionId)?.ConnectionId;
 
@@ -78,6 +87,14 @@ namespace Server
 
 					await Clients.Clients(new List<string>() { player.ConnectionId, opponentId }).SendAsync("MatchStarted", match.Players);
 				}
+
+				Console.WriteLine($"Player {player.ConnectionId} started matchmaking");
+
+			}
+			else
+			{
+				Console.WriteLine($"Player {Context.ConnectionId} not found");
+
 			}
 		}
 
@@ -109,6 +126,8 @@ namespace Server
 					}
 				}
 			};
+
+			Console.WriteLine($"Match {match.Id} found");
 		}
 
 		public async Task UpdatePlayerState(int y, int score)
@@ -142,6 +161,8 @@ namespace Server
 					await Clients.Client(opponentId).SendAsync("OpponentStateUpdated", player.Y, player.Score);
 				}
 			}
+
+			Console.WriteLine($"Player {Context.ConnectionId} updated state");
 		}
 
 		public async Task EndMatch()
@@ -154,11 +175,13 @@ namespace Server
 
 					players[opponentId].MatchId = null;
 
-					matches.Remove(player.MatchId);
+					matches.TryRemove(match.Id, out Match removedMatch);
 
 					await Clients.Clients(new List<string>() { player.ConnectionId, opponentId }).SendAsync("MatchEnded");
 				}
 			}
+
+			Console.WriteLine($"Player {Context.ConnectionId} ended match");
 		}
 
 		public async Task CancelMatchmaking()
@@ -169,6 +192,8 @@ namespace Server
 
 				await Clients.Caller.SendAsync("MatchmakingCanceled");
 			}
+
+			Console.WriteLine($"Player {Context.ConnectionId} canceled matchmaking");
 		}
 	}
 

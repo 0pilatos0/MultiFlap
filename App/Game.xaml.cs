@@ -1,4 +1,5 @@
 using App.GameObjects;
+using Microsoft.AspNetCore.SignalR.Client;
 using Plugin.Maui.Audio;
 
 namespace App;
@@ -13,9 +14,24 @@ public partial class Game : ContentPage
 	int _height = 600;
 	private int score;
 
+	private readonly HubConnection _connection;
+	
 	public Game()
 	{
 		InitializeComponent();
+
+		_connection = new HubConnectionBuilder()
+			.WithUrl("http://192.168.2.24:5076/game")
+			.Build();
+
+		Task.Run(async () =>
+		{
+			Dispatcher.Dispatch(async () => await _connection.StartAsync());
+			await _connection.InvokeAsync("OnConnectedAsync");
+		});
+
+		
+
 		var tapGestureRecognizer = new TapGestureRecognizer();
 		tapGestureRecognizer.Tapped += OnCanvasTapped;
 		canvas.GestureRecognizers.Add(tapGestureRecognizer);
@@ -115,6 +131,11 @@ public partial class Game : ContentPage
 
 	private async void OnStartClicked(object sender, EventArgs e)
 	{
+		//start matchmaking
+		await _connection.InvokeAsync("StartMatchmaking");
+
+
+
 		isRunning = true;
 		score = 0;
 		flappy = new Flappy(_width / 2, _height / 2);
