@@ -11,6 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -50,5 +51,17 @@
                 CornerRadius="8"
                 Margin="0,16,0,0"/>
         </VerticalStackLayout>
+
+        <Label
+            x:Name="OnlinePlayersLabel"
+            Text="Online players: 0"
+            FontSize="Medium"
+            FontAttributes="Bold"
+            TextColor="Black"
+            HorizontalOptions="Center"
+            VerticalOptions="CenterAndExpand"
+            Grid.Row="2"
+            Margin="0,8,0,0" />
+
     </Grid>
 </ContentPage>

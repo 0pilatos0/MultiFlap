@@ -23,6 +23,8 @@ namespace Server
 			Console.WriteLine($"Player {player.ConnectionId} connected");
 			Console.WriteLine($"Player count: {GameData.Instance.Players.Count}");
 
+			Clients.All.SendAsync("UpdateOnlinePlayers", GameData.Instance.Players.Count);
+
 			return base.OnConnectedAsync();
 		}
 
@@ -52,6 +54,8 @@ namespace Server
 		{
 			Console.WriteLine($"Player {Context.ConnectionId} started matchmaking");
 			Console.WriteLine($"Player count: {GameData.Instance.Players.Count}");
+
+
 			if (GameData.Instance.Players.TryGetValue(Context.ConnectionId, out Player player))
 			{
 				player.MatchId = null;
