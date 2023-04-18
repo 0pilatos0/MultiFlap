@@ -143,11 +143,6 @@ public partial class Game : ContentPage
 
 	private async void OnStartClicked(object sender, EventArgs e)
 	{
-		//start matchmaking
-		await _connection.InvokeAsync("StartMatchmaking");
-
-
-
 		isRunning = true;
 		score = 0;
 		flappy = new Flappy(_width / 2, _height / 2);
@@ -156,6 +151,13 @@ public partial class Game : ContentPage
 		canvas.Drawable = new Canvas() { flappy = flappy, _greenPipes = pipes };
 		RunGameLoop();
 	}
+
+    private async void OnStartMatchmaking(object sender, EventArgs e)
+    {
+        //start matchmaking
+        await _connection.InvokeAsync("StartMatchmaking");
+		//set matchmaking text in the middle of the canvas
+    }
 }
 
 public class Canvas : IDrawable

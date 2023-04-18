@@ -1,11 +1,12 @@
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="App.Game"
-             xmlns:local="clr-namespace:App"
-             Title="Game"
-             BackgroundColor="#F2F2F2">
+<ContentPage
+    x:Class="App.Game"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:App"
+    Title="Game"
+    BackgroundColor="#F2F2F2">
     <ContentPage.Resources>
-        <local:Canvas x:Key="drawable"/>
+        <local:Canvas x:Key="drawable" />
     </ContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -17,51 +18,73 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Header -->
-        <StackLayout Grid.Row="0"
-                     BackgroundColor="#2C2C2C"
-                     Padding="10">
-            <Label Text="MultiFlap"
-                   FontSize="Large"
-                   FontAttributes="Bold"
-                   TextColor="White"
-                   FontFamily="Arial" />
+        <!--  Header  -->
+        <StackLayout
+            Grid.Row="0"
+            Padding="10"
+            BackgroundColor="#2C2C2C">
+            <Label
+                FontAttributes="Bold"
+                FontFamily="Arial"
+                FontSize="Large"
+                Text="MultiFlap"
+                TextColor="White" />
         </StackLayout>
 
-        <!-- Main content -->
+        <!--  Main content  -->
         <VerticalStackLayout
             Grid.Row="1"
             Padding="16"
             BackgroundColor="#F2F2F2">
-            <Label x:Name="ScoreLabel" Text="Score: 0" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" TextColor="Black" />
+            <Label
+                x:Name="ScoreLabel"
+                FontAttributes="Bold"
+                FontSize="Large"
+                HorizontalOptions="Center"
+                Text="Score: 0"
+                TextColor="Black"
+                VerticalOptions="CenterAndExpand" />
 
             <GraphicsView
                 x:Name="canvas"
+                BackgroundColor="#F2F2F2"
                 Drawable="{StaticResource drawable}"
                 HeightRequest="600"
-                WidthRequest="400"
-                BackgroundColor="#F2F2F2" />
-            <Button
-                Text="Start"
-                FontSize="Large"
-                FontAttributes="Bold"
-                Clicked="OnStartClicked"
-                BackgroundColor="#2C2C2C"
-                TextColor="White"
-                CornerRadius="8"
-                Margin="0,16,0,0"/>
+                WidthRequest="400" />
+
+            <HorizontalStackLayout Grid.Row="1">
+                <Button
+                    Margin="0,16,0,0"
+                    BackgroundColor="#2C2C2C"
+                    Clicked="OnStartClicked"
+                    CornerRadius="8"
+                    FontAttributes="Bold"
+                    FontSize="Large"
+                    Text="Solo"
+                    TextColor="White" />
+                <Button
+                    Margin="0,16,0,0"
+                    BackgroundColor="#2C2C2C"
+                    Clicked="OnStartMatchmaking"
+                    CornerRadius="8"
+                    FontAttributes="Bold"
+                    FontSize="Large"
+                    Text="Multiplayer"
+                    TextColor="White" />
+            </HorizontalStackLayout>
+
         </VerticalStackLayout>
 
         <Label
             x:Name="OnlinePlayersLabel"
-            Text="Online players: 0"
-            FontSize="Medium"
-            FontAttributes="Bold"
-            TextColor="Black"
-            HorizontalOptions="Center"
-            VerticalOptions="CenterAndExpand"
             Grid.Row="2"
-            Margin="0,8,0,0" />
+            Margin="0,8,0,0"
+            FontAttributes="Bold"
+            FontSize="Medium"
+            HorizontalOptions="Center"
+            Text="Online players: 0"
+            TextColor="Black"
+            VerticalOptions="CenterAndExpand" />
 
     </Grid>
 </ContentPage>

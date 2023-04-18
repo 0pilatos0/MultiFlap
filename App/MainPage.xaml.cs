@@ -40,15 +40,5 @@ namespace App
 		{
 			Navigation.PushAsync(new Game());
 		}
-
-		private async void sendButton_Clicked(object sender, EventArgs e)
-		{
-			await _connection.InvokeCoreAsync("SendMessage", args: new[]
-			{
-				myChatMessage.Text
-			});
-
-			myChatMessage.Text = String.Empty;
-        }
     }
 }
