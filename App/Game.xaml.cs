@@ -1,6 +1,7 @@
 using App.GameObjects;
 using Microsoft.AspNetCore.SignalR.Client;
 using Plugin.Maui.Audio;
+using System.Net.Sockets;
 
 namespace App;
 
@@ -10,8 +11,8 @@ public partial class Game : ContentPage
 	private Flappy flappy;
 	private List<GreenPipe> pipes;
 
-	int _width = 400;
-	int _height = 600;
+	int _width = 350;
+	int _height = 500;
 	private int score;
 
 	private readonly HubConnection _connection;
@@ -20,29 +21,39 @@ public partial class Game : ContentPage
 	{
 		InitializeComponent();
 
-		_connection = new HubConnectionBuilder()
+			_connection = new HubConnectionBuilder()
 			.WithUrl("http://161.97.97.200:5076/game")
 			//.WithUrl("http://192.168.2.24:5076/game")
 			.Build();
 
-		_connection.On<int>("UpdateOnlinePlayers", (onlinePlayers) =>
-		{
-			Task.Run(() =>
+			_connection.On<int>("UpdateOnlinePlayers", (onlinePlayers) =>
 			{
-				Dispatcher.Dispatch(async () =>
+				Task.Run(() =>
 				{
-					OnlinePlayersLabel.Text = $"Online Players: {onlinePlayers}";
+					Dispatcher.Dispatch(async () =>
+					{
+						OnlinePlayersLabel.Text = $"Online Players: {onlinePlayers}";
+					});
 				});
 			});
-		});
 
 
 		Task.Run(async () =>
 		{
-			Dispatcher.Dispatch(async () => await _connection.StartAsync());
-			await _connection.InvokeAsync("OnConnectedAsync");
+			try
+			{
+				await _connection.StartAsync();
+				await _connection.InvokeAsync("OnConnectedAsync");
+			}
+			catch
+			{
+				Dispatcher.Dispatch(() => 
+				{
+					MultiplayerButton.Text = "Offline";
+					MultiplayerButton.IsEnabled = false;
+				});
+			}
 		});
-
 
 		var tapGestureRecognizer = new TapGestureRecognizer();
 		tapGestureRecognizer.Tapped += OnCanvasTapped;
@@ -162,8 +173,8 @@ public partial class Game : ContentPage
 
 public class Canvas : IDrawable
 {
-	private int _height = 600;
-	private int _width = 400;
+	private int _height = 500;
+	private int _width = 350;
 	public Flappy flappy;
 	public List<GreenPipe> _greenPipes = new List<GreenPipe>();
 

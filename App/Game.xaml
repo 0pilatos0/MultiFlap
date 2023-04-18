@@ -5,23 +5,15 @@
     xmlns:local="clr-namespace:App"
     Title="Game"
     BackgroundColor="#F2F2F2">
+
     <ContentPage.Resources>
         <local:Canvas x:Key="drawable" />
     </ContentPage.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
 
+    <StackLayout>
         <!--  Header  -->
         <StackLayout
-            Grid.Row="0"
-            Padding="10"
+            Padding="20,30,20,10"
             BackgroundColor="#2C2C2C">
             <Label
                 FontAttributes="Bold"
@@ -32,59 +24,77 @@
         </StackLayout>
 
         <!--  Main content  -->
-        <VerticalStackLayout
-            Grid.Row="1"
-            Padding="16"
-            BackgroundColor="#F2F2F2">
+        <StackLayout
+            Padding="20"
+            BackgroundColor="White">
+
             <Label
                 x:Name="ScoreLabel"
                 FontAttributes="Bold"
                 FontSize="Large"
                 HorizontalOptions="Center"
                 Text="Score: 0"
-                TextColor="Black"
-                VerticalOptions="CenterAndExpand" />
+                TextColor="#2C2C2C"
+                Margin="0,0,0,30" />
 
-            <GraphicsView
-                x:Name="canvas"
+            <Frame
+                Margin="0,0,0,20"
                 BackgroundColor="#F2F2F2"
-                Drawable="{StaticResource drawable}"
-                HeightRequest="600"
-                WidthRequest="400" />
+                CornerRadius="20">
+                <GraphicsView
+                    x:Name="canvas"
+                    BackgroundColor="#F2F2F2"
+                    Drawable="{StaticResource drawable}"
+                    HeightRequest="500"
+                    WidthRequest="350"
+                    Margin="10" />
+            </Frame>
 
-            <HorizontalStackLayout Grid.Row="1">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                 <Button
-                    Margin="0,16,0,0"
+                    Margin="0,0,20,0"
                     BackgroundColor="#2C2C2C"
                     Clicked="OnStartClicked"
-                    CornerRadius="8"
+                    CornerRadius="15"
                     FontAttributes="Bold"
                     FontSize="Large"
                     Text="Solo"
-                    TextColor="White" />
+                    TextColor="White"
+                    HeightRequest="50"
+                    WidthRequest="150" />
+
                 <Button
-                    Margin="0,16,0,0"
+                    x:Name="MultiplayerButton"
                     BackgroundColor="#2C2C2C"
                     Clicked="OnStartMatchmaking"
-                    CornerRadius="8"
+                    CornerRadius="15"
                     FontAttributes="Bold"
                     FontSize="Large"
                     Text="Multiplayer"
-                    TextColor="White" />
-            </HorizontalStackLayout>
+                    TextColor="White"
+                    HeightRequest="50"
+                    WidthRequest="150" />
+            </StackLayout>
+        </StackLayout>
 
-        </VerticalStackLayout>
-
-        <Label
-            x:Name="OnlinePlayersLabel"
-            Grid.Row="2"
-            Margin="0,8,0,0"
-            FontAttributes="Bold"
-            FontSize="Medium"
-            HorizontalOptions="Center"
-            Text="Online players: 0"
-            TextColor="Black"
-            VerticalOptions="CenterAndExpand" />
-
-    </Grid>
+        <StackLayout
+            Margin="20,0"
+            Orientation="Horizontal"
+            HorizontalOptions="CenterAndExpand"
+            VerticalOptions="EndAndExpand">
+            <Image
+                Source="online.png"
+                HeightRequest="20"
+                WidthRequest="20"
+                VerticalOptions="Center" />
+            <Label
+                x:Name="OnlinePlayersLabel"
+                FontAttributes="Bold"
+                FontSize="Small"
+                Text="0 Online Players"
+                TextColor="#2C2C2C"
+                Margin="10,0,0,0"
+                VerticalOptions="Center" />
+        </StackLayout>
+    </StackLayout>
 </ContentPage>

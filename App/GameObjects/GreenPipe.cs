@@ -14,9 +14,9 @@ namespace App.GameObjects
         public int GapSize { get; private set; }
 
         private int _speed = 5;
-        private int _maxTopHeight = 600;
+        private int _maxTopHeight = 500;
         private int _minTopHeight = 100;
-        private int _minBottomHeight = 150;
+        private int _minBottomHeight = 100;
         private int _maxBottomHeight;
 
         public GreenPipe(int x, int gapSize, int maxBottomHeight)
@@ -47,8 +47,8 @@ namespace App.GameObjects
 		public void Draw(ICanvas canvas)
 		{
 			canvas.FillColor = Colors.Green;
-			canvas.FillRectangle(X, 0, 100, TopHeight);
-			canvas.FillRectangle(X, TopHeight + GapSize, 100, BottomHeight);
+			canvas.FillRectangle(X, 0, 75, TopHeight);
+			canvas.FillRectangle(X, TopHeight + GapSize, 75, BottomHeight);
 		}
 	}
 }
