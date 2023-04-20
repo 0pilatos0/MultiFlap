@@ -15,8 +15,8 @@ namespace App.GameObjects
         private const double Gravity = 1.2;
         private const int JumpVelocity = -17;
 
-        public Flappy(int x, int y)
-        {
+		public Flappy(int x, int y, Color color)
+		{
             X = x;
             Y = y;
             Velocity = 0;

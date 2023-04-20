@@ -156,7 +156,7 @@ public partial class Game : ContentPage
 	{
 		isRunning = true;
 		score = 0;
-		flappy = new Flappy(_width / 2, _height / 2);
+		flappy = new Flappy(_width / 2, _height / 2, Colors.Yellow);
 		pipes = new List<GreenPipe>();
 		pipes.Add(new GreenPipe(_width, 200, _height));
 		canvas.Drawable = new Canvas() { flappy = flappy, _greenPipes = pipes };
