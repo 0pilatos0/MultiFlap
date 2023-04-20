@@ -12,9 +12,7 @@
 
     <StackLayout>
         <!--  Header  -->
-        <StackLayout
-            Padding="20,30,20,10"
-            BackgroundColor="#2C2C2C">
+        <StackLayout Padding="20,30,20,10" BackgroundColor="#2C2C2C">
             <Label
                 FontAttributes="Bold"
                 FontFamily="Arial"
@@ -24,18 +22,16 @@
         </StackLayout>
 
         <!--  Main content  -->
-        <StackLayout
-            Padding="20"
-            BackgroundColor="White">
+        <StackLayout Padding="20" BackgroundColor="White">
 
             <Label
                 x:Name="ScoreLabel"
+                Margin="0,0,0,30"
                 FontAttributes="Bold"
                 FontSize="Large"
                 HorizontalOptions="Center"
                 Text="Score: 0"
-                TextColor="#2C2C2C"
-                Margin="0,0,0,30" />
+                TextColor="#2C2C2C" />
 
             <Frame
                 Margin="0,0,0,20"
@@ -43,14 +39,14 @@
                 CornerRadius="20">
                 <GraphicsView
                     x:Name="canvas"
+                    Margin="10"
                     BackgroundColor="#F2F2F2"
                     Drawable="{StaticResource drawable}"
                     HeightRequest="500"
-                    WidthRequest="350"
-                    Margin="10" />
+                    WidthRequest="350" />
             </Frame>
 
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+            <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
                 <Button
                     Margin="0,0,20,0"
                     BackgroundColor="#2C2C2C"
@@ -58,42 +54,43 @@
                     CornerRadius="15"
                     FontAttributes="Bold"
                     FontSize="Large"
+                    HeightRequest="50"
                     Text="Solo"
                     TextColor="White"
-                    HeightRequest="50"
                     WidthRequest="150" />
 
                 <Button
                     x:Name="MultiplayerButton"
+                    Margin="0,0,20,0"
                     BackgroundColor="#2C2C2C"
                     Clicked="OnStartMatchmaking"
                     CornerRadius="15"
                     FontAttributes="Bold"
                     FontSize="Large"
+                    HeightRequest="50"
                     Text="Multiplayer"
                     TextColor="White"
-                    HeightRequest="50"
                     WidthRequest="150" />
             </StackLayout>
         </StackLayout>
 
         <StackLayout
             Margin="20,0"
-            Orientation="Horizontal"
             HorizontalOptions="CenterAndExpand"
+            Orientation="Horizontal"
             VerticalOptions="EndAndExpand">
             <Image
-                Source="online.png"
                 HeightRequest="20"
-                WidthRequest="20"
-                VerticalOptions="Center" />
+                Source="online.png"
+                VerticalOptions="Center"
+                WidthRequest="20" />
             <Label
                 x:Name="OnlinePlayersLabel"
+                Margin="10,0,0,0"
                 FontAttributes="Bold"
                 FontSize="Small"
                 Text="0 Online Players"
                 TextColor="#2C2C2C"
-                Margin="10,0,0,0"
                 VerticalOptions="Center" />
         </StackLayout>
     </StackLayout>
