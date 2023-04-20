@@ -5,85 +5,92 @@
     xmlns:local="clr-namespace:App"
     Title="Game"
     BackgroundColor="#F2F2F2">
-
+    
     <ContentPage.Resources>
         <local:Canvas x:Key="drawable" />
     </ContentPage.Resources>
 
     <StackLayout>
-        <!--  Main content  -->
+        <!--  Header  -->
         <StackLayout
             Padding="20"
-            BackgroundColor="White">
+            BackgroundColor="White"
+            Orientation="Horizontal"
+            VerticalOptions="Start">
 
             <Label
                 x:Name="ScoreLabel"
                 FontAttributes="Bold"
                 FontSize="Large"
-                HorizontalOptions="Center"
                 Text="Score: 0"
                 TextColor="#2C2C2C"
-                Margin="0,0,0,30" />
+                VerticalOptions="Center" />
 
-            <Frame
-                Margin="0,0,0,20"
-                BackgroundColor="#F2F2F2"
-                CornerRadius="20">
-                <GraphicsView
-                    x:Name="canvas"
-                    BackgroundColor="#F2F2F2"
-                    Drawable="{StaticResource drawable}"
-                    HeightRequest="500"
-                    WidthRequest="350"
-                    Margin="10" />
-            </Frame>
+            <StackLayout
+                Orientation="Horizontal"
+                HorizontalOptions="EndAndExpand"
+                Spacing="10">
 
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                <Button
-                    Margin="0,0,20,0"
-                    BackgroundColor="#2C2C2C"
-                    Clicked="OnStartClicked"
-                    CornerRadius="15"
+                <Image
+                    Source="online.png"
+                    HeightRequest="20"
+                    WidthRequest="20"
+                    VerticalOptions="Center" />
+
+                <Label
+                    x:Name="OnlinePlayersLabel"
                     FontAttributes="Bold"
-                    FontSize="Large"
-                    Text="Solo"
-                    TextColor="White"
-                    HeightRequest="50"
-                    WidthRequest="150" />
-
-                <Button
-                    Margin="0,0,20,0"
-                    x:Name="MultiplayerButton"
-                    BackgroundColor="#2C2C2C"
-                    Clicked="OnStartMatchmaking"
-                    CornerRadius="15"
-                    FontAttributes="Bold"
-                    FontSize="Large"
-                    Text="Multiplayer"
-                    TextColor="White"
-                    HeightRequest="50"
-                    WidthRequest="150" />
+                    FontSize="Small"
+                    Text="0 Online Players"
+                    TextColor="#2C2C2C"
+                    VerticalOptions="Center" />
             </StackLayout>
         </StackLayout>
 
+        <!--  Main content  -->
+        <Frame
+            Padding="10"
+            Margin="20"
+            BackgroundColor="#F2F2F2"
+            CornerRadius="20">
+            <GraphicsView
+                x:Name="canvas"
+                BackgroundColor="#F2F2F2"
+                Drawable="{StaticResource drawable}"
+                HeightRequest="500"
+                WidthRequest="350" />
+        </Frame>
+
+        <!--  Footer  -->
         <StackLayout
-            Margin="20,0"
             Orientation="Horizontal"
             HorizontalOptions="CenterAndExpand"
-            VerticalOptions="EndAndExpand">
-            <Image
-                Source="online.png"
-                HeightRequest="20"
-                WidthRequest="20"
-                VerticalOptions="Center" />
-            <Label
-                x:Name="OnlinePlayersLabel"
+            VerticalOptions="End">
+
+            <Button
+                Margin="10"
+                BackgroundColor="#2C2C2C"
+                Clicked="OnStartClicked"
+                CornerRadius="15"
                 FontAttributes="Bold"
-                FontSize="Small"
-                Text="0 Online Players"
-                TextColor="#2C2C2C"
-                Margin="10,0,0,0"
-                VerticalOptions="Center" />
+                FontSize="Large"
+                Text="Solo"
+                TextColor="White"
+                HeightRequest="50"
+                WidthRequest="150" />
+
+            <Button
+                Margin="10"
+                x:Name="MultiplayerButton"
+                BackgroundColor="#2C2C2C"
+                Clicked="OnStartMatchmaking"
+                CornerRadius="15"
+                FontAttributes="Bold"
+                FontSize="Large"
+                Text="Multiplayer"
+                TextColor="White"
+                HeightRequest="50"
+                WidthRequest="150" />
         </StackLayout>
     </StackLayout>
 </ContentPage>
