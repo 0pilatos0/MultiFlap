@@ -7,7 +7,7 @@
     BackgroundColor="#F2F2F2">
     
     <ContentPage.Resources>
-        <local:Canvas x:Key="drawable" />
+        <local:GameCanvas x:Key="drawable" />
     </ContentPage.Resources>
 
     <StackLayout>
