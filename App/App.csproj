@@ -12,10 +12,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
 
         <!-- Display name -->
-        <ApplicationTitle>App</ApplicationTitle>
+        <ApplicationTitle>MultiFlap</ApplicationTitle>
 
         <!-- App Identifier -->
-        <ApplicationId>com.companyname.app</ApplicationId>
+        <ApplicationId>com.pilatos.multiflap</ApplicationId>
         <ApplicationIdGuid>9A904B72-422A-4424-810F-E2F6404DD06D</ApplicationIdGuid>
 
         <!-- Versions -->
@@ -32,10 +32,10 @@
 
     <ItemGroup>
         <!-- App Icon -->
-        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#2E2E2E" />
 
         <!-- Splash Screen -->
-        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#2E2E2E" BaseSize="128,128" />
 
         <!-- Images -->
         <MauiImage Include="Resources\Images\*" />
