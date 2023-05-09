@@ -34,7 +34,8 @@ public static class MauiProgram
 			Domain = "dev-84ref6m25ippcu2o.us.auth0.com",
 			ClientId = "ChftVfAPQaAIncpXAxI9ir2opzb61Srw",
 			Scope = "openid profile",
-			RedirectUri = "multiflap://callback"
+			RedirectUri = "multiflap://callback",
+			Audience = "http://161.97.97.200/",
 		}));
 
 		return builder.Build();

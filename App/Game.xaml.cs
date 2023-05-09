@@ -22,8 +22,8 @@ public partial class Game : ContentPage
 
 		_connection = new HubConnectionBuilder()
 			//.WithUrl("http://145.49.40.171:5076/game")
-			.WithUrl("http://192.168.2.24:5076/game")
-			//.WithUrl("http://161.97.97.200:5076/game")
+			//.WithUrl("https://192.168.2.24:5076/game") //Localhost
+			.WithUrl("http://161.97.97.200:5076/game") //self hosted
 			.Build();
 
 		_connection.On<int>("UpdateOnlinePlayers", (onlinePlayers) =>

@@ -5,17 +5,29 @@
     BackgroundColor="#F2F2F2">
     <ScrollView>
         <VerticalStackLayout 
-            Spacing="25" 
-            Padding="30,0" 
-            VerticalOptions="Center">
+            VerticalOptions="CenterAndExpand">
             <StackLayout
-                x:Name="LoginView">
-                <Button 
-                    x:Name="LoginBtn"
-                    Text="Log In"
-                    SemanticProperties.Hint="Click to log in"
-                    Clicked="OnLoginClicked"
-                    HorizontalOptions="Center" />
+                x:Name="LoginView"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="CenterAndExpand"
+                >
+                <Image Source="dotnet_bot.svg" 
+               HorizontalOptions="CenterAndExpand" 
+               VerticalOptions="CenterAndExpand" 
+               HeightRequest="100" 
+               WidthRequest="100" />
+
+                <Button x:Name="LoginBtn"
+                Text="Log In"
+                BackgroundColor="#007AFF"
+                TextColor="White"
+                CornerRadius="5"
+                Padding="15,10"
+                FontSize="Large"
+                FontAttributes="Bold"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="Center" 
+                Clicked="OnLoginClicked"/>
             </StackLayout>
             <StackLayout
         x:Name="HomeView"
@@ -124,6 +136,20 @@
                 CornerRadius="8"
                 Text="Settings"
                 TextColor="White" />
+                        <Button
+                Margin="0,20,0,0"
+                BackgroundColor="#2C2C2C"
+                CornerRadius="8"
+                Clicked="OnLogoutClicked"
+                Text="Logout"
+                TextColor="White" />
+
+                        <Button 
+                  x:Name="CallAPIBtn"
+                  Text="Call API"
+                  SemanticProperties.Hint="Click to call the API"
+                  Clicked="OnApiCallClicked"
+                  HorizontalOptions="Center" />
                     </StackLayout>
                 </Grid>
             </StackLayout>
