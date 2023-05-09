@@ -5,33 +5,9 @@
     BackgroundColor="#F2F2F2">
     <ScrollView>
         <VerticalStackLayout 
-            VerticalOptions="CenterAndExpand">
+            VerticalOptions="Start">
             <StackLayout
-                x:Name="LoginView"
-                VerticalOptions="CenterAndExpand"
-                HorizontalOptions="CenterAndExpand"
-                >
-                <Image Source="dotnet_bot.svg" 
-               HorizontalOptions="CenterAndExpand" 
-               VerticalOptions="CenterAndExpand" 
-               HeightRequest="100" 
-               WidthRequest="100" />
-
-                <Button x:Name="LoginBtn"
-                Text="Log In"
-                BackgroundColor="#007AFF"
-                TextColor="White"
-                CornerRadius="5"
-                Padding="15,10"
-                FontSize="Large"
-                FontAttributes="Bold"
-                VerticalOptions="CenterAndExpand"
-                HorizontalOptions="Center" 
-                Clicked="OnLoginClicked"/>
-            </StackLayout>
-            <StackLayout
-        x:Name="HomeView"
-        IsVisible="false">
+        x:Name="HomeView">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />

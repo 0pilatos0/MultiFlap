@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="App.Views.LoginPage"
+             Title="Login">
+    <StackLayout VerticalOptions="CenterAndExpand" 
+                 HorizontalOptions="CenterAndExpand" 
+                 Spacing="20">
+
+        <Image Source="dotnet_bot.svg"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               HeightRequest="100"
+               WidthRequest="100"/>
+
+        <Button x:Name="LoginButton"
+                Text="Log In"
+                BackgroundColor="#007AFF"
+                TextColor="White"
+                CornerRadius="5"
+                Padding="15,10"
+                FontSize="Large"
+                FontAttributes="Bold"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="Center"
+                Clicked="OnLoginClicked"/>
+        <ActivityIndicator x:Name="LoggingIn"
+                           IsRunning="True"
+                           IsVisible="false"/>
+    </StackLayout>
+</ContentPage>

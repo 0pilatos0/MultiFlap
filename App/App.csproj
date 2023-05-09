@@ -69,6 +69,9 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>Resources.resx</DependentUpon>
       </Compile>
+      <Compile Update="Views\LoginPage.xaml.cs">
+        <DependentUpon>LoginPage.xaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -80,6 +83,9 @@
 
     <ItemGroup>
       <MauiXaml Update="Game.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+      <MauiXaml Update="Views\LoginPage.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
     </ItemGroup>

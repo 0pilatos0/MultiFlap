@@ -9,7 +9,13 @@ public class Auth0Client
 	private readonly OidcClient oidcClient;
 	private string audience;
 
-	public Auth0Client(Auth0ClientOptions options)
+	readonly IPreferences preferences;
+
+	public bool IsAuthenticated => preferences.Get<bool>(nameof(IsAuthenticated), false);
+	public string CurrentUser => preferences.Get<string>(nameof(CurrentUser), string.Empty);
+	public string AccessToken => preferences.Get<string>(nameof(AccessToken), string.Empty);
+
+	public Auth0Client(Auth0ClientOptions options, IPreferences preferences)
 	{
 		oidcClient = new OidcClient(new OidcClientOptions
 		{
@@ -21,6 +27,7 @@ public class Auth0Client
 		});
 
 		audience = options.Audience;
+		this.preferences = preferences;
 	}
 
 	public IdentityModel.OidcClient.Browser.IBrowser Browser
@@ -49,7 +56,16 @@ public class Auth0Client
 			})
 			};
 		}
-		return await oidcClient.LoginAsync(loginRequest);
+		var loginResult = await oidcClient.LoginAsync(loginRequest);
+
+		if (!loginResult.IsError)
+		{
+			preferences.Set(nameof(IsAuthenticated), true);
+			preferences.Set(nameof(CurrentUser), loginResult.User.Identity.Name);
+			preferences.Set(nameof(AccessToken), loginResult.AccessToken);
+		}
+
+		return loginResult;
 	}
 
 	public async Task<BrowserResult> LogoutAsync()
