@@ -22,7 +22,11 @@ builder.Services.AddCors(options =>
 	   });
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(options =>
+{
+	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
 		  .AddJwtBearer(options =>
 		  {
 			  options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}/";
