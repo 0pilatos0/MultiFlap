@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Server;
 using System.Text.Json;
 
@@ -60,6 +61,10 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddControllers();
+builder.Services.AddDbContext<MultiFlapDbContext>(options =>
+{
+	options.UseSqlServer(builder.Configuration.GetConnectionString("MultiFlapDb"));
+});
 
 var app = builder.Build();
 
