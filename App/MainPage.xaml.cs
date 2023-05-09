@@ -1,39 +1,32 @@
-﻿using App.GameObjects;
-using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Maui.Graphics.Skia;
-using Plugin.Maui.Audio;
-using System.Reflection;
-using System.Resources;
-using IImage = Microsoft.Maui.Graphics.IImage;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using MauiAuth0App.Auth0;
 
 namespace App
 {
     public partial class MainPage : ContentPage
 	{
-		private readonly HubConnection _connection;
+		private readonly Auth0Client auth0Client;
 
-		public MainPage()
+		public MainPage(Auth0Client client)
 		{
 			InitializeComponent();
-			//_connection = new HubConnectionBuilder()
-			//	.WithUrl("http://192.168.2.24:5076/game")
-			//	.Build();
+			auth0Client = client;
 
-			//_connection.On<string>("MessageReceived", (message) =>
-			//{
-			//	Task.Run(() =>
-			//	{
-			//		Dispatcher.Dispatch(async () =>
-			//		{
-			//			chatMessages.Text += $"{Environment.NewLine}{message}";
-			//		});
-			//	});
-			//});
+		}
 
-			//Task.Run(() =>
-			//{
-			//	Dispatcher.Dispatch(async () => await _connection.StartAsync());
-			//});
+		private async void OnLoginClicked(object sender, EventArgs e)
+		{
+			var loginResult = await auth0Client.LoginAsync();
+
+			if (!loginResult.IsError)
+			{
+				LoginView.IsVisible = false;
+				HomeView.IsVisible = true;
+			}
+			else
+			{
+				await DisplayAlert("Error", loginResult.ErrorDescription, "OK");
+			}
 		}
 
 		private void StartGameClicked(object sender, EventArgs e)

@@ -3,32 +3,49 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     BackgroundColor="#F2F2F2">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <ScrollView>
+        <VerticalStackLayout 
+            Spacing="25" 
+            Padding="30,0" 
+            VerticalOptions="Center">
+            <StackLayout
+                x:Name="LoginView">
+                <Button 
+                    x:Name="LoginBtn"
+                    Text="Log In"
+                    SemanticProperties.Hint="Click to log in"
+                    Clicked="OnLoginClicked"
+                    HorizontalOptions="Center" />
+            </StackLayout>
+            <StackLayout
+        x:Name="HomeView"
+        IsVisible="false">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-        <!--  Header  -->
-        <StackLayout
+                    <!--  Header  -->
+                    <StackLayout
             Grid.Row="0"
             Padding="10"
             BackgroundColor="#2C2C2C">
-            <Label
+                        <Label
                 FontAttributes="Bold"
                 FontFamily="Arial"
                 FontSize="Large"
                 Text="MultiFlap"
                 TextColor="White" />
-        </StackLayout>
+                    </StackLayout>
 
-        <!--  Main content  -->
-        <StackLayout Grid.Row="1" Margin="20">
+                    <!--  Main content  -->
+                    <StackLayout Grid.Row="1" Margin="20">
 
-            <Label
+                        <Label
                 Margin="0,0,0,20"
                 FontFamily="Arial"
                 FontSize="Large"
@@ -36,45 +53,45 @@
                 Text="Welcome to MultiFlap!"
                 TextColor="#2C2C2C" />
 
-            <!--  Gameplay instructions  -->
-            <StackLayout>
-                <Label
+                        <!--  Gameplay instructions  -->
+                        <StackLayout>
+                            <Label
                     Margin="0,0,0,10"
                     FontAttributes="Bold"
                     FontFamily="Arial"
                     FontSize="Medium"
                     Text="How to play:"
                     TextColor="#2C2C2C" />
-                <Label
+                            <Label
                     Margin="0,0,0,20"
                     FontFamily="Arial"
                     Text="Tap the screen to make the bird flap its wings and avoid the obstacles."
                     TextColor="#2C2C2C" />
-            </StackLayout>
+                        </StackLayout>
 
-            <!--  Leaderboard and loadout  -->
-            <StackLayout
+                        <!--  Leaderboard and loadout  -->
+                        <StackLayout
                 Margin="0,0,0,20"
                 HorizontalOptions="Center"
                 Orientation="Horizontal">
-                <Button
+                            <Button
                     Margin="0,0,10,0"
                     BackgroundColor="#2C2C2C"
                     CornerRadius="8"
                     FontFamily="Arial"
                     Text="Leaderboard"
                     TextColor="White" />
-                <Button
+                            <Button
                     Margin="10,0,0,0"
                     BackgroundColor="#2C2C2C"
                     CornerRadius="8"
                     FontFamily="Arial"
                     Text="Loadout"
                     TextColor="White" />
-            </StackLayout>
+                        </StackLayout>
 
-            <!--  Call to action  -->
-            <Button
+                        <!--  Call to action  -->
+                        <Button
                 Margin="0,0,0,20"
                 BackgroundColor="#4CAF50"
                 Clicked="StartGameClicked"
@@ -83,30 +100,33 @@
                 Text="Start Game"
                 TextColor="White" />
 
-            <!--  High score  -->
-            <StackLayout Margin="0,0,0,10" Orientation="Horizontal">
-                <Label
+                        <!--  High score  -->
+                        <StackLayout Margin="0,0,0,10" Orientation="Horizontal">
+                            <Label
                     Margin="0,0,10,0"
                     FontFamily="Arial"
                     FontSize="Medium"
                     Text="High Score:"
                     TextColor="#2C2C2C"
                     VerticalTextAlignment="Center" />
-                <Label
+                            <Label
                     FontFamily="Arial"
                     FontSize="Medium"
                     Text="0"
                     TextColor="#666666"
                     VerticalTextAlignment="Center" />
-            </StackLayout>
+                        </StackLayout>
 
-            <!--  Settings  -->
-            <Button
+                        <!--  Settings  -->
+                        <Button
                 Margin="0,20,0,0"
                 BackgroundColor="#2C2C2C"
                 CornerRadius="8"
                 Text="Settings"
                 TextColor="White" />
-        </StackLayout>
-    </Grid>
+                    </StackLayout>
+                </Grid>
+            </StackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

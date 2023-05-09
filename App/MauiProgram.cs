@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Plugin.Maui.Audio;
+using MauiAuth0App.Auth0;
 
 namespace App;
 
@@ -26,6 +27,16 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-        return builder.Build();
+		builder.Services.AddSingleton<MainPage>();
+
+		builder.Services.AddSingleton(new Auth0Client(new()
+		{
+			Domain = "dev-84ref6m25ippcu2o.us.auth0.com",
+			ClientId = "ChftVfAPQaAIncpXAxI9ir2opzb61Srw",
+			Scope = "openid profile",
+			RedirectUri = "multiflap://callback"
+		}));
+
+		return builder.Build();
     }
 }
