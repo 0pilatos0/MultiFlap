@@ -12,7 +12,7 @@ using Server;
 namespace Server.Migrations
 {
     [DbContext(typeof(MultiFlapDbContext))]
-    [Migration("20230509211855_InitialCreate")]
+    [Migration("20230509212705_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -35,6 +35,9 @@ namespace Server.Migrations
 
                     b.Property<int>("HighScore")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("HighScoreDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Identifier")
                         .HasColumnType("int");

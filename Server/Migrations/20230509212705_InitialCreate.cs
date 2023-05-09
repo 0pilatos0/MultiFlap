@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -32,6 +33,7 @@ namespace Server.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Identifier = table.Column<int>(type: "int", nullable: false),
                     HighScore = table.Column<int>(type: "int", nullable: false),
+                    HighScoreDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserSettingsId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

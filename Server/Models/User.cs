@@ -8,6 +8,7 @@ namespace Server.Models
 		public int Id { get; set; }
 		public int Identifier { get; set; }
 		public int HighScore { get; set; }
+		public DateTime HighScoreDate { get; set; }
 		public UserSettings? UserSettings { get; set; }
 	}
 }

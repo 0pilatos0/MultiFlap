@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Server.Models;
 
 namespace Server.Controllers
@@ -28,7 +29,7 @@ namespace Server.Controllers
 		[HttpGet("{id}")]
 		public IActionResult Get(int id)
 		{
-			User user = _dbContext.Users.Find(id);
+			User user = _dbContext.Users.Include(u => u.UserSettings).FirstOrDefault(u => u.Id == id);
 			if (user == null)
 			{
 				return NotFound();

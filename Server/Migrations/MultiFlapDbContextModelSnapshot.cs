@@ -33,6 +33,9 @@ namespace Server.Migrations
                     b.Property<int>("HighScore")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("HighScoreDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Identifier")
                         .HasColumnType("int");
 
