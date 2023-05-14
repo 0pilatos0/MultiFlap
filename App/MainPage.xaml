@@ -120,12 +120,12 @@
                 Text="Logout"
                 TextColor="White" />
 
-                        <Button 
+                        <!--<Button 
                   x:Name="CallAPIBtn"
                   Text="Call API"
                   SemanticProperties.Hint="Click to call the API"
                   Clicked="OnApiCallClicked"
-                  HorizontalOptions="Center" />
+                  HorizontalOptions="Center" />-->
                     </StackLayout>
                 </Grid>
             </StackLayout>
