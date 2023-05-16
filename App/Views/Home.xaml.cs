@@ -10,12 +10,14 @@ namespace App
     {
         private readonly Auth0Client auth0Client;
         private string accessToken;
+		private EditUserSettings editUserSettings;
 
-        public MainPage(Auth0Client client)
+		public MainPage(Auth0Client client, EditUserSettings editUserSettingsPage)
         {
             InitializeComponent();
             auth0Client = client;
-        }
+			this.editUserSettings = editUserSettingsPage;
+		}
 
         protected async override void OnNavigatedTo(NavigatedToEventArgs args)
         {
@@ -71,7 +73,7 @@ namespace App
 
         private async void OnSettingsClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new EditUserSettings());
+            await Navigation.PushAsync(editUserSettings);
         }
 
 	}

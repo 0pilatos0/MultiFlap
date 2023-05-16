@@ -2,6 +2,8 @@
 using Plugin.Maui.Audio;
 using MauiAuth0App.Auth0;
 using CommunityToolkit.Maui;
+using App.Views;
+using App.ViewModels;
 
 namespace App;
 
@@ -19,18 +21,24 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        builder.Services.AddSingleton(AudioManager.Current);
-		builder.Services.AddTransient<MainPage>();
-        builder.Services.AddTransient<Game>();
+		
 
 
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
+        //Pages
+		builder.Services.AddTransient<MainPage>();
+		builder.Services.AddTransient<Game>();
+		builder.Services.AddTransient<LoginPage>();
+		builder.Services.AddTransient<EditUserSettings>();
 
-		builder.Services.AddSingleton<MainPage>();
+		//ViewModels
+		builder.Services.AddSingleton<UserSettingsViewModel>();
 
-		builder.Services.AddSingleton<IPreferences>(Preferences.Default);
+		//Services
+		builder.Services.AddSingleton(AudioManager.Current);
+        builder.Services.AddSingleton<IPreferences>(Preferences.Default);
 		builder.Services.AddSingleton(new Auth0Client(new()
 		{
 			Domain = "dev-84ref6m25ippcu2o.us.auth0.com",
