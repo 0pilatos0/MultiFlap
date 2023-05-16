@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace App.Models
 {
-    class UserSettings
-    {
-        public string displayName { get; set; }
-    }
+	public class UserSettings
+	{
+		public string DisplayName { get; set; }
+	}
 }

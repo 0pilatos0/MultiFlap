@@ -2,6 +2,7 @@
 using MauiAuth0App.Auth0;
 using System.Net.Http.Headers;
 using App.Views;
+using App.Models;
 
 namespace App
 {
@@ -67,5 +68,11 @@ namespace App
                 }
             }
         }
-    }
+
+        private async void OnSettingsClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new EditUserSettings());
+        }
+
+	}
 }

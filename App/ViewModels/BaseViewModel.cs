@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.ViewModels
 {
@@ -13,29 +8,50 @@ namespace App.ViewModels
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private string _title;
-		public string Title { get => _title; set { _title = value; OnPropertyChanged(); } }
-
-		private bool _isLoading;
-		public bool IsLoading { get => _isLoading; set { _isLoading = value; OnPropertyChanged(); } }
-
-		protected bool initialised = false;
-
-		public INavigation Navigation { get; set; }
-
-		protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+		public string Title
 		{
-			var changed = PropertyChanged;
-
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			get => _title;
+			set
+			{
+				if (_title != value)
+				{
+					_title = value;
+					OnPropertyChanged();
+				}
+			}
 		}
 
-
-		public void RaisePropertyChanged(params string[] properties)
+		private bool _isLoading;
+		public bool IsLoading
 		{
-			foreach (var propertyName in properties)
+			get => _isLoading;
+			set
 			{
-				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				if (_isLoading != value)
+				{
+					_isLoading = value;
+					OnPropertyChanged();
+				}
 			}
+		}
+
+		protected bool _isInitialized;
+		public bool IsInitialized
+		{
+			get => _isInitialized;
+			set
+			{
+				if (_isInitialized != value)
+				{
+					_isInitialized = value;
+					OnPropertyChanged();
+				}
+			}
+		}
+
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }

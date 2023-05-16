@@ -88,10 +88,10 @@
       <MauiXaml Update="Game.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
-      <MauiXaml Update="Views\Login.xaml">
+      <MauiXaml Update="Views\EditUserSettings.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
-      <MauiXaml Update="Views\NewPage1.xaml">
+      <MauiXaml Update="Views\Login.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
     </ItemGroup>

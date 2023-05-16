@@ -111,6 +111,7 @@
                             BackgroundColor="#2C2C2C"
                             CornerRadius="8"
                             Text="Settings"
+                            Clicked="OnSettingsClicked"
                             TextColor="White" />
                         <Button
                             Margin="0,20,0,0"
