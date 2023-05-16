@@ -2,7 +2,10 @@
     x:Class="App.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    BackgroundColor="#F2F2F2">
+    BackgroundColor="#F2F2F2"
+    NavigationPage.HasNavigationBar="False"  
+    NavigationPage.BackButtonTitle=""  
+    >
     <ScrollView>
         <VerticalStackLayout
             VerticalOptions="Start">
