@@ -64,13 +64,16 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Update="Views\Home.xaml.cs">
+        <DependentUpon>Home.xaml</DependentUpon>
+      </Compile>
       <Compile Update="Properties\Resources.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Resources.resx</DependentUpon>
       </Compile>
-      <Compile Update="Views\LoginPage.xaml.cs">
-        <DependentUpon>LoginPage.xaml</DependentUpon>
+      <Compile Update="Views\Login.xaml.cs">
+        <DependentUpon>Login.xaml</DependentUpon>
       </Compile>
     </ItemGroup>
 
@@ -85,7 +88,10 @@
       <MauiXaml Update="Game.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
-      <MauiXaml Update="Views\LoginPage.xaml">
+      <MauiXaml Update="Views\Login.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+      <MauiXaml Update="Views\NewPage1.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
     </ItemGroup>
