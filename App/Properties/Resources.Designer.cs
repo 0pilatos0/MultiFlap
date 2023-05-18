@@ -59,15 +59,5 @@ namespace App.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] flappy {
-            get {
-                object obj = ResourceManager.GetObject("flappy", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }
