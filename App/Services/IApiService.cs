@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace App.Services
 {
-	internal interface IApiService
+	public interface IApiService
 	{
 		string ApiUrl { get; }
 

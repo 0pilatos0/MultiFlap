@@ -4,6 +4,7 @@ using MauiAuth0App.Auth0;
 using CommunityToolkit.Maui;
 using App.Views;
 using App.ViewModels;
+using App.Services;
 
 namespace App;
 
@@ -37,6 +38,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<UserSettingsViewModel>();
 
 		//Services
+		builder.Services.AddSingleton<IApiService, ApiService>();
 		builder.Services.AddSingleton(AudioManager.Current);
         builder.Services.AddSingleton<IPreferences>(Preferences.Default);
 		builder.Services.AddSingleton(new Auth0Client(new()

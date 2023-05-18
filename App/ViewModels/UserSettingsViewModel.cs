@@ -1,16 +1,20 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Threading.Tasks;
 using App.Models;
 using CommunityToolkit.Mvvm.Input;
 using MauiAuth0App.Auth0;
+using App.Services;
 
 namespace App.ViewModels
 {
 	public class UserSettingsViewModel : BaseViewModel
 	{
 		private UserSettings _userSettings;
-		private Auth0Client auth0Client;
+		private readonly IApiService _apiService;
+		private readonly Auth0Client _auth0Client;
 
 		public UserSettings UserSettings
 		{
@@ -25,11 +29,45 @@ namespace App.ViewModels
 			}
 		}
 
-		public UserSettingsViewModel(Auth0Client auth0Client)
+		public UserSettingsViewModel(IApiService apiService, Auth0Client auth0Client)
 		{
-			// Initialize the UserSettings instance
-			this.auth0Client = auth0Client;
+			_apiService = apiService;
+			_auth0Client = auth0Client;
 			UserSettings = new UserSettings();
+
+			LoadUserSettings();
+		}
+
+		private async Task LoadUserSettings()
+		{
+			try
+			{
+				// Get the access token from the Auth0Client
+				string accessToken = _auth0Client.AccessToken; // Replace with your actual method to retrieve the access token
+
+				// Define the API endpoint URL
+				string apiUrl = "usersettings"; // Use the API base URL from the ApiService
+
+				// Send a GET request to the API endpoint to retrieve the user settings
+				string response = await _apiService.GetAsync(apiUrl, accessToken);
+
+				// Check if the request was successful
+				if (!string.IsNullOrEmpty(response))
+				{
+					// Deserialize the response JSON to UserSettings object
+					UserSettings = JsonSerializer.Deserialize<UserSettings>(response);
+					Console.WriteLine("User settings loaded successfully!");
+				}
+				else
+				{
+					Console.WriteLine("Error loading user settings");
+				}
+			}
+			catch (Exception ex)
+			{
+				// Handle any exception that occurred during the API request
+				Console.WriteLine("An error occurred: " + ex.Message);
+			}
 		}
 
 		// Command for saving the user settings
@@ -50,38 +88,28 @@ namespace App.ViewModels
 		{
 			try
 			{
-				// Create an instance of HttpClient
-				using (HttpClient httpClient = new HttpClient())
+				// Serialize the UserSettings object to JSON
+				string jsonPayload = JsonSerializer.Serialize(UserSettings);
+
+				// Get the access token from the Auth0Client
+				string accessToken = _auth0Client.AccessToken; // Replace with your actual method to retrieve the access token
+
+				// Define the API endpoint URL
+				string apiUrl = "usersettings"; // Use the API base URL from the ApiService
+
+				// Send a PUT request to the API endpoint to update the user settings
+				string response = await _apiService.PutAsync(apiUrl, jsonPayload, accessToken);
+
+				// Check if the request was successful
+				if (!string.IsNullOrEmpty(response))
 				{
-					// Set the access token in the Authorization header
-					string accessToken = auth0Client.AccessToken; // Replace with your actual method to retrieve the access token
-					httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-
-					// Define the API endpoint URL
-					string apiUrl = "https://de68-81-206-192-243.ngrok-free.app/"; // Replace with your actual API endpoint
-
-					// Create a JSON payload with the updated user settings
-
-					string jsonPayload = JsonSerializer.Serialize(UserSettings);
-
-					// Create a StringContent object with the JSON payload
-					var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
-
-					// Send a PUT request to the API endpoint to update the user settings
-					HttpResponseMessage response = await httpClient.PutAsync(apiUrl, content);
-
-					// Check if the request was successful
-					if (response.IsSuccessStatusCode)
-					{
-						// User settings saved successfully
-						Console.WriteLine("User settings saved successfully!");
-					}
-					else
-					{
-						// Handle the error response from the API
-						string errorMessage = await response.Content.ReadAsStringAsync();
-						Console.WriteLine("Error saving user settings: " + errorMessage);
-					}
+					// User settings saved successfully
+					Console.WriteLine("User settings saved successfully!");
+				}
+				else
+				{
+					// Handle the error response from the API
+					Console.WriteLine("Error saving user settings: " + response);
 				}
 			}
 			catch (Exception ex)

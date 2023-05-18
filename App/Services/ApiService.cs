@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace App.Services
 {
-	internal class ApiService : IApiService
+	public class ApiService : IApiService
 	{
 		private readonly HttpClient httpClient;
 
@@ -15,7 +15,7 @@ namespace App.Services
 			httpClient = new HttpClient();
 		}
 
-		public string ApiUrl { get; } = "http://161.97.97.200:5076/";
+		public string ApiUrl { get; } = "http://161.97.97.200:5076";
 
 		public async Task<string> GetAsync(string endpoint, string accessToken)
 		{
