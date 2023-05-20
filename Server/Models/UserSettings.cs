@@ -2,11 +2,13 @@
 
 namespace Server.Models
 {
-    public class UserSettings
-    {
-		[Key]
+	public class UserSettings
+	{
 		public int Id { get; set; }
-		public string DisplayName { get; set; }
-        public string Language { get; set; }
-    }
+		public int UserId { get; set; }
+		public string Language { get; set; }
+		public bool ReceiveNotifications { get; set; }
+
+		public virtual User User { get; set; }
+	}
 }

@@ -8,6 +8,8 @@ namespace App.Models
 {
 	public class UserSettings
 	{
-		public string DisplayName { get; set; }
+		public string UserId { get; set; } // Foreign key to User.Id
+
+		
 	}
 }

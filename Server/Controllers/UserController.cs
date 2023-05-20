@@ -1,73 +1,98 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
 
 namespace Server.Controllers
 {
 	[ApiController]
-	[Route("api/[controller]")]
+	[Authorize]
+	[Route("api/users")]
 	public class UserController : ControllerBase
 	{
-		private readonly MultiFlapDbContext _dbContext;
+		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
 
-		public UserController(MultiFlapDbContext dbContext)
+		public UserController(MultiFlapDbContext context)
 		{
-			_dbContext = dbContext;
+			_context = context;
 		}
 
-		// POST api/user
-		[HttpPost]
-		public IActionResult Post([FromBody] UserSettings userSettings)
-		{
-			User user = new User { UserSettings = userSettings };
-			_dbContext.Users.Add(user);
-			_dbContext.SaveChanges();
-			return Ok(user);
-		}
-
-		// GET api/user/{id}
+		// GET api/users/{id}
 		[HttpGet("{id}")]
-		public IActionResult Get(int id)
+		public async Task<ActionResult<User>> GetUser(int id)
 		{
-			User user = _dbContext.Users.Include(u => u.UserSettings).FirstOrDefault(u => u.Id == id);
+			var user = await _context.Users.FindAsync(id);
+
 			if (user == null)
 			{
 				return NotFound();
 			}
 
-			return Ok(user);
+			return user;
 		}
 
-		// PUT api/user/{id}
+		// POST api/users
+		[HttpPost]
+		public async Task<ActionResult<User>> CreateUser(User user)
+		{
+			// You may perform additional validation or checks here
+
+			_context.Users.Add(user);
+			await _context.SaveChangesAsync();
+
+			return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+		}
+
+		// PUT api/users/{id}
 		[HttpPut("{id}")]
-		public IActionResult Put(int id, [FromBody] UserSettings userSettings)
+		public async Task<IActionResult> UpdateUser(int id, User updatedUser)
 		{
-			User user = _dbContext.Users.Find(id);
-			if (user == null)
+			if (id != updatedUser.Id)
 			{
-				return NotFound();
+				return BadRequest();
 			}
 
-			user.UserSettings = userSettings;
-			_dbContext.SaveChanges();
+			_context.Entry(updatedUser).State = EntityState.Modified;
 
-			return Ok(user);
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!UserExists(id))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			return NoContent();
 		}
 
-		// DELETE api/user/{id}
+		// DELETE api/users/{id}
 		[HttpDelete("{id}")]
-		public IActionResult Delete(int id)
+		public async Task<IActionResult> DeleteUser(int id)
 		{
-			User user = _dbContext.Users.Find(id);
+			var user = await _context.Users.FindAsync(id);
+
 			if (user == null)
 			{
 				return NotFound();
 			}
 
-			_dbContext.Users.Remove(user);
-			_dbContext.SaveChanges();
+			_context.Users.Remove(user);
+			await _context.SaveChangesAsync();
 
-			return Ok();
+			return NoContent();
+		}
+
+		private bool UserExists(int id)
+		{
+			return _context.Users.Any(u => u.Id == id);
 		}
 	}
 }

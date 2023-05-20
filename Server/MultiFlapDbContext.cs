@@ -10,5 +10,11 @@ namespace Server
 		}
 
 		public DbSet<User> Users { get; set; }
+		public DbSet<UserSettings> UserSettings { get; set; }
+		public DbSet<Achievement> Achievements { get; set; }
+		public DbSet<LeaderboardEntry> LeaderboardEntries { get; set; }
+		public DbSet<PowerUpItem> PowerUpItems { get; set; }
+		
+		
 	}
 }

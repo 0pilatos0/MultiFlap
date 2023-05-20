@@ -1,52 +1,105 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Server.Models;
 
 namespace Server.Controllers
 {
 	[ApiController]
-	[Route("api/[controller]")]
-	public class LeaderboardController : ControllerBase
+	[Authorize]
+	[Route("api/leaderboard")]
+	public class LeaderboardEntryController : ControllerBase
 	{
-		private readonly MultiFlapDbContext _dbContext;
+		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
 
-		public LeaderboardController(MultiFlapDbContext dbContext)
+		public LeaderboardEntryController(MultiFlapDbContext context)
 		{
-			_dbContext = dbContext;
-		}
-
-		// POST api/leaderboard
-		[HttpPost]
-		public IActionResult Post([FromBody] User user)
-		{
-			_dbContext.Users.Add(user);
-			_dbContext.SaveChanges();
-			return Ok(user);
+			_context = context;
 		}
 
 		// GET api/leaderboard
 		[HttpGet]
-		public IActionResult Get()
+		public ActionResult<IEnumerable<LeaderboardEntry>> GetLeaderboard()
 		{
-			List<User> leaderboard = _dbContext.Users.OrderByDescending(u => u.HighScore)
-													.Take(10)
-													.ToList();
-			return Ok(leaderboard);
+			var leaderboard = _context.LeaderboardEntries.OrderByDescending(le => le.Score).ToList();
+
+			return leaderboard;
 		}
 
-		// PUT api/leaderboard/{id}
-		[HttpPut("{id}")]
-		public IActionResult Put(int id, [FromBody] int highscore)
+		// GET api/leaderboard/{id}
+		[HttpGet("{id}")]
+		public async Task<ActionResult<LeaderboardEntry>> GetLeaderboardEntry(int id)
 		{
-			User user = _dbContext.Users.Find(id);
-			if (user == null)
+			var leaderboardEntry = await _context.LeaderboardEntries.FindAsync(id);
+
+			if (leaderboardEntry == null)
 			{
 				return NotFound();
 			}
 
-			user.HighScore = highscore;
-			_dbContext.SaveChanges();
+			return leaderboardEntry;
+		}
 
-			return Ok(user);
+		// POST api/leaderboard
+		[HttpPost]
+		public async Task<ActionResult<LeaderboardEntry>> AddLeaderboardEntry(LeaderboardEntry leaderboardEntry)
+		{
+			_context.LeaderboardEntries.Add(leaderboardEntry);
+			await _context.SaveChangesAsync();
+
+			return CreatedAtAction(nameof(GetLeaderboardEntry), new { id = leaderboardEntry.Id }, leaderboardEntry);
+		}
+
+		// PUT api/leaderboard/{id}
+		[HttpPut("{id}")]
+		public async Task<IActionResult> UpdateLeaderboardEntry(int id, LeaderboardEntry updatedLeaderboardEntry)
+		{
+			if (id != updatedLeaderboardEntry.Id)
+			{
+				return BadRequest();
+			}
+
+			_context.Entry(updatedLeaderboardEntry).State = EntityState.Modified;
+
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!LeaderboardEntryExists(id))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			return NoContent();
+		}
+
+		// DELETE api/leaderboard/{id}
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> DeleteLeaderboardEntry(int id)
+		{
+			var leaderboardEntry = await _context.LeaderboardEntries.FindAsync(id);
+
+			if (leaderboardEntry == null)
+			{
+				return NotFound();
+			}
+
+			_context.LeaderboardEntries.Remove(leaderboardEntry);
+			await _context.SaveChangesAsync();
+
+			return NoContent();
+		}
+
+		private bool LeaderboardEntryExists(int id)
+		{
+			return _context.LeaderboardEntries.Any(le => le.Id == id);
 		}
 	}
 }
