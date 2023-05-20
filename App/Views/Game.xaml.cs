@@ -1,7 +1,11 @@
 using App.GameObjects;
+using App.Services;
+using MauiAuth0App.Auth0;
 using Microsoft.AspNetCore.SignalR.Client;
 using Plugin.Maui.Audio;
+using System;
 using System.Net.Sockets;
+using System.Text.Json;
 
 namespace App;
 
@@ -15,11 +19,16 @@ public partial class Game : ContentPage
 	private int _height = 500;
 
 	private readonly HubConnection _connection;
+	private readonly IApiService _apiService;
+	private readonly Auth0Client _auth0Client;
 
-	public Game()
+	public Game(IApiService apiService, Auth0Client auth0Client)
 	{
 		InitializeComponent();
 
+		_apiService = apiService;
+		_auth0Client = auth0Client;
+		
 		_connection = new HubConnectionBuilder()
 			//.WithUrl("http://145.49.40.171:5076/game")
 			//.WithUrl("https://192.168.2.24:5076/game") //Localhost
@@ -54,7 +63,6 @@ public partial class Game : ContentPage
 					MultiplayerButton.IsEnabled = false;
 				});
 			}
-			
 		});
 	}
 
@@ -94,10 +102,7 @@ public partial class Game : ContentPage
 				{
 					if (_flappy.Y - 20 < pipe.TopHeight || _flappy.Y + 20 > pipe.TopHeight + pipe.GapSize)
 					{
-						_isRunning = false;
-						var player2 = AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("gameOver.mp3"));
-						player2.Play();
-						await DisplayAlert("Game Over", $"Score: {_score}", "OK");
+						GameOver(_score);
 						return;
 					}
 				}
@@ -105,10 +110,7 @@ public partial class Game : ContentPage
 
 			if (_flappy.Y < 0 || _flappy.Y > _height)
 			{
-				_isRunning = false;
-				var player2 = AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("gameOver.mp3"));
-				player2.Play();
-				await DisplayAlert("Game Over", $"Score: {_score}", "OK");
+				GameOver(_score);
 				return;
 			}
 
@@ -119,6 +121,21 @@ public partial class Game : ContentPage
 
 			await Task.Delay(TimeSpan.FromSeconds(1.0 / 45));
 		}
+	}
+
+	private async void GameOver(int score)
+	{
+		_isRunning = false;
+		var player2 = AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("gameOver.mp3"));
+		player2.Play();
+		await DisplayAlert("Game Over", $"Score: {score}", "OK");
+
+		LeaderboardEntryDTO leaderboardEntry = new LeaderboardEntryDTO { Score = score };
+		//convert to string
+		string payload = JsonSerializer.Serialize(leaderboardEntry);
+
+		await _apiService.PostAsync("api/leaderboard", payload, _auth0Client.AccessToken );
+		return;
 	}
 
 	private async void OnCanvasTapped(object sender, EventArgs e)
@@ -148,4 +165,14 @@ public partial class Game : ContentPage
 	{
 		await _connection.InvokeAsync("StartMatchmaking");
 	}
+}
+
+public class LeaderboardEntryDTO
+{
+	public int Id { get; set; }
+	public int Score { get; set; }
+	public DateTime DateAchieved { get; set; }
+
+	public int UserId { get; set; }
+	public string UserName { get; set; }
 }

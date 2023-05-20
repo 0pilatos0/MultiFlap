@@ -3,43 +3,46 @@ using MauiAuth0App.Auth0;
 using System.Net.Http.Headers;
 using App.Views;
 using App.Models;
+using App.Services;
 
 namespace App
 {
     public partial class MainPage : ContentPage
     {
-        private readonly Auth0Client auth0Client;
+        private readonly Auth0Client _auth0Client;
+        private readonly IApiService _apiService;
         private string accessToken;
 		private EditUserSettings editUserSettings;
 
-		public MainPage(Auth0Client client, EditUserSettings editUserSettingsPage)
+		public MainPage(Auth0Client client, IApiService apiService, EditUserSettings editUserSettingsPage)
         {
             InitializeComponent();
-            auth0Client = client;
+            _auth0Client = client;
+			_apiService = apiService;
 			this.editUserSettings = editUserSettingsPage;
 		}
 
         protected async override void OnNavigatedTo(NavigatedToEventArgs args)
         {
             base.OnNavigatedTo(args);
-            if (!auth0Client.IsAuthenticated)
+            if (!_auth0Client.IsAuthenticated)
             {
-                await Navigation.PushAsync(new LoginPage(auth0Client));
+                await Navigation.PushAsync(new LoginPage(_auth0Client));
             }
         }
 
         private void StartGameClicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new Game());
+            Navigation.PushAsync(new Game(_apiService, _auth0Client));
         }
 
         private async void OnLogoutClicked(object sender, EventArgs e)
         {
-            var logoutResult = await auth0Client.LogoutAsync();
+            var logoutResult = await _auth0Client.LogoutAsync();
 
             if (!logoutResult.IsError)
             {
-                await Navigation.PushAsync(new LoginPage(auth0Client));
+                await Navigation.PushAsync(new LoginPage(_auth0Client));
             }
             else
             {

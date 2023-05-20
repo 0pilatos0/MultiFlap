@@ -8,7 +8,7 @@
     <VerticalStackLayout>
         <StackLayout Padding="20">
             <Label Text="Display Name" />
-            <Entry Text="{Binding UserSettings.DisplayName}" />
+            <Entry Text="{Binding UserSettings.UserId}" />
 
             <Button Text="Save" Command="{Binding SaveCommand}" />
         </StackLayout>
