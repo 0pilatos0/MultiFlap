@@ -6,6 +6,7 @@ using Plugin.Maui.Audio;
 using System;
 using System.Net.Sockets;
 using System.Text.Json;
+using App.Models;
 
 namespace App;
 
@@ -130,7 +131,7 @@ public partial class Game : ContentPage
 		player2.Play();
 		await DisplayAlert("Game Over", $"Score: {score}", "OK");
 
-		LeaderboardEntryDTO leaderboardEntry = new LeaderboardEntryDTO { Score = score };
+		LeaderboardEntry leaderboardEntry = new LeaderboardEntry { Score = score };
 		//convert to string
 		string payload = JsonSerializer.Serialize(leaderboardEntry);
 
@@ -167,12 +168,3 @@ public partial class Game : ContentPage
 	}
 }
 
-public class LeaderboardEntryDTO
-{
-	public int Id { get; set; }
-	public int Score { get; set; }
-	public DateTime DateAchieved { get; set; }
-
-	public int UserId { get; set; }
-	public string UserName { get; set; }
-}

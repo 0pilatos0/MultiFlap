@@ -7,16 +7,17 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using App.Services;
 using MauiAuth0App.Auth0;
+using App.Models;
 
 namespace App.ViewModels
 {
 	public class LeaderboardViewModel : BaseViewModel
 	{
-		private ObservableCollection<LeaderboardEntryDTO> _leaderboardEntries;
+		private ObservableCollection<LeaderboardEntry> _leaderboardEntries;
 		private readonly IApiService _apiService;
 		private readonly Auth0Client _auth0Client;
 
-		public ObservableCollection<LeaderboardEntryDTO> LeaderboardEntries
+		public ObservableCollection<LeaderboardEntry> LeaderboardEntries
 		{
 			get => _leaderboardEntries;
 			set
@@ -33,7 +34,7 @@ namespace App.ViewModels
 		{
 			_apiService = apiService;
 			_auth0Client = auth0Client;
-			LeaderboardEntries = new ObservableCollection<LeaderboardEntryDTO>();
+			LeaderboardEntries = new ObservableCollection<LeaderboardEntry>();
 
 			LoadLeaderboard();
 		}
@@ -52,7 +53,7 @@ namespace App.ViewModels
 				if (!string.IsNullOrEmpty(response))
 				{
 					// Deserialize the response JSON to a list of LeaderboardEntry objects
-					LeaderboardEntries = JsonSerializer.Deserialize<ObservableCollection<LeaderboardEntryDTO>>(response);
+					LeaderboardEntries = JsonSerializer.Deserialize<ObservableCollection<LeaderboardEntry>>(response);
 					Console.WriteLine("Leaderboard loaded successfully!");
 				}
 				else
