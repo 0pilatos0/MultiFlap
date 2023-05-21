@@ -33,9 +33,11 @@ public static class MauiProgram
 		builder.Services.AddTransient<Game>();
 		builder.Services.AddTransient<LoginPage>();
 		builder.Services.AddTransient<EditUserSettings>();
+		builder.Services.AddTransient<Leaderboard>();
 
 		//ViewModels
 		builder.Services.AddSingleton<UserSettingsViewModel>();
+		builder.Services.AddSingleton<LeaderboardViewModel>();
 
 		//Services
 		builder.Services.AddSingleton<IApiService, ApiService>();

@@ -13,13 +13,16 @@ namespace App
         private readonly IApiService _apiService;
         private string accessToken;
 		private EditUserSettings editUserSettings;
+		private Leaderboard leaderboard;
 
-		public MainPage(Auth0Client client, IApiService apiService, EditUserSettings editUserSettingsPage)
-        {
+		public MainPage(Auth0Client client, IApiService apiService, EditUserSettings editUserSettingsPage, Leaderboard leaderboardPage)
+
+		{
             InitializeComponent();
             _auth0Client = client;
 			_apiService = apiService;
 			this.editUserSettings = editUserSettingsPage;
+			this.leaderboard = leaderboardPage;
 		}
 
         protected async override void OnNavigatedTo(NavigatedToEventArgs args)
@@ -36,7 +39,12 @@ namespace App
             Navigation.PushAsync(new Game(_apiService, _auth0Client));
         }
 
-        private async void OnLogoutClicked(object sender, EventArgs e)
+		private async void OnLeaderboardClicked(object sender, EventArgs e)
+		{
+            await Navigation.PushAsync(leaderboard);
+		}
+
+		private async void OnLogoutClicked(object sender, EventArgs e)
         {
             var logoutResult = await _auth0Client.LogoutAsync();
 
