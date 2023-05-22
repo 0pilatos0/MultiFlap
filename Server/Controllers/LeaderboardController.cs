@@ -6,7 +6,6 @@ using Server.Models;
 namespace Server.Controllers
 {
 	[ApiController]
-	[Authorize]
 	[Route("api/leaderboard")]
 	public class LeaderboardEntryController : ControllerBase
 	{
@@ -19,9 +18,19 @@ namespace Server.Controllers
 
 		// GET api/leaderboard
 		[HttpGet]
-		public ActionResult<IEnumerable<LeaderboardEntry>> GetLeaderboard()
+		public ActionResult<IEnumerable<LeaderboardEntryDTO>> GetLeaderboard()
 		{
-			var leaderboard = _context.LeaderboardEntries.OrderByDescending(le => le.Score).ToList();
+			var leaderboard = _context.LeaderboardEntries
+				.Include(le => le.User)
+				.OrderByDescending(le => le.Score)
+				.Select(le => new LeaderboardEntryDTO
+				{
+					Id = le.Id,
+					Score = le.Score,
+					DateAchieved = le.DateAchieved,
+					DisplayName = le.User.DisplayName
+				})
+				.ToList();
 
 			return leaderboard;
 		}
@@ -102,4 +111,13 @@ namespace Server.Controllers
 			return _context.LeaderboardEntries.Any(le => le.Id == id);
 		}
 	}
+
+	public class LeaderboardEntryDTO
+{
+    public int Id { get; set; }
+    public int Score { get; set; }
+    public DateTime DateAchieved { get; set; }
+    public string DisplayName { get; set; }
+}
+
 }
