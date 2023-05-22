@@ -31,10 +31,12 @@ namespace App.Services
 			httpClient.DefaultRequestHeaders.Clear();
 			httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
 
-			var content = new StringContent(body);
+			var content = new StringContent(body, Encoding.UTF8, "application/json"); // Set media type to JSON
 			var response = await httpClient.PostAsync($"{ApiUrl}/{endpoint}", content);
 			return await response.Content.ReadAsStringAsync();
 		}
+
+
 
 		public async Task<string> PutAsync(string endpoint, string body, string accessToken)
 		{

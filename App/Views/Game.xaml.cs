@@ -134,8 +134,7 @@ public partial class Game : ContentPage
 		LeaderboardEntry leaderboardEntry = new LeaderboardEntry { Score = score };
 		//convert to string
 		string payload = JsonSerializer.Serialize(leaderboardEntry);
-
-		await _apiService.PostAsync("api/leaderboard", payload, _auth0Client.AccessToken );
+		string response = await _apiService.PostAsync("api/leaderboard", payload, _auth0Client.AccessToken );
 		return;
 	}
 
