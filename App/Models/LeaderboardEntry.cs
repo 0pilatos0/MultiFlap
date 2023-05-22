@@ -11,8 +11,6 @@ namespace App.Models
 		public int Id { get; set; }
 		public int Score { get; set; }
 		public DateTime DateAchieved { get; set; }
-
-		public int UserId { get; set; }
-		public string UserName { get; set; }
+		public string DisplayName { get; set; }
 	}
 }

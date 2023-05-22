@@ -1,25 +1,26 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="App.Views.Leaderboard"
              Title="Leaderboard"
-             xmlns:viewModels="clr-namespace:App.ViewModels"
-             >
+             xmlns:viewModels="clr-namespace:App.ViewModels">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Leaderboard" FontSize="Large" HorizontalOptions="Center" Margin="0,20,0,10" />
-            <ListView ItemsSource="{Binding LeaderboardEntries}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Padding="10">
-                                <Label Text="{Binding UserName}" FontSize="Medium" />
-                                <Label Text="{Binding Score}" FontSize="Small" />
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackLayout>
+        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <ScrollView>
+                <StackLayout >
+                    <ListView ItemsSource="{Binding LeaderboardEntries}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand" Padding="10">
+                                        <Label Text="{Binding DisplayName}" FontSize="Medium" HorizontalOptions="StartAndExpand" />
+                                        <Label Text="{Binding Score}" FontSize="Small" VerticalOptions="Center" HorizontalOptions="End" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+            </ScrollView>
+        </RefreshView>
     </ContentPage.Content>
 </ContentPage>

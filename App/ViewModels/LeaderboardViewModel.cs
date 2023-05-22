@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using App.Services;
 using MauiAuth0App.Auth0;
 using App.Models;
+using System.Windows.Input;
 
 namespace App.ViewModels
 {
@@ -16,6 +17,9 @@ namespace App.ViewModels
 		private ObservableCollection<LeaderboardEntry> _leaderboardEntries;
 		private readonly IApiService _apiService;
 		private readonly Auth0Client _auth0Client;
+
+		private ICommand _refreshCommand;
+		private bool _isRefreshing;
 
 		public ObservableCollection<LeaderboardEntry> LeaderboardEntries
 		{
@@ -52,8 +56,14 @@ namespace App.ViewModels
 				// Check if the request was successful
 				if (!string.IsNullOrEmpty(response))
 				{
+					var options = new JsonSerializerOptions
+					{
+						WriteIndented = true,
+						PropertyNameCaseInsensitive = true // this is the point
+					};
+
 					// Deserialize the response JSON to a list of LeaderboardEntry objects
-					LeaderboardEntries = JsonSerializer.Deserialize<ObservableCollection<LeaderboardEntry>>(response);
+					LeaderboardEntries = JsonSerializer.Deserialize<ObservableCollection<LeaderboardEntry>>(response, options);
 					Console.WriteLine("Leaderboard loaded successfully!");
 				}
 				else
@@ -65,6 +75,26 @@ namespace App.ViewModels
 			{
 				// Handle any exception that occurred during the API request
 				Console.WriteLine("An error occurred: " + ex.Message);
+			}
+		}
+
+		public ICommand RefreshCommand => _refreshCommand ??= new Command(async () =>
+		{
+			IsRefreshing = true;
+			await LoadLeaderboard();
+			IsRefreshing = false;
+		});
+
+		public bool IsRefreshing
+		{
+			get => _isRefreshing;
+			set
+			{
+				if (_isRefreshing != value)
+				{
+					_isRefreshing = value;
+					OnPropertyChanged();
+				}
 			}
 		}
 	}
