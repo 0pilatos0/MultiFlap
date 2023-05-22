@@ -77,6 +77,8 @@ namespace Server.Controllers
 			// Add the user ID to the leaderboard entry
 			leaderboardEntry.UserId = userId;
 
+			Console.WriteLine($"Adding leaderboard entry for user {userId} with score {newLeaderboardEntry.Score}");
+
 			// Add the leaderboard entry to the database
 			_context.LeaderboardEntries.Add(leaderboardEntry);
 			await _context.SaveChangesAsync();
