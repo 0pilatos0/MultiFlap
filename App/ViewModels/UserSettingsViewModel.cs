@@ -46,7 +46,7 @@ namespace App.ViewModels
 				string accessToken = _auth0Client.AccessToken; // Replace with your actual method to retrieve the access token
 
 				// Define the API endpoint URL
-				string apiUrl = "usersettings"; // Use the API base URL from the ApiService
+				string apiUrl = "api/usersettings"; // Use the API base URL from the ApiService
 
 				// Send a GET request to the API endpoint to retrieve the user settings
 				string response = await _apiService.GetAsync(apiUrl, accessToken);

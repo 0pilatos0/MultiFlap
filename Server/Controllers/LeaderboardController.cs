@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Server.Controllers
 {
 	[ApiController]
+	[Authorize]
 	[Route("api/leaderboard")]
 	public class LeaderboardEntryController : ControllerBase
 	{
@@ -51,8 +53,31 @@ namespace Server.Controllers
 
 		// POST api/leaderboard
 		[HttpPost]
-		public async Task<ActionResult<LeaderboardEntry>> AddLeaderboardEntry(LeaderboardEntry leaderboardEntry)
+		public async Task<ActionResult<LeaderboardEntry>> AddLeaderboardEntry(LeaderboardEntryDTO newLeaderboardEntry)
 		{
+			// Get user based on the authorized request
+			var userId = GetUserIdFromAuthorizedRequest(); // Replace this with your implementation to get the user ID
+
+			// Check if the user exists, otherwise create it
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+			if (user == null)
+			{
+				// Create a new user with the provided ID
+				user = new User { Id = userId };
+				_context.Users.Add(user);
+			}
+
+			LeaderboardEntry leaderboardEntry = new LeaderboardEntry
+			{
+				UserId = userId,
+				Score = newLeaderboardEntry.Score,
+				DateAchieved = DateTime.Now
+			};
+
+			// Add the user ID to the leaderboard entry
+			leaderboardEntry.UserId = userId;
+
+			// Add the leaderboard entry to the database
 			_context.LeaderboardEntries.Add(leaderboardEntry);
 			await _context.SaveChangesAsync();
 
@@ -109,6 +134,24 @@ namespace Server.Controllers
 		private bool LeaderboardEntryExists(int id)
 		{
 			return _context.LeaderboardEntries.Any(le => le.Id == id);
+		}
+
+		private int GetUserIdFromAuthorizedRequest()
+		{
+			var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+			if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
+			{
+				var token = authorizationHeader.Substring("Bearer ".Length);
+				var tokenHandler = new JwtSecurityTokenHandler();
+				var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+				var userIdClaim = jwtToken?.Claims.FirstOrDefault(claim => claim.Type == "sub");
+
+				if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+				{
+					return userId;
+				}
+			}
+			throw new Exception("Failed to retrieve the user ID from the authorized request.");
 		}
 	}
 
