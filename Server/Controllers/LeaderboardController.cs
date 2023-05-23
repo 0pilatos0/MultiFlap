@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using Server.Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 
 namespace Server.Controllers
 {
@@ -56,28 +58,31 @@ namespace Server.Controllers
 		public async Task<ActionResult<LeaderboardEntry>> AddLeaderboardEntry(LeaderboardEntryDTO newLeaderboardEntry)
 		{
 			// Get user based on the authorized request
-			var userId = GetUserIdFromAuthorizedRequest(); // Replace this with your implementation to get the user ID
+			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(); // Replace this with your implementation to get the user ID
 
 			// Check if the user exists, otherwise create it
-			var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.Auth0Identifier == userAuth0Id);
 			if (user == null)
 			{
+
+				//generate random username 
+				string username = "user" + new Random().Next(1000000, 9999999).ToString();
+
 				// Create a new user with the provided ID
-				user = new User { Id = userId };
+				user = new User { Auth0Identifier = userAuth0Id, DisplayName = username, Email = "",  SoundEnabled = true};
 				_context.Users.Add(user);
 			}
 
+
 			LeaderboardEntry leaderboardEntry = new LeaderboardEntry
 			{
-				UserId = userId,
+				User = user,
 				Score = newLeaderboardEntry.Score,
 				DateAchieved = DateTime.Now
 			};
 
-			// Add the user ID to the leaderboard entry
-			leaderboardEntry.UserId = userId;
 
-			Console.WriteLine($"Adding leaderboard entry for user {userId} with score {newLeaderboardEntry.Score}");
+			Console.WriteLine($"Adding leaderboard entry for user {user.Id} with score {newLeaderboardEntry.Score}");
 
 			// Add the leaderboard entry to the database
 			_context.LeaderboardEntries.Add(leaderboardEntry);
@@ -138,21 +143,30 @@ namespace Server.Controllers
 			return _context.LeaderboardEntries.Any(le => le.Id == id);
 		}
 
-		private int GetUserIdFromAuthorizedRequest()
+		private async Task<string> GetAuth0IdFromAuthorizedRequestAsync()
 		{
 			var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
 			if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
 			{
 				var token = authorizationHeader.Substring("Bearer ".Length);
-				var tokenHandler = new JwtSecurityTokenHandler();
-				var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
-				var userIdClaim = jwtToken?.Claims.FirstOrDefault(claim => claim.Type == "sub");
 
-				if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+				var httpClient = new HttpClient();
+				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+				var response = await httpClient.GetAsync("https://dev-84ref6m25ippcu2o.us.auth0.com/userinfo");
+				if (response.IsSuccessStatusCode)
 				{
-					return userId;
+					var content = await response.Content.ReadAsStringAsync();
+					var json = JObject.Parse(content);
+					var userId = json["sub"]?.Value<string>();
+
+					if (userId != null)
+					{
+						return userId;
+					}
 				}
 			}
+
 			throw new Exception("Failed to retrieve the user ID from the authorized request.");
 		}
 	}
