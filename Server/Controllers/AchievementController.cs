@@ -8,7 +8,7 @@ namespace Server.Controllers
 	[ApiController]
 	[Authorize]
 	[Route("api/users/{userId}/achievements")]
-	public class AchievementController : ControllerBase
+	public class AchievementController : BaseController
 	{
 		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
 

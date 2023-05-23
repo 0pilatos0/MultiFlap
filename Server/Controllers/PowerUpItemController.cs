@@ -8,7 +8,7 @@ namespace Server.Controllers
 	[ApiController]
 	[Authorize]
 	[Route("api/users/{userId}/powerups")]
-	public class PowerUpItemController : ControllerBase
+	public class PowerUpItemController : BaseController
 	{
 		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
 

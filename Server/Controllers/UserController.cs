@@ -8,7 +8,7 @@ namespace Server.Controllers
 	[ApiController]
 	[Authorize]
 	[Route("api/users")]
-	public class UserController : ControllerBase
+	public class UserController : BaseController
 	{
 		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
 

@@ -12,7 +12,7 @@ namespace Server.Controllers
 	[ApiController]
 	[Authorize]
 	[Route("api/leaderboard")]
-	public class LeaderboardEntryController : ControllerBase
+	public class LeaderboardEntryController : BaseController
 	{
 		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
 		private readonly IMemoryCache _memoryCache;
@@ -61,7 +61,7 @@ namespace Server.Controllers
 		public async Task<ActionResult<LeaderboardEntry>> AddLeaderboardEntry(LeaderboardEntryDTO newLeaderboardEntry)
 		{
 			// Get user based on the authorized request
-			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(); // Replace this with your implementation to get the user ID
+			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
 
 			// Check if the user exists, otherwise create it
 			var user = await _context.Users.FirstOrDefaultAsync(u => u.Auth0Identifier == userAuth0Id);
@@ -146,40 +146,7 @@ namespace Server.Controllers
 			return _context.LeaderboardEntries.Any(le => le.Id == id);
 		}
 
-		private async Task<string> GetAuth0IdFromAuthorizedRequestAsync()
-		{
-			var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-			if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
-			{
-				var token = authorizationHeader.Substring("Bearer ".Length);
-
-				// Check if the user ID is already cached
-				if (_memoryCache.TryGetValue(token, out string userId))
-				{
-					return userId;
-				}
-
-				var httpClient = new HttpClient();
-				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-				var response = await httpClient.GetAsync("https://dev-84ref6m25ippcu2o.us.auth0.com/userinfo");
-				if (response.IsSuccessStatusCode)
-				{
-					var content = await response.Content.ReadAsStringAsync();
-					var json = JObject.Parse(content);
-					userId = json["sub"]?.Value<string>();
-
-					if (userId != null)
-					{
-						// Cache the user ID for future use
-						_memoryCache.Set(token, userId, TimeSpan.FromMinutes(10)); // Cache for 10 minutes
-						return userId;
-					}
-				}
-			}
-
-			throw new Exception("Failed to retrieve the user ID from the authorized request.");
-		}
+		
 
 	}
 
