@@ -64,29 +64,7 @@ namespace Server.Controllers
 			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
 
 			// Check if the user exists, otherwise create it
-			var user = await _context.Users.FirstOrDefaultAsync(u => u.Auth0Identifier == userAuth0Id);
-			if (user == null)
-			{
-
-				//generate random username 
-				string username = "user" + new Random().Next(1000000, 9999999).ToString();
-
-				// Create a new user with the provided ID
-				user = new User { Auth0Identifier = userAuth0Id, Email = ""};
-				_context.Users.Add(user);
-
-				//create UserSettings for the new user and set the DisplayName
-				UserSettings userSettings = new UserSettings
-				{
-					User = user,
-					DisplayName = username,
-					Language = "english",
-					ReceiveNotifications = true,
-					SoundEnabled = true
-				};
-				_context.UserSettings.Add(userSettings);
-			}
-
+			User? user = await GetUserFromIdAsync(_context, userAuth0Id);
 
 			LeaderboardEntry leaderboardEntry = new LeaderboardEntry
 			{
@@ -104,6 +82,8 @@ namespace Server.Controllers
 
 			return CreatedAtAction(nameof(GetLeaderboardEntry), new { id = leaderboardEntry.Id }, leaderboardEntry);
 		}
+
+		
 
 		// PUT api/leaderboard/{id}
 		[HttpPut("{id}")]

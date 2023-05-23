@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
+using Server.Models;
 using System.Net.Http.Headers;
 
 namespace Server.Controllers
@@ -40,6 +42,34 @@ namespace Server.Controllers
 			}
 
 			throw new Exception("Failed to retrieve the user ID from the authorized request.");
+		}
+
+		protected async Task<User> GetUserFromIdAsync(MultiFlapDbContext _context, string userAuth0Id)
+		{
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.Auth0Identifier == userAuth0Id);
+			if (user == null)
+			{
+
+				//generate random username 
+				string username = "user" + new Random().Next(1000000, 9999999).ToString();
+
+				// Create a new user with the provided ID
+				user = new User { Auth0Identifier = userAuth0Id, Email = "" };
+				_context.Users.Add(user);
+
+				//create UserSettings for the new user and set the DisplayName
+				UserSettings userSettings = new UserSettings
+				{
+					User = user,
+					DisplayName = username,
+					Language = "english",
+					ReceiveNotifications = true,
+					SoundEnabled = true
+				};
+				_context.UserSettings.Add(userSettings);
+			}
+
+			return user;
 		}
 	}
 }

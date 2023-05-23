@@ -1,27 +1,38 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Server.Models;
 
 namespace Server.Controllers
 {
 	[ApiController]
 	[Authorize]
-	[Route("api/users/{userId}/settings")]
+	[Route("api/users/settings")]
 	public class UserSettingsController : BaseController
 	{
 		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
-
-		public UserSettingsController(MultiFlapDbContext context)
+		private readonly IMemoryCache _memoryCache;
+		
+		public UserSettingsController(MultiFlapDbContext context, IMemoryCache memoryCache)
 		{
 			_context = context;
+			_memoryCache = memoryCache;
 		}
 
 		// GET api/users/{userId}/settings
 		[HttpGet]
-		public async Task<ActionResult<UserSettings>> GetUserSettings(int userId)
+		public async Task<ActionResult<UserSettings>> GetUserSettings()
 		{
-			var userSettings = await _context.UserSettings.FirstOrDefaultAsync(us => us.UserId == userId);
+			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
+			User user = await GetUserFromIdAsync(_context, userAuth0Id );
+
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			var userSettings = await _context.UserSettings.FirstOrDefaultAsync(us => us.UserId == user.Id);
 
 			if (userSettings == null)
 			{
@@ -33,11 +44,14 @@ namespace Server.Controllers
 
 		// PUT api/users/{userId}/settings
 		[HttpPut]
-		public async Task<IActionResult> UpdateUserSettings(int userId, UserSettings updatedUserSettings)
+		public async Task<IActionResult> UpdateUserSettings(UserSettings updatedUserSettings)
 		{
-			if (userId != updatedUserSettings.UserId)
+			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
+			User user = await GetUserFromIdAsync(_context, userAuth0Id);
+
+			if (user == null)
 			{
-				return BadRequest();
+				return NotFound();
 			}
 
 			_context.Entry(updatedUserSettings).State = EntityState.Modified;
@@ -48,7 +62,7 @@ namespace Server.Controllers
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				if (!UserSettingsExists(userId))
+				if (!UserSettingsExists(user.Id))
 				{
 					return NotFound();
 				}
