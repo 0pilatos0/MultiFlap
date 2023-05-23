@@ -66,6 +66,8 @@ builder.Services.AddDbContext<MultiFlapDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("MultiFlapDb"));
 });
 
+builder.Services.AddMemoryCache();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

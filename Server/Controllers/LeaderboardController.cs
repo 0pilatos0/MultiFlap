@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
 using Server.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,10 +15,12 @@ namespace Server.Controllers
 	public class LeaderboardEntryController : ControllerBase
 	{
 		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
+		private readonly IMemoryCache _memoryCache;
 
-		public LeaderboardEntryController(MultiFlapDbContext context)
+		public LeaderboardEntryController(MultiFlapDbContext context, IMemoryCache memoryCache)
 		{
 			_context = context;
+			_memoryCache = memoryCache;
 		}
 
 		// GET api/leaderboard
@@ -150,6 +153,12 @@ namespace Server.Controllers
 			{
 				var token = authorizationHeader.Substring("Bearer ".Length);
 
+				// Check if the user ID is already cached
+				if (_memoryCache.TryGetValue(token, out string userId))
+				{
+					return userId;
+				}
+
 				var httpClient = new HttpClient();
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -158,10 +167,12 @@ namespace Server.Controllers
 				{
 					var content = await response.Content.ReadAsStringAsync();
 					var json = JObject.Parse(content);
-					var userId = json["sub"]?.Value<string>();
+					userId = json["sub"]?.Value<string>();
 
 					if (userId != null)
 					{
+						// Cache the user ID for future use
+						_memoryCache.Set(token, userId, TimeSpan.FromMinutes(10)); // Cache for 10 minutes
 						return userId;
 					}
 				}
@@ -169,6 +180,7 @@ namespace Server.Controllers
 
 			throw new Exception("Failed to retrieve the user ID from the authorized request.");
 		}
+
 	}
 
 	public class LeaderboardEntryDTO
