@@ -3,14 +3,11 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     BackgroundColor="#F2F2F2"
-    NavigationPage.HasNavigationBar="False"  
-    NavigationPage.BackButtonTitle=""  
-    >
+    NavigationPage.BackButtonTitle=""
+    NavigationPage.HasNavigationBar="False">
     <ScrollView>
-        <VerticalStackLayout
-            VerticalOptions="Start">
-            <StackLayout
-                x:Name="HomeView">
+        <VerticalStackLayout VerticalOptions="Start">
+            <StackLayout x:Name="HomeView">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -68,10 +65,10 @@
                             <Button
                                 Margin="0,0,10,0"
                                 BackgroundColor="#2C2C2C"
+                                Clicked="OnLeaderboardClicked"
                                 CornerRadius="8"
                                 FontFamily="Arial"
                                 Text="Leaderboard"
-                                Clicked="OnLeaderboardClicked"
                                 TextColor="White" />
                             <Button
                                 Margin="10,0,0,0"
@@ -113,24 +110,24 @@
                         <Button
                             Margin="0,20,0,0"
                             BackgroundColor="#2C2C2C"
+                            Clicked="OnSettingsClicked"
                             CornerRadius="8"
                             Text="Settings"
-                            Clicked="OnSettingsClicked"
                             TextColor="White" />
                         <Button
                             Margin="0,20,0,0"
                             BackgroundColor="#2C2C2C"
-                            CornerRadius="8"
                             Clicked="OnLogoutClicked"
+                            CornerRadius="8"
                             Text="Logout"
                             TextColor="White" />
 
-                        <!--<Button 
-                  x:Name="CallAPIBtn"
-                  Text="Call API"
-                  SemanticProperties.Hint="Click to call the API"
-                  Clicked="OnApiCallClicked"
-                  HorizontalOptions="Center" />-->
+                        <!--<Button
+                        x:Name="CallAPIBtn"
+                        Text="Call API"
+                        SemanticProperties.Hint="Click to call the API"
+                        Clicked="OnApiCallClicked"
+                        HorizontalOptions="Center" />-->
                     </StackLayout>
                 </Grid>
             </StackLayout>

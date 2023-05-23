@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="App.Views.EditUserSettings"
-             xmlns:viewModels="clr-namespace:App.ViewModels"
-             x:DataType ="viewModels:UserSettingsViewModel"
-             Title="Settings"
-             >
+<ContentPage
+    x:Class="App.Views.EditUserSettings"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:App.ViewModels"
+    Title="Settings"
+    x:DataType="viewModels:UserSettingsViewModel">
     <VerticalStackLayout>
         <StackLayout Padding="20">
             <Label Text="Display Name" />
@@ -15,14 +15,14 @@
             <Picker SelectedItem="{Binding UserSettings.Language}">
                 <Picker.Items>
                     <x:String>English</x:String>
-                    
+
                 </Picker.Items>
             </Picker>
 
             <Label Text="Sound" />
             <Switch IsToggled="{Binding UserSettings.SoundEnabled}" />
 
-            <Button Text="Save" Command="{Binding SaveCommand}" />
+            <Button Command="{Binding SaveCommand}" Text="Save" />
         </StackLayout>
     </VerticalStackLayout>
 </ContentPage>

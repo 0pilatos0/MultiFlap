@@ -5,7 +5,7 @@
     xmlns:local="clr-namespace:App"
     Title="Game"
     BackgroundColor="#F2F2F2">
-    
+
     <ContentPage.Resources>
         <local:GameCanvas x:Key="drawable" />
     </ContentPage.Resources>
@@ -27,15 +27,15 @@
                 VerticalOptions="Center" />
 
             <StackLayout
-                Orientation="Horizontal"
                 HorizontalOptions="EndAndExpand"
+                Orientation="Horizontal"
                 Spacing="10">
 
                 <Image
-                    Source="online.png"
                     HeightRequest="20"
-                    WidthRequest="20"
-                    VerticalOptions="Center" />
+                    Source="online.png"
+                    VerticalOptions="Center"
+                    WidthRequest="20" />
 
                 <Label
                     x:Name="OnlinePlayersLabel"
@@ -49,8 +49,8 @@
 
         <!--  Main content  -->
         <Frame
-            Padding="10"
             Margin="20"
+            Padding="10"
             BackgroundColor="#F2F2F2"
             CornerRadius="20">
             <GraphicsView
@@ -63,8 +63,8 @@
 
         <!--  Footer  -->
         <StackLayout
-            Orientation="Horizontal"
             HorizontalOptions="CenterAndExpand"
+            Orientation="Horizontal"
             VerticalOptions="End">
 
             <Button
@@ -74,22 +74,22 @@
                 CornerRadius="15"
                 FontAttributes="Bold"
                 FontSize="Large"
+                HeightRequest="50"
                 Text="Solo"
                 TextColor="White"
-                HeightRequest="50"
                 WidthRequest="150" />
 
             <Button
-                Margin="10"
                 x:Name="MultiplayerButton"
+                Margin="10"
                 BackgroundColor="#2C2C2C"
                 Clicked="OnStartMatchmaking"
                 CornerRadius="15"
                 FontAttributes="Bold"
                 FontSize="Large"
+                HeightRequest="50"
                 Text="Multiplayer"
                 TextColor="White"
-                HeightRequest="50"
                 WidthRequest="150" />
         </StackLayout>
     </StackLayout>
