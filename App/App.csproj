@@ -74,10 +74,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Page Include="Resources\flappy.png" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Update="Views\Home.xaml.cs">
         <DependentUpon>Home.xaml</DependentUpon>
       </Compile>
