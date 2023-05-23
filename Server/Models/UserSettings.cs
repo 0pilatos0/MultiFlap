@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Server.Models
 {
@@ -10,6 +11,7 @@ namespace Server.Models
 		public bool ReceiveNotifications { get; set; }
 		public string DisplayName { get; set; } 
 		public bool SoundEnabled { get; set; }
+		[JsonIgnore]
 		public virtual User User { get; set; }
 	}
 }

@@ -43,7 +43,7 @@ namespace App.Services
 			httpClient.DefaultRequestHeaders.Clear();
 			httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
 
-			var content = new StringContent(body);
+			var content = new StringContent(body, Encoding.UTF8, "application/json");
 			var response = await httpClient.PutAsync($"{ApiUrl}/{endpoint}", content);
 			return await response.Content.ReadAsStringAsync();
 		}
