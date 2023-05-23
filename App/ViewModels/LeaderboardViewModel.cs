@@ -29,10 +29,16 @@ namespace App.ViewModels
 				if (_leaderboardEntries != value)
 				{
 					_leaderboardEntries = value;
+					OnPropertyChanged(nameof(HasItems));
+					OnPropertyChanged(nameof(HasNoItems));
+					OnPropertyChanged(nameof(LeaderboardEntries));
 					OnPropertyChanged();
 				}
 			}
 		}
+
+		public bool HasItems => LeaderboardEntries.Count > 0;
+		public bool HasNoItems => !HasItems;
 
 		public LeaderboardViewModel(IApiService apiService, Auth0Client auth0Client)
 		{
@@ -76,6 +82,9 @@ namespace App.ViewModels
 				// Handle any exception that occurred during the API request
 				Console.WriteLine("An error occurred: " + ex.Message);
 			}
+
+			OnPropertyChanged(nameof(HasItems));
+			OnPropertyChanged(nameof(HasNoItems));
 		}
 
 		public ICommand RefreshCommand => _refreshCommand ??= new Command(async () =>

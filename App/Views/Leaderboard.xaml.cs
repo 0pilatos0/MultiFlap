@@ -10,4 +10,6 @@ public partial class Leaderboard : ContentPage
 
 		BindingContext = leaderboardViewModel;
 	}
+
+
 }
