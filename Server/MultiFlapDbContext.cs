@@ -13,13 +13,13 @@ namespace Server
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<User>().HasData(
-				new User { Id = 1, DisplayName = "Admin1", Email = "admin1@example.com", SoundEnabled = true },
-				new User { Id = 2, DisplayName = "Admin2", Email = "admin2@example.com", SoundEnabled = false }
+				new User { Id = 1, Email = "admin1@example.com"},
+				new User { Id = 2, Email = "admin2@example.com"}
 			);
 
 			modelBuilder.Entity<UserSettings>().HasData(
-				new UserSettings { Id = 1, UserId = 1, Language = "English", ReceiveNotifications = true },
-				new UserSettings { Id = 2, UserId = 2, Language = "French", ReceiveNotifications = false }
+				new UserSettings { Id = 1, UserId = 1, Language = "English", ReceiveNotifications = true, DisplayName = "Admin1", SoundEnabled = false },
+				new UserSettings { Id = 2, UserId = 2, Language = "French", ReceiveNotifications = false, DisplayName = "Admin2", SoundEnabled = true }
 			);
 
 			modelBuilder.Entity<Achievement>().HasData(

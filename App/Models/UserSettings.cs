@@ -11,5 +11,6 @@ namespace App.Models
 		public string UserId { get; set; } // Foreign key to User.Id
 		public string Language { get; set; }
 		public bool SoundEnabled { get; set; }
+		public string DisplayName { get; set; }
 	}
 }

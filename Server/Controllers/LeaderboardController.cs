@@ -35,7 +35,7 @@ namespace Server.Controllers
 					Id = le.Id,
 					Score = le.Score,
 					DateAchieved = le.DateAchieved,
-					DisplayName = le.User.DisplayName
+					DisplayName = le.User.UserSettings.DisplayName
 				})
 				.ToList();
 
@@ -72,8 +72,19 @@ namespace Server.Controllers
 				string username = "user" + new Random().Next(1000000, 9999999).ToString();
 
 				// Create a new user with the provided ID
-				user = new User { Auth0Identifier = userAuth0Id, DisplayName = username, Email = "",  SoundEnabled = true};
+				user = new User { Auth0Identifier = userAuth0Id, Email = ""};
 				_context.Users.Add(user);
+
+				//create UserSettings for the new user and set the DisplayName
+				UserSettings userSettings = new UserSettings
+				{
+					User = user,
+					DisplayName = username,
+					Language = "english",
+					ReceiveNotifications = true,
+					SoundEnabled = true
+				};
+				_context.UserSettings.Add(userSettings);
 			}
 
 

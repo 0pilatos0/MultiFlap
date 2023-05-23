@@ -8,7 +8,8 @@ namespace Server.Models
 		public int UserId { get; set; }
 		public string Language { get; set; }
 		public bool ReceiveNotifications { get; set; }
-
+		public string DisplayName { get; set; } 
+		public bool SoundEnabled { get; set; }
 		public virtual User User { get; set; }
 	}
 }
