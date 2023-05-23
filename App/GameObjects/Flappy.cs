@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Maui.Graphics.Platform;
+using System.Reflection;
+using IImage = Microsoft.Maui.Graphics.IImage;
 
 namespace App.GameObjects
 {
@@ -15,14 +13,24 @@ namespace App.GameObjects
         private const double Gravity = 1.2;
         private const int JumpVelocity = -17;
 
+		private IImage flappyImage;
+
 		public Flappy(int x, int y, Color color)
 		{
             X = x;
             Y = y;
             Velocity = 0;
-        }
 
-        public void UpdatePosition()
+			Assembly assembly = GetType().GetTypeInfo().Assembly;
+			using (Stream stream = assembly.GetManifestResourceStream("App.Resources.Images.flappy.png"))
+			{
+				flappyImage = PlatformImage.FromStream(stream);
+			}
+		}
+
+	
+
+		public void UpdatePosition()
         {
             Velocity += Gravity;
             //convert to int
@@ -37,9 +45,11 @@ namespace App.GameObjects
 		public void Draw(ICanvas canvas)
 		{
             if (this == null) return;
-         
-			canvas.FillColor = Colors.Yellow;
-			canvas.FillCircle(X, Y, 20);
+
+			float width = 40; // Adjust the width of the image as needed
+			float height = 40; // Adjust the height of the image as needed
+
+			canvas.DrawImage(flappyImage, X, Y, width, height);
 		}
 	}
 }

@@ -49,8 +49,18 @@
     </ItemGroup>
 
     <ItemGroup>
+      <MauiImage Remove="Resources\Images\flappy.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\flappy.png" />
+      <None Remove="Resources\Images\flappy.png" />
       <None Remove="Resources\Raw\gameOver.mp3" />
       <None Remove="Resources\Raw\jump.mp3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\Images\flappy.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -61,6 +71,10 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
         <PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="7.0.59" />
         <PackageReference Include="Plugin.Maui.Audio" Version="1.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Include="Resources\flappy.png" />
     </ItemGroup>
 
     <ItemGroup>
