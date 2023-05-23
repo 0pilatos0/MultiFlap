@@ -32,7 +32,7 @@ namespace Server.Controllers
 				return NotFound();
 			}
 
-			var userSettings = await _context.UserSettings.FirstOrDefaultAsync(us => us.UserId == user.Id);
+			var userSettings = user.UserSettings;
 
 			if (userSettings == null)
 			{
