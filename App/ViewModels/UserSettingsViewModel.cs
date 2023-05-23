@@ -88,6 +88,9 @@ namespace App.ViewModels
 		{
 			try
 			{
+				if (UserSettings.Language == null)
+					UserSettings.Language = "English";
+
 				// Serialize the UserSettings object to JSON
 				string jsonPayload = JsonSerializer.Serialize(UserSettings);
 
