@@ -22,7 +22,7 @@ namespace Server.Controllers
 
 		// GET api/users/{userId}/settings
 		[HttpGet]
-		public async Task<ActionResult<UserSettings>> GetUserSettings()
+		public async Task<ActionResult<UserSettingsDTO>> GetUserSettings()
 		{
 			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
 			User user = await GetUserFromIdAsync(_context, userAuth0Id );
@@ -39,7 +39,12 @@ namespace Server.Controllers
 				return NotFound();
 			}
 
-			return userSettings;
+			return new UserSettingsDTO {
+				Language = userSettings.Language,
+				ReceiveNotifications = userSettings.ReceiveNotifications,
+				DisplayName = userSettings.DisplayName,
+				SoundEnabled = userSettings.SoundEnabled
+			};
 		}
 
 		// PUT api/users/{userId}/settings

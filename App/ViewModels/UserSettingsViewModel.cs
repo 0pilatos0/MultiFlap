@@ -54,8 +54,13 @@ namespace App.ViewModels
 				// Check if the request was successful
 				if (!string.IsNullOrEmpty(response))
 				{
+					var options = new JsonSerializerOptions
+					{
+						WriteIndented = true,
+						PropertyNameCaseInsensitive = true // this is the point
+					};
 					// Deserialize the response JSON to UserSettings object
-					UserSettings = JsonSerializer.Deserialize<UserSettings>(response);
+					UserSettings = JsonSerializer.Deserialize<UserSettings>(response, options);
 					Console.WriteLine("User settings loaded successfully!");
 				}
 				else
