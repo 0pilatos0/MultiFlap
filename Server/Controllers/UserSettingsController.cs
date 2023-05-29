@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Server.Models;
+using System.Threading.Tasks;
 
 namespace Server.Controllers
 {
@@ -11,21 +12,21 @@ namespace Server.Controllers
 	[Route("api/users/settings")]
 	public class UserSettingsController : BaseController
 	{
-		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
+		private readonly MultiFlapDbContext _context;
 		private readonly IMemoryCache _memoryCache;
-		
+
 		public UserSettingsController(MultiFlapDbContext context, IMemoryCache memoryCache)
 		{
 			_context = context;
 			_memoryCache = memoryCache;
 		}
 
-		// GET api/users/{userId}/settings
+		// GET api/users/settings
 		[HttpGet]
 		public async Task<ActionResult<UserSettingsDTO>> GetUserSettings()
 		{
 			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
-			User user = await GetUserFromIdAsync(_context, userAuth0Id);
+			var user = await GetUserFromIdAsync(_context, userAuth0Id);
 
 			if (user == null)
 			{
@@ -48,13 +49,12 @@ namespace Server.Controllers
 			};
 		}
 
-
-		// PUT api/users/{userId}/settings
+		// PUT api/users/settings
 		[HttpPut]
 		public async Task<IActionResult> UpdateUserSettings(UserSettingsDTO updatedUserSettings)
 		{
 			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
-			User user = await GetUserFromIdAsync(_context, userAuth0Id);
+			var user = await GetUserFromIdAsync(_context, userAuth0Id);
 
 			if (user == null)
 			{
@@ -94,12 +94,10 @@ namespace Server.Controllers
 			return NoContent();
 		}
 
-
 		private bool UserSettingsExists(int userId)
 		{
 			return _context.UserSettings.Any(us => us.UserId == userId);
 		}
-
 	}
 
 	public class UserSettingsDTO

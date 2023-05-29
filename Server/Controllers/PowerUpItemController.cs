@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Server.Controllers
 {
@@ -10,7 +13,7 @@ namespace Server.Controllers
 	[Route("api/users/{userId}/powerups")]
 	public class PowerUpItemController : BaseController
 	{
-		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
+		private readonly MultiFlapDbContext _context;
 
 		public PowerUpItemController(MultiFlapDbContext context)
 		{
@@ -21,7 +24,9 @@ namespace Server.Controllers
 		[HttpGet]
 		public ActionResult<IEnumerable<PowerUpItem>> GetPowerUpItems(int userId)
 		{
-			var powerUpItems = _context.PowerUpItems.Where(pu => pu.UserId == userId).ToList();
+			var powerUpItems = _context.PowerUpItems
+				.Where(pu => pu.UserId == userId)
+				.ToList();
 
 			return powerUpItems;
 		}

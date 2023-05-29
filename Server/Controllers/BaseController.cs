@@ -3,29 +3,38 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
 using Server.Models;
+using System;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace Server.Controllers
 {
+	// Base controller class for common functionalities
 	public class BaseController : ControllerBase
 	{
-		protected async Task<string> GetAuth0IdFromAuthorizedRequestAsync(IMemoryCache _memoryCache)
+		// Retrieves the Auth0 ID from the authorized request using the provided memory cache
+		protected async Task<string> GetAuth0IdFromAuthorizedRequestAsync(IMemoryCache memoryCache)
 		{
+			// Retrieve the authorization header from the request
 			var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+
 			if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
 			{
 				var token = authorizationHeader.Substring("Bearer ".Length);
 
 				// Check if the user ID is already cached
-				if (_memoryCache.TryGetValue(token, out string userId))
+				if (memoryCache.TryGetValue(token, out string userId))
 				{
 					return userId;
 				}
 
+				// Make a request to Auth0's userinfo endpoint to get the user ID
 				var httpClient = new HttpClient();
 				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
 				var response = await httpClient.GetAsync("https://dev-84ref6m25ippcu2o.us.auth0.com/userinfo");
+
 				if (response.IsSuccessStatusCode)
 				{
 					var content = await response.Content.ReadAsStringAsync();
@@ -35,29 +44,31 @@ namespace Server.Controllers
 					if (userId != null)
 					{
 						// Cache the user ID for future use
-						_memoryCache.Set(token, userId, TimeSpan.FromMinutes(10)); // Cache for 10 minutes
+						memoryCache.Set(token, userId, TimeSpan.FromMinutes(10)); // Cache for 10 minutes
 						return userId;
 					}
 				}
 			}
 
+			// No valid user ID found in the request
 			throw new Exception("Failed to retrieve the user ID from the authorized request.");
 		}
 
-		protected async Task<User> GetUserFromIdAsync(MultiFlapDbContext _context, string userAuth0Id)
+		// Retrieves a user from the provided Auth0 ID, creates a new user if not found
+		protected async Task<User> GetUserFromIdAsync(MultiFlapDbContext context, string userAuth0Id)
 		{
-			var user = await _context.Users.FirstOrDefaultAsync(u => u.Auth0Identifier == userAuth0Id);
+			var user = await context.Users.FirstOrDefaultAsync(u => u.Auth0Identifier == userAuth0Id);
+
 			if (user == null)
 			{
-
-				//generate random username 
+				// Generate a random username
 				string username = "user" + new Random().Next(1000000, 9999999).ToString();
 
 				// Create a new user with the provided ID
 				user = new User { Auth0Identifier = userAuth0Id, Email = "" };
-				_context.Users.Add(user);
+				context.Users.Add(user);
 
-				//create UserSettings for the new user and set the DisplayName
+				// Create UserSettings for the new user and set the DisplayName
 				UserSettings userSettings = new UserSettings
 				{
 					User = user,
@@ -66,7 +77,7 @@ namespace Server.Controllers
 					ReceiveNotifications = true,
 					SoundEnabled = true
 				};
-				_context.UserSettings.Add(userSettings);
+				context.UserSettings.Add(userSettings);
 			}
 
 			return user;

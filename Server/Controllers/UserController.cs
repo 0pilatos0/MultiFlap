@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
+using System.Threading.Tasks;
 
 namespace Server.Controllers
 {
@@ -10,7 +11,7 @@ namespace Server.Controllers
 	[Route("api/users")]
 	public class UserController : BaseController
 	{
-		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
+		private readonly MultiFlapDbContext _context;
 
 		public UserController(MultiFlapDbContext context)
 		{

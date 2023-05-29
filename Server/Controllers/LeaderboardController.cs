@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
 using Server.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Server.Controllers
 {
@@ -14,7 +16,7 @@ namespace Server.Controllers
 	[Route("api/leaderboard")]
 	public class LeaderboardEntryController : BaseController
 	{
-		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
+		private readonly MultiFlapDbContext _context;
 		private readonly IMemoryCache _memoryCache;
 
 		public LeaderboardEntryController(MultiFlapDbContext context, IMemoryCache memoryCache)
@@ -27,6 +29,7 @@ namespace Server.Controllers
 		[HttpGet]
 		public ActionResult<IEnumerable<LeaderboardEntryDTO>> GetLeaderboard()
 		{
+			// Retrieve leaderboard entries with associated user data and order by score
 			var leaderboard = _context.LeaderboardEntries
 				.Include(le => le.User)
 				.OrderByDescending(le => le.Score)
@@ -60,7 +63,7 @@ namespace Server.Controllers
 		[HttpPost]
 		public async Task<ActionResult<LeaderboardEntry>> AddLeaderboardEntry(LeaderboardEntryDTO newLeaderboardEntry)
 		{
-			// Get user based on the authorized request
+			// Get the user's Auth0 ID from the authorized request
 			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
 
 			// Check if the user exists, otherwise create it
@@ -73,7 +76,6 @@ namespace Server.Controllers
 				DateAchieved = DateTime.Now
 			};
 
-
 			Console.WriteLine($"Adding leaderboard entry for user {user.Id} with score {newLeaderboardEntry.Score}");
 
 			// Add the leaderboard entry to the database
@@ -82,8 +84,6 @@ namespace Server.Controllers
 
 			return CreatedAtAction(nameof(GetLeaderboardEntry), new { id = leaderboardEntry.Id }, leaderboardEntry);
 		}
-
-		
 
 		// PUT api/leaderboard/{id}
 		[HttpPut("{id}")]
@@ -136,9 +136,6 @@ namespace Server.Controllers
 		{
 			return _context.LeaderboardEntries.Any(le => le.Id == id);
 		}
-
-		
-
 	}
 
 	public class LeaderboardEntryDTO
@@ -148,5 +145,4 @@ namespace Server.Controllers
 		public DateTime DateAchieved { get; set; }
 		public string? DisplayName { get; set; }
 	}
-
 }

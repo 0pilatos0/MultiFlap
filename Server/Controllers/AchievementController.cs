@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Server.Controllers
 {
@@ -10,7 +13,7 @@ namespace Server.Controllers
 	[Route("api/users/{userId}/achievements")]
 	public class AchievementController : BaseController
 	{
-		private readonly MultiFlapDbContext _context; // Replace YourAppContext with your actual database context
+		private readonly MultiFlapDbContext _context;
 
 		public AchievementController(MultiFlapDbContext context)
 		{
@@ -21,6 +24,7 @@ namespace Server.Controllers
 		[HttpGet]
 		public ActionResult<IEnumerable<Achievement>> GetAchievements(int userId)
 		{
+			// Retrieve achievements for the given user ID
 			var achievements = _context.Achievements.Where(a => a.UserId == userId).ToList();
 
 			return achievements;
@@ -32,6 +36,7 @@ namespace Server.Controllers
 		{
 			achievement.UserId = userId;
 
+			// Add the new achievement to the context and save changes
 			_context.Achievements.Add(achievement);
 			await _context.SaveChangesAsync();
 
@@ -47,6 +52,7 @@ namespace Server.Controllers
 				return BadRequest();
 			}
 
+			// Update the achievement in the context and save changes
 			_context.Entry(updatedAchievement).State = EntityState.Modified;
 
 			try
@@ -72,6 +78,7 @@ namespace Server.Controllers
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteAchievement(int userId, int id)
 		{
+			// Find the achievement to delete
 			var achievement = await _context.Achievements.FindAsync(id);
 
 			if (achievement == null || achievement.UserId != userId)
@@ -79,6 +86,7 @@ namespace Server.Controllers
 				return NotFound();
 			}
 
+			// Remove the achievement from the context and save changes
 			_context.Achievements.Remove(achievement);
 			await _context.SaveChangesAsync();
 
@@ -89,6 +97,7 @@ namespace Server.Controllers
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Achievement>> GetAchievement(int userId, int id)
 		{
+			// Find the requested achievement
 			var achievement = await _context.Achievements.FindAsync(id);
 
 			if (achievement == null || achievement.UserId != userId)
@@ -101,6 +110,7 @@ namespace Server.Controllers
 
 		private bool AchievementExists(int userId, int id)
 		{
+			// Check if an achievement with the given user ID and ID exists in the context
 			return _context.Achievements.Any(a => a.UserId == userId && a.Id == id);
 		}
 	}
