@@ -199,12 +199,19 @@ namespace Server
 				{
 					var opponentId = match.Players.FirstOrDefault(p => p.ConnectionId != player.ConnectionId)?.ConnectionId;
 
-					//send OpponentGameOver to the opponent
-					
 					await Clients.Client(opponentId).SendAsync("OpponentGameOver", score);
 					Console.WriteLine($"Sent OpponentGameOver to {opponentId}");
 				}
+				else
+				{
+					Console.WriteLine($"Match not found for player {Context.ConnectionId}");
+				}
+			} 
+			else
+			{
+				Console.WriteLine($"Could not find player in current playerlist");
 			}
+
 
 			Console.WriteLine($"Player {Context.ConnectionId} game over");
 		}
