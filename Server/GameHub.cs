@@ -183,6 +183,24 @@ namespace Server
 			Console.WriteLine($"Player {Context.ConnectionId} updated state");
 		}
 
+		//gameover (score)
+		public async Task GameOver(Player player, int score)
+		{
+			if (GameData.Instance.Players.TryGetValue(Context.ConnectionId, out Player p))
+			{
+				p.Score = score;
+
+				if (p.MatchId != null && GameData.Instance.Matches.TryGetValue(p.MatchId, out Match match))
+				{
+					var opponentId = match.Players.FirstOrDefault(p => p.ConnectionId != player.ConnectionId)?.ConnectionId;
+
+					await Clients.Client(opponentId).SendAsync("OpponentGameOver", player.Score);
+				}
+			}
+
+			Console.WriteLine($"Player {Context.ConnectionId} gameover");
+		}
+
 		public async Task EndMatch()
 		{
 			if (GameData.Instance.Players.TryGetValue(Context.ConnectionId, out Player player))

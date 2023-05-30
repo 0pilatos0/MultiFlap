@@ -19,6 +19,8 @@ public partial class Game : ContentPage
 	private int _width = 350;
 	private int _height = 500;
 
+	private bool onlineMatch = false;
+
 	private readonly HubConnection _connection;
 	private readonly IApiService _apiService;
 	private readonly Auth0Client _auth0Client;
@@ -29,7 +31,7 @@ public partial class Game : ContentPage
 
 		_apiService = apiService;
 		_auth0Client = auth0Client;
-		
+
 		_connection = new HubConnectionBuilder()
 			//.WithUrl("http://145.49.40.171:5076/game")
 			//.WithUrl("https://192.168.2.24:5076/game") //Localhost
@@ -47,25 +49,58 @@ public partial class Game : ContentPage
 			});
 		});
 
-		Task.Run(async () =>
+		//client on "MatchStarted"
+		_connection.On<List<PlayerMatchInfo>>("MatchStarted", (players) =>
 		{
-			try
+			Task.Run(() =>
 			{
-				await _connection.StartAsync();
-				//if connection couldnt be made throw exception
-				if (_connection.State != HubConnectionState.Connected)
-					throw new SocketException();
-			}
-			catch (Exception ex)
-			{
-				Dispatcher.Dispatch(() =>
+				Dispatcher.Dispatch(async () =>
 				{
-					MultiplayerButton.Text = "Offline";
-					MultiplayerButton.IsEnabled = false;
+					onlineMatch = true;
+					_isRunning = true;
+					_score = 0;
+					_flappy = new Flappy(_width / 2, _height / 2, Colors.Yellow);
+					_pipes = new List<GreenPipe>();
+					_pipes.Add(new GreenPipe(_width, 200, _height));
+					canvas.Drawable = new GameCanvas() { flappy = _flappy, _greenPipes = _pipes };
+					RunGameLoop();
 				});
-			}
+			});
 		});
-	}
+
+		//client on OpponentGameOver
+		_connection.On<int>("OpponentGameOver", (opponentScore) =>
+		{
+			Task.Run(() =>
+			{
+				Dispatcher.Dispatch(async () =>
+				{
+					_isRunning = false;
+					await DisplayAlert("Game Over", $"You won! Your score: {_score} Opponent score: {opponentScore}", "OK");
+				});
+			});
+
+
+
+			Task.Run(async () =>
+			{
+				try
+				{
+					await _connection.StartAsync();
+					//if connection couldnt be made throw exception
+					if (_connection.State != HubConnectionState.Connected)
+						throw new SocketException();
+				}
+				catch (Exception ex)
+				{
+					Dispatcher.Dispatch(() =>
+					{
+						MultiplayerButton.Text = "Offline";
+						MultiplayerButton.IsEnabled = false;
+					});
+				}
+			});
+		}
 
 	protected override void OnAppearing()
 	{
@@ -129,12 +164,24 @@ public partial class Game : ContentPage
 		_isRunning = false;
 		var player2 = AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("gameOver.mp3"));
 		player2.Play();
-		await DisplayAlert("Game Over", $"Score: {score}", "OK");
 
-		LeaderboardEntry leaderboardEntry = new LeaderboardEntry { Score = score };
-		//convert to string
-		string payload = JsonSerializer.Serialize(leaderboardEntry);
-		string response = await _apiService.PostAsync("api/leaderboard", payload, _auth0Client.AccessToken );
+		if (onlineMatch)
+		{
+			//send game over to server
+			await _connection.SendAsync("GameOver", score);
+			onlineMatch = false;
+		}
+		else
+		{
+			await DisplayAlert("Game Over", $"Score: {score}", "OK");
+
+			LeaderboardEntry leaderboardEntry = new LeaderboardEntry { Score = score };
+			//convert to string
+			string payload = JsonSerializer.Serialize(leaderboardEntry);
+			string response = await _apiService.PostAsync("api/leaderboard", payload, _auth0Client.AccessToken);
+		}
+
+
 		return;
 	}
 
@@ -167,3 +214,9 @@ public partial class Game : ContentPage
 	}
 }
 
+public class PlayerMatchInfo
+{
+	public string ConnectionId { get; set; }
+	public int Y { get; set; }
+	public int Score { get; set; }
+}
