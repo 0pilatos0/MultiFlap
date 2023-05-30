@@ -169,7 +169,7 @@ public partial class Game : ContentPage
 		if (onlineMatch)
 		{
 			//send game over to server
-			await _connection.SendAsync("GameOver", score);
+			await _connection.InvokeAsync("GameOver", score);
 			onlineMatch = false;
 		}
 		else

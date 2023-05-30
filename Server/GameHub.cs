@@ -185,6 +185,14 @@ namespace Server
 
 		public async Task GameOver(int score)
 		{
+			Console.WriteLine($"Received game over from {Context.ConnectionId}");
+
+			if (string.IsNullOrEmpty(Context.ConnectionId))
+			{
+				Console.WriteLine("Connection ID is null or empty");
+				return;
+			}
+
 			if (GameData.Instance.Players.TryGetValue(Context.ConnectionId, out Player player))
 			{
 				if (player.MatchId != null && GameData.Instance.Matches.TryGetValue(player.MatchId, out Match match))
