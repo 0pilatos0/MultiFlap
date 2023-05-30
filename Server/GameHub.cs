@@ -80,12 +80,21 @@ namespace Server
 						Score = player.Score
 					});
 
-					GameData.Instance.Matches.TryAdd(match.Id, match);
 
 					var opponentId = match.Players.FirstOrDefault(p => p.ConnectionId != player.ConnectionId)?.ConnectionId;
 
 					GameData.Instance.Players[opponentId].MatchId = match.Id;
 					GameData.Instance.Players[opponentId].IsLookingForMatch = false;
+
+					match.Players.Add(new PlayerMatchInfo()
+					{
+						ConnectionId = opponentId,
+						Y = 0,
+						Score = 0
+					});
+
+					GameData.Instance.Matches.TryAdd(match.Id, match);
+
 
 					GameData.Instance.Players[player.ConnectionId].MatchId = match.Id;
 					GameData.Instance.Players[player.ConnectionId].IsLookingForMatch = false;
