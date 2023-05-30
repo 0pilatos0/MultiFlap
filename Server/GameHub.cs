@@ -87,6 +87,9 @@ namespace Server
 					GameData.Instance.Players[opponentId].MatchId = match.Id;
 					GameData.Instance.Players[opponentId].IsLookingForMatch = false;
 
+					GameData.Instance.Players[player.ConnectionId].MatchId = match.Id;
+					GameData.Instance.Players[player.ConnectionId].IsLookingForMatch = false;
+
 					await Clients.Clients(new List<string>() { player.ConnectionId, opponentId }).SendAsync("MatchStarted", match.Players);
 					Console.WriteLine($"Match {match.Id} started");
 
