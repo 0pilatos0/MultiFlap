@@ -79,10 +79,11 @@ public partial class Game : ContentPage
 					await DisplayAlert("Game Over", $"You won! Your score: {_score} Opponent score: {opponentScore}", "OK");
 				});
 			});
+		});
 
 
 
-			Task.Run(async () =>
+		Task.Run(async () =>
 			{
 				try
 				{
