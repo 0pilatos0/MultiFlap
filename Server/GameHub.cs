@@ -169,7 +169,10 @@ namespace Server
 					var opponentId = match.Players.FirstOrDefault(p => p.ConnectionId != player.ConnectionId)?.ConnectionId;
 
 					GameData.Instance.Players[opponentId].MatchId = null;
+					GameData.Instance.Players[opponentId].IsLookingForMatch = false;
 					GameData.Instance.Players[Context.ConnectionId].MatchId = null;
+					GameData.Instance.Players[Context.ConnectionId].IsLookingForMatch = false;
+
 
 					GameData.Instance.Matches.TryRemove(match.Id, out Match removedMatch);
 
