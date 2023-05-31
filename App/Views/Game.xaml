@@ -10,87 +10,113 @@
         <local:GameCanvas x:Key="drawable" />
     </ContentPage.Resources>
 
-    <StackLayout>
-        <!--  Header  -->
-        <StackLayout
-            Padding="20"
-            BackgroundColor="White"
-            Orientation="Horizontal"
-            VerticalOptions="Start">
-
-            <Label
-                x:Name="ScoreLabel"
-                FontAttributes="Bold"
-                FontSize="Large"
-                Text="Score: 0"
-                TextColor="#2C2C2C"
-                VerticalOptions="Center" />
-
+    <Grid>
+        <!-- Main content -->
+        <StackLayout>
+            <!-- Header -->
             <StackLayout
-                HorizontalOptions="EndAndExpand"
+                Padding="20"
+                BackgroundColor="White"
                 Orientation="Horizontal"
-                Spacing="10">
-
-                <Image
-                    HeightRequest="20"
-                    Source="online.png"
-                    VerticalOptions="Center"
-                    WidthRequest="20" />
+                VerticalOptions="Start">
 
                 <Label
-                    x:Name="OnlinePlayersLabel"
+                    x:Name="ScoreLabel"
                     FontAttributes="Bold"
-                    FontSize="Small"
-                    Text="0 Online Players"
+                    FontSize="Large"
+                    Text="Score: 0"
                     TextColor="#2C2C2C"
                     VerticalOptions="Center" />
+
+                <StackLayout
+                    HorizontalOptions="EndAndExpand"
+                    Orientation="Horizontal"
+                    Spacing="10">
+
+                    <Image
+                        HeightRequest="20"
+                        Source="online.png"
+                        VerticalOptions="Center"
+                        WidthRequest="20" />
+
+                    <Label
+                        x:Name="OnlinePlayersLabel"
+                        FontAttributes="Bold"
+                        FontSize="Small"
+                        Text="0 Online Players"
+                        TextColor="#2C2C2C"
+                        VerticalOptions="Center" />
+                </StackLayout>
+            </StackLayout>
+
+            <!-- Main content -->
+            <Frame
+                Margin="20"
+                Padding="10"
+                BackgroundColor="#F2F2F2"
+                CornerRadius="20">
+                <GraphicsView
+                    x:Name="canvas"
+                    BackgroundColor="#F2F2F2"
+                    Drawable="{StaticResource drawable}"
+                    HeightRequest="500"
+                    WidthRequest="350" />
+            </Frame>
+
+            <!-- Footer -->
+            <StackLayout
+                HorizontalOptions="CenterAndExpand"
+                Orientation="Horizontal"
+                VerticalOptions="End">
+
+                <Button
+                    Margin="10"
+                    BackgroundColor="#2C2C2C"
+                    Clicked="OnStartClicked"
+                    CornerRadius="15"
+                    FontAttributes="Bold"
+                    FontSize="Large"
+                    HeightRequest="50"
+                    Text="Solo"
+                    TextColor="White"
+                    WidthRequest="150" />
+
+                <Button
+                    x:Name="MultiplayerButton"
+                    Margin="10"
+                    BackgroundColor="#2C2C2C"
+                    Clicked="OnStartMatchmaking"
+                    CornerRadius="15"
+                    FontAttributes="Bold"
+                    FontSize="Large"
+                    HeightRequest="50"
+                    Text="Multiplayer"
+                    TextColor="White"
+                    WidthRequest="150" />
             </StackLayout>
         </StackLayout>
 
-        <!--  Main content  -->
-        <Frame
-            Margin="20"
-            Padding="10"
-            BackgroundColor="#F2F2F2"
-            CornerRadius="20">
-            <GraphicsView
-                x:Name="canvas"
-                BackgroundColor="#F2F2F2"
-                Drawable="{StaticResource drawable}"
-                HeightRequest="500"
-                WidthRequest="350" />
-        </Frame>
-
-        <!--  Footer  -->
+        <!-- Matchmaking overlay -->
         <StackLayout
-            HorizontalOptions="CenterAndExpand"
-            Orientation="Horizontal"
-            VerticalOptions="End">
-
+            x:Name="isMatchMaking"
+            BackgroundColor="#80000000"
+            VerticalOptions="FillAndExpand"
+            HorizontalOptions="FillAndExpand"
+            Padding="20">
+            <ActivityIndicator
+                IsRunning="True"
+                Color="White"
+                VerticalOptions="CenterAndExpand" />
             <Button
-                Margin="10"
-                BackgroundColor="#2C2C2C"
-                Clicked="OnStartClicked"
-                CornerRadius="15"
-                FontAttributes="Bold"
-                FontSize="Large"
-                HeightRequest="50"
-                Text="Solo"
+                Clicked="OnCancelMatchmakingClicked"
+                Text="Cancel"
                 TextColor="White"
-                WidthRequest="150" />
-
-            <Button
-                x:Name="MultiplayerButton"
-                Margin="10"
                 BackgroundColor="#2C2C2C"
-                Clicked="OnStartMatchmaking"
                 CornerRadius="15"
-                FontAttributes="Bold"
                 FontSize="Large"
+                WidthRequest="150"
                 HeightRequest="50"
-                Text="Multiplayer"
-                TextColor="White"
-                WidthRequest="150" />
+                HorizontalOptions="Center" />
         </StackLayout>
-    </StackLayout>
+    </Grid>
 </ContentPage>

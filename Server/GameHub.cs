@@ -39,7 +39,7 @@ namespace Server
 
 					GameData.Instance.Matches.TryRemove(match.Id, out Match _);
 
-					Clients.Client(opponentId).SendAsync("OpponentDisconnected");
+					Clients.Client(opponentId).SendAsync("OpponentGameOver", 0);
 				}
 
 				GameData.Instance.Players.TryRemove(player.ConnectionId, out Player _);
@@ -152,41 +152,6 @@ namespace Server
 
 		}
 
-		public async Task UpdatePlayerState(int y, int score)
-		{
-			if (GameData.Instance.Players.TryGetValue(Context.ConnectionId, out Player player))
-			{
-				player.Y = y;
-				player.Score = score;
-
-				if (player.MatchId != null && GameData.Instance.Matches.TryGetValue(player.MatchId, out Match match))
-				{
-					match.Players = match.Players.Select(p =>
-					{
-					if (p.ConnectionId == player.ConnectionId)
-					{
-						return new PlayerMatchInfo()
-						{
-							ConnectionId = p.ConnectionId,
-							Y = player.Y,
-							Score = player.Score
-						};
-						}
-						else
-						{
-							return p;
-						}
-					}).ToList();
-
-					var opponentId = match.Players.FirstOrDefault(p => p.ConnectionId != player.ConnectionId)?.ConnectionId;
-
-					await Clients.Client(opponentId).SendAsync("OpponentStateUpdated", player.Y, player.Score);
-				}
-			}
-
-			Console.WriteLine($"Player {Context.ConnectionId} updated state");
-		}
-
 		public async Task GameOver(int score)
 		{
 			Console.WriteLine($"Received game over from {Context.ConnectionId}");
@@ -225,31 +190,22 @@ namespace Server
 			Console.WriteLine($"Player {Context.ConnectionId} game over");
 		}
 
-
-		public async Task EndMatch()
-		{
-			if (GameData.Instance.Players.TryGetValue(Context.ConnectionId, out Player player))
-			{
-				if (player.MatchId != null && GameData.Instance.Matches.TryGetValue(player.MatchId, out Match match))
-				{
-					var opponentId = match.Players.FirstOrDefault(p => p.ConnectionId != player.ConnectionId)?.ConnectionId;
-
-					GameData.Instance.Players[opponentId].MatchId = null;
-
-					GameData.Instance.Matches.TryRemove(match.Id, out Match removedMatch);
-
-					await Clients.Clients(new List<string>() { player.ConnectionId, opponentId }).SendAsync("MatchEnded");
-				}
-			}
-
-			Console.WriteLine($"Player {Context.ConnectionId} ended match");
-		}
-
 		public async Task CancelMatchmaking()
 		{
 			if (GameData.Instance.Players.TryGetValue(Context.ConnectionId, out Player player))
 			{
 				player.IsLookingForMatch = false;
+				if (player.MatchId != null && GameData.Instance.Matches.TryGetValue(player.MatchId, out Match match))
+				{
+					if (match.Players.Count == 1)
+					{
+						GameData.Instance.Matches.TryRemove(match.Id, out Match removedMatch);
+					}
+					else
+					{
+						match.Players = match.Players.Where(p => p.ConnectionId != player.ConnectionId).ToList();
+					}
+				}
 
 				await Clients.Caller.SendAsync("MatchmakingCanceled");
 			}

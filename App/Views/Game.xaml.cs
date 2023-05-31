@@ -13,6 +13,7 @@ namespace App;
 public partial class Game : ContentPage
 {
 	private bool _isRunning;
+
 	private Flappy _flappy;
 	private List<GreenPipe> _pipes;
 	private int _score;
@@ -28,6 +29,8 @@ public partial class Game : ContentPage
 	public Game(IApiService apiService, Auth0Client auth0Client)
 	{
 		InitializeComponent();
+
+		isMatchMaking.IsVisible = false;
 
 		_apiService = apiService;
 		_auth0Client = auth0Client;
@@ -56,6 +59,7 @@ public partial class Game : ContentPage
 			{
 				Dispatcher.Dispatch(async () =>
 				{
+					isMatchMaking.IsVisible = false;
 					onlineMatch = true;
 					_isRunning = true;
 					_score = 0;
@@ -111,6 +115,7 @@ public partial class Game : ContentPage
 		tapGestureRecognizer.Tapped += OnCanvasTapped;
 		canvas.GestureRecognizers.Add(tapGestureRecognizer);
 	}
+
 
 	protected override void OnDisappearing()
 	{
@@ -211,7 +216,14 @@ public partial class Game : ContentPage
 
 	private async void OnStartMatchmaking(object sender, EventArgs e)
 	{
+		isMatchMaking.IsVisible = true;
 		await _connection.InvokeAsync("StartMatchmaking");
+	}
+
+	private async void OnCancelMatchmakingClicked(object sender, EventArgs e)
+	{
+		await _connection.InvokeAsync("CancelMatchmaking");
+		isMatchMaking.IsVisible = false;
 	}
 }
 
