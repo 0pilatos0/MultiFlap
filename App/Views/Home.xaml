@@ -99,6 +99,7 @@
                                 TextColor="#2C2C2C"
                                 VerticalTextAlignment="Center" />
                             <Label
+                                x:Name="highScore"
                                 FontFamily="Arial"
                                 FontSize="Medium"
                                 Text="0"

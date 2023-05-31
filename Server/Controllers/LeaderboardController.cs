@@ -45,6 +45,24 @@ namespace Server.Controllers
 			return leaderboard;
 		}
 
+		[HttpGet("me")]
+		public async Task<ActionResult<int>> GetOwnHighscore()
+		{
+			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
+
+			User? user = await GetUserFromIdAsync(_context, userAuth0Id);
+
+			var highscore = _context.LeaderboardEntries
+				.Where(le => le.User == user)
+				.OrderByDescending(le => le.Score)
+				.Select(le => le.Score)
+				.FirstOrDefault();
+
+			return Ok(highscore);
+		}
+
+
+
 		// GET api/leaderboard/{id}
 		[HttpGet("{id}")]
 		public async Task<ActionResult<LeaderboardEntry>> GetLeaderboardEntry(int id)
