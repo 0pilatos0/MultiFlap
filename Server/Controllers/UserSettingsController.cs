@@ -45,7 +45,8 @@ namespace Server.Controllers
 				Language = userSettings.Language,
 				ReceiveNotifications = userSettings.ReceiveNotifications,
 				DisplayName = userSettings.DisplayName,
-				SoundEnabled = userSettings.SoundEnabled
+				SoundEnabled = userSettings.SoundEnabled,
+				ShakeEnabled = userSettings.ShakeEnabled
 			};
 		}
 
@@ -74,6 +75,7 @@ namespace Server.Controllers
 			userSettings.ReceiveNotifications = updatedUserSettings.ReceiveNotifications;
 			userSettings.DisplayName = updatedUserSettings.DisplayName;
 			userSettings.SoundEnabled = updatedUserSettings.SoundEnabled;
+			userSettings.ShakeEnabled = updatedUserSettings.ShakeEnabled;
 
 			try
 			{
@@ -106,5 +108,6 @@ namespace Server.Controllers
 		public bool ReceiveNotifications { get; set; }
 		public string DisplayName { get; set; }
 		public bool SoundEnabled { get; set; }
+		public bool ShakeEnabled { get; set; }
 	}
 }
