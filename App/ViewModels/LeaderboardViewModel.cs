@@ -49,7 +49,7 @@ namespace App.ViewModels
 			LoadLeaderboard();
 		}
 
-		private async Task LoadLeaderboard()
+		public async Task LoadLeaderboard()
 		{
 			try
 			{

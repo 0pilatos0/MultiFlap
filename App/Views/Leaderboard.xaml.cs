@@ -1,15 +1,22 @@
 using App.ViewModels;
 
-namespace App.Views;
-
-public partial class Leaderboard : ContentPage
+namespace App.Views
 {
-	public Leaderboard(LeaderboardViewModel leaderboardViewModel)
+	public partial class Leaderboard : ContentPage
 	{
-		InitializeComponent();
+		private readonly LeaderboardViewModel _leaderboardViewModel;
 
-		BindingContext = leaderboardViewModel;
+		public Leaderboard(LeaderboardViewModel leaderboardViewModel)
+		{
+			InitializeComponent();
+			_leaderboardViewModel = leaderboardViewModel;
+			BindingContext = _leaderboardViewModel;
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			_ = _leaderboardViewModel.LoadLeaderboard(); 
+		}
 	}
-
-
 }

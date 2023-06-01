@@ -1,4 +1,6 @@
-﻿using Microsoft.Maui.Graphics.Platform;
+﻿#if !WINDOWS
+using Microsoft.Maui.Graphics.Platform;
+#endif
 using System.Reflection;
 using IImage = Microsoft.Maui.Graphics.IImage;
 
@@ -21,12 +23,14 @@ namespace App.GameObjects
             Y = y;
             Velocity = 0;
 
-			Assembly assembly = GetType().GetTypeInfo().Assembly;
+#if !WINDOWS
+            Assembly assembly = GetType().GetTypeInfo().Assembly;
 			using (Stream stream = assembly.GetManifestResourceStream("App.Resources.Images.flappy.png"))
 			{
 				flappyImage = PlatformImage.FromStream(stream);
 			}
-		}
+#endif
+        }
 
 	
 
@@ -49,7 +53,9 @@ namespace App.GameObjects
 			float width = 40; // Adjust the width of the image as needed
 			float height = 40; // Adjust the height of the image as needed
 
-			canvas.DrawImage(flappyImage, X, Y, width, height);
-		}
+#if !WINDOWS
+            canvas.DrawImage(flappyImage, X, Y, width, height);
+#endif
+        }
 	}
 }

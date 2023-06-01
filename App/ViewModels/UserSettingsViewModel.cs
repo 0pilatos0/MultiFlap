@@ -38,7 +38,7 @@ namespace App.ViewModels
 			LoadUserSettings();
 		}
 
-		private async Task LoadUserSettings()
+		public async Task LoadUserSettings()
 		{
 			try
 			{

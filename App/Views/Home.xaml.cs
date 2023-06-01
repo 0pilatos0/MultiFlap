@@ -30,7 +30,6 @@ namespace App
 		}
 
 
-
 		protected async override void OnNavigatedTo(NavigatedToEventArgs args)
 		{
 			base.OnNavigatedTo(args);
@@ -106,6 +105,13 @@ namespace App
 		private async void OnSettingsClicked(object sender, EventArgs e)
 		{
 			await Navigation.PushAsync(editUserSettings);
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			SetHighScore();
 		}
 
 	}

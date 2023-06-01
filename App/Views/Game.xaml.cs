@@ -181,10 +181,18 @@ public partial class Game : ContentPage
 		{
 			await DisplayAlert("Game Over", $"Score: {score}", "OK");
 
-			LeaderboardEntry leaderboardEntry = new LeaderboardEntry { Score = score };
-			//convert to string
-			string payload = JsonSerializer.Serialize(leaderboardEntry);
-			string response = await _apiService.PostAsync("api/leaderboard", payload, _auth0Client.AccessToken);
+			try
+			{
+				LeaderboardEntry leaderboardEntry = new LeaderboardEntry { Score = score };
+				//convert to string
+				string payload = JsonSerializer.Serialize(leaderboardEntry);
+				string response = await _apiService.PostAsync("api/leaderboard", payload, _auth0Client.AccessToken);
+			} catch
+			(Exception e)
+			{
+				//display allert the highscore could not be submitted due to connection issues
+				await DisplayAlert("Connection Error", "Your highscore could not be submitted, are you connected to the internet?", "OK");
+			}
 		}
 
 
