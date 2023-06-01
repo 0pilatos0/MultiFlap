@@ -30,6 +30,16 @@
                 <Label Text="Sound" FontSize="Title" FontAttributes="Bold" />
                 <Switch IsToggled="{Binding UserSettings.SoundEnabled}" />
 
+
+                <Label Text="Jump Shaking" FontSize="Title" FontAttributes="Bold" />
+                <Switch IsToggled="{Binding UserSettings.ShakeEnabled}" />
+
+                <!--<Label Text="Vibration" FontSize="Title" FontAttributes="Bold" />
+                <Switch IsToggled="{Binding UserSettings.VibrationEnabled}" /> -->
+                
+                
+
+
                 <Button Command="{Binding SaveCommand}" Text="Save" HorizontalOptions="Center" WidthRequest="200" />
             </StackLayout>
         </ScrollView>

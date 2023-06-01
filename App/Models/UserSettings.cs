@@ -12,5 +12,6 @@ namespace App.Models
 		public bool ReceiveNotifications { get; set; }
 		public string DisplayName { get; set; }
 		public bool SoundEnabled { get; set; }
+		public bool ShakeEnabled { get; set; }
 	}
 }

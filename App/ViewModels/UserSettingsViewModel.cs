@@ -24,6 +24,15 @@ namespace App.ViewModels
 				if (_userSettings != value)
 				{
 					_userSettings = value;
+					if (_userSettings.ShakeEnabled)
+					{
+						Preferences.Set("Shake", false);
+					}
+					else
+					{
+						Preferences.Set("Shake", true);
+					}
+
 					OnPropertyChanged();
 				}
 			}

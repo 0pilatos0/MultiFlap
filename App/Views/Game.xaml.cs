@@ -21,6 +21,7 @@ public partial class Game : ContentPage
 	private int _height = 500;
 
 	private bool onlineMatch = false;
+	private bool shakeEnabled = true;
 
 	private readonly HubConnection _connection;
 	private readonly IApiService _apiService;
@@ -31,6 +32,7 @@ public partial class Game : ContentPage
 		InitializeComponent();
 
 		isMatchMaking.IsVisible = false;
+		
 
 		_apiService = apiService;
 		_auth0Client = auth0Client;
@@ -114,6 +116,14 @@ public partial class Game : ContentPage
 		var tapGestureRecognizer = new TapGestureRecognizer();
 		tapGestureRecognizer.Tapped += OnCanvasTapped;
 		canvas.GestureRecognizers.Add(tapGestureRecognizer);
+
+		shakeEnabled = Preferences.Get("Shake", false);
+
+		if (shakeEnabled)
+		{
+			Accelerometer.ShakeDetected += OnShakeDetected;
+			Accelerometer.Start(SensorSpeed.Game);
+		}
 	}
 
 
@@ -121,6 +131,12 @@ public partial class Game : ContentPage
 	{
 		base.OnDisappearing();
 		_isRunning = false;
+
+		if (shakeEnabled)
+		{
+			Accelerometer.ShakeDetected -= OnShakeDetected;
+			Accelerometer.Stop();
+		}
 	}
 
 	private async void RunGameLoop()
@@ -219,6 +235,17 @@ public partial class Game : ContentPage
 		_pipes.Add(new GreenPipe(_width, 200, _height));
 		canvas.Drawable = new GameCanvas() { flappy = _flappy, _greenPipes = _pipes };
 		RunGameLoop();
+	}
+
+	private async void OnShakeDetected(object sender, EventArgs e)
+	{
+		if (_isRunning)
+		{
+			var player = AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("jump.mp3"));
+			player.Play();
+
+			_flappy.Jump();
+		}
 	}
 
 
