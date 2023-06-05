@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.GameObjects
+namespace App.GameCore.GameObjects
 {
     interface IGameObject
     {
-		public void Draw(ICanvas canvas);
-	}
+        public void Draw(ICanvas canvas);
+    }
 }

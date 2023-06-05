@@ -70,6 +70,8 @@ public class Auth0Client
 
 	public async Task<BrowserResult> LogoutAsync()
 	{
+		preferences.Set(nameof(IsAuthenticated), true);
+
 		var logoutParameters = new Dictionary<string, string>
 	{
 	  {"client_id", oidcClient.Options.ClientId },

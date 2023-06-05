@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.GameObjects
+namespace App.GameCore.GameObjects
 {
-	public class GreenPipe : IGameObject
-	{
+    public class GreenPipe : IGameObject
+    {
         public int X { get; private set; }
         public int TopHeight { get; private set; }
         public int BottomHeight { get; private set; }
@@ -44,11 +44,11 @@ namespace App.GameObjects
             BottomHeight = _maxBottomHeight - (TopHeight + GapSize);
         }
 
-		public void Draw(ICanvas canvas)
-		{
-			canvas.FillColor = Colors.Green;
-			canvas.FillRectangle(X, 0, 75, TopHeight);
-			canvas.FillRectangle(X, TopHeight + GapSize, 75, BottomHeight);
-		}
-	}
+        public void Draw(ICanvas canvas)
+        {
+            canvas.FillColor = Colors.Green;
+            canvas.FillRectangle(X, 0, 75, TopHeight);
+            canvas.FillRectangle(X, TopHeight + GapSize, 75, BottomHeight);
+        }
+    }
 }

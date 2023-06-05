@@ -1,4 +1,3 @@
-using App.GameObjects;
 using App.Services;
 using MauiAuth0App.Auth0;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -7,107 +6,92 @@ using System;
 using System.Net.Sockets;
 using System.Text.Json;
 using App.Models;
+using App.GameCore;
+using App.GameCore.GameObjects;
 
 namespace App;
 
 public partial class Game : ContentPage
 {
-	private bool _isRunning;
+	private Flappy flappy;
+	private List<GreenPipe> pipes;
 
-	private Flappy _flappy;
-	private List<GreenPipe> _pipes;
-	private int _score;
-	private int _width = 350;
-	private int _height = 500;
+	private readonly HubConnection connection;
+	private readonly IApiService apiService;
+	private readonly Auth0Client auth0Client;
 
-	private bool onlineMatch = false;
-	private bool shakeEnabled = true;
-
-	private readonly HubConnection _connection;
-	private readonly IApiService _apiService;
-	private readonly Auth0Client _auth0Client;
+	private readonly GameEngine gameEngine;
 
 	public Game(IApiService apiService, Auth0Client auth0Client)
 	{
 		InitializeComponent();
 
+		gameEngine = new GameEngine();
+
 		isMatchMaking.IsVisible = false;
-		
 
-		_apiService = apiService;
-		_auth0Client = auth0Client;
+		this.apiService = apiService;
+		this.auth0Client = auth0Client;
 
-		_connection = new HubConnectionBuilder()
+		connection = new HubConnectionBuilder()
 			//.WithUrl("http://145.49.40.171:5076/game")
 			//.WithUrl("https://192.168.2.24:5076/game") //Localhost
 			.WithUrl("http://161.97.97.200:5076/game") //self hosted
 			.Build();
 
-		_connection.On<int>("UpdateOnlinePlayers", (onlinePlayers) =>
+		connection.On<int>("UpdateOnlinePlayers", (onlinePlayers) =>
 		{
-			Task.Run(() =>
+			Device.BeginInvokeOnMainThread(() =>
 			{
-				Dispatcher.Dispatch(async () =>
-				{
-					OnlinePlayersLabel.Text = $"Online Players: {onlinePlayers}";
-				});
+				OnlinePlayersLabel.Text = $"Online Players: {onlinePlayers}";
 			});
 		});
 
-		//client on "MatchStarted"
-		_connection.On<List<PlayerMatchInfo>>("MatchStarted", (players) =>
+		connection.On<List<PlayerMatchInfo>>("MatchStarted", (players) =>
 		{
-			Task.Run(() =>
+			Device.BeginInvokeOnMainThread(() =>
 			{
-				Dispatcher.Dispatch(async () =>
-				{
-					isMatchMaking.IsVisible = false;
-					onlineMatch = true;
-					_isRunning = true;
-					_score = 0;
-					_flappy = new Flappy(_width / 2, _height / 2, Colors.Yellow);
-					_pipes = new List<GreenPipe>();
-					_pipes.Add(new GreenPipe(_width, 200, _height));
-					canvas.Drawable = new GameCanvas() { flappy = _flappy, _greenPipes = _pipes };
-					RunGameLoop();
-				});
+				isMatchMaking.IsVisible = false;
+
+				gameEngine.OnlineMatch = true;
+				gameEngine.ResetScore();
+				gameEngine.IsRunning = true;
+
+				flappy = new Flappy(gameEngine.Width / 2, gameEngine.Height / 2, Colors.Yellow);
+				pipes = new List<GreenPipe>();
+				pipes.Add(new GreenPipe(gameEngine.Width, 200, gameEngine.Height));
+				canvas.Drawable = new GameCanvas() { Flappy = flappy, GreenPipes = pipes };
+				RunGameLoop();
 			});
 		});
 
-		//client on OpponentGameOver
-		_connection.On<int>("OpponentGameOver", (opponentScore) =>
+		connection.On<int>("OpponentGameOver", (opponentScore) =>
 		{
-			Task.Run(() =>
+			Device.BeginInvokeOnMainThread(async () =>
 			{
-				Dispatcher.Dispatch(async () =>
-				{
-					_isRunning = false;
-					await DisplayAlert("Game Over", $"You won! Your score: {_score} Opponent score: {opponentScore}", "OK");
-				});
+				gameEngine.IsRunning = false;
+				await DisplayAlert("Game Over", $"You won! Your score: {gameEngine.Score} Opponent score: {opponentScore}", "OK");
 			});
 		});
-
-
 
 		Task.Run(async () =>
+		{
+			try
 			{
-				try
+				await connection.StartAsync();
+				if (connection.State != HubConnectionState.Connected)
+					throw new SocketException();
+			}
+			catch (Exception ex)
+			{
+				Device.BeginInvokeOnMainThread(() =>
 				{
-					await _connection.StartAsync();
-					//if connection couldnt be made throw exception
-					if (_connection.State != HubConnectionState.Connected)
-						throw new SocketException();
-				}
-				catch (Exception ex)
-				{
-					Dispatcher.Dispatch(() =>
-					{
-						MultiplayerButton.Text = "Offline";
-						MultiplayerButton.IsEnabled = false;
-					});
-				}
-			});
-		}
+					MultiplayerButton.Text = "Offline";
+					MultiplayerButton.IsEnabled = false;
+				});
+			}
+		});
+	}
 
 	protected override void OnAppearing()
 	{
@@ -117,22 +101,21 @@ public partial class Game : ContentPage
 		tapGestureRecognizer.Tapped += OnCanvasTapped;
 		canvas.GestureRecognizers.Add(tapGestureRecognizer);
 
-		shakeEnabled = Preferences.Get("Shake", false);
+		gameEngine.ShakeEnabled = Preferences.Get("Shake", false);
 
-		if (shakeEnabled)
+		if (gameEngine.ShakeEnabled)
 		{
 			Accelerometer.ShakeDetected += OnShakeDetected;
 			Accelerometer.Start(SensorSpeed.Game);
 		}
 	}
 
-
 	protected override void OnDisappearing()
 	{
 		base.OnDisappearing();
-		_isRunning = false;
+		gameEngine.IsRunning = false;
 
-		if (shakeEnabled)
+		if (gameEngine.ShakeEnabled)
 		{
 			Accelerometer.ShakeDetected -= OnShakeDetected;
 			Accelerometer.Stop();
@@ -141,57 +124,43 @@ public partial class Game : ContentPage
 
 	private async void RunGameLoop()
 	{
-		while (_isRunning)
+		while (gameEngine.IsRunning)
 		{
-			_flappy.UpdatePosition();
+			flappy.UpdatePosition();
 
-			if (_score > 100)
+			if (gameEngine.Score > 100)
 			{
-				foreach (var pipe in _pipes)
+				foreach (var pipe in pipes)
 				{
 					pipe.UpdatePosition();
 				}
 			}
 
-			foreach (var pipe in _pipes)
+			if (gameEngine.CheckCollision(flappy, pipes))
 			{
-				// Check for collision
-				if (_flappy.X + 20 > pipe.X && _flappy.X - 20 < pipe.X + 100)
-				{
-					if (_flappy.Y - 20 < pipe.TopHeight || _flappy.Y + 20 > pipe.TopHeight + pipe.GapSize)
-					{
-						GameOver(_score);
-						return;
-					}
-				}
-			}
-
-			if (_flappy.Y < 0 || _flappy.Y > _height)
-			{
-				GameOver(_score);
+				GameOver(gameEngine.Score);
 				return;
 			}
 
-			_score++;
-			ScoreLabel.Text = $"Score: {_score}";
-
+			gameEngine.Score++;
+			ScoreLabel.Text = $"Score: {gameEngine.Score}";
+			
 			canvas.Invalidate();
-
+;
 			await Task.Delay(TimeSpan.FromSeconds(1.0 / 45));
 		}
 	}
 
 	private async void GameOver(int score)
 	{
-		_isRunning = false;
+		gameEngine.IsRunning = false;
 		var player2 = AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("gameOver.mp3"));
 		player2.Play();
 
-		if (onlineMatch)
+		if (gameEngine.OnlineMatch)
 		{
-			//send game over to server
-			await _connection.InvokeAsync("GameOver", score);
-			onlineMatch = false;
+			await connection.InvokeAsync("GameOver", score);
+			gameEngine.OnlineMatch = false;
 		}
 		else
 		{
@@ -200,71 +169,60 @@ public partial class Game : ContentPage
 			try
 			{
 				LeaderboardEntry leaderboardEntry = new LeaderboardEntry { Score = score };
-				//convert to string
 				string payload = JsonSerializer.Serialize(leaderboardEntry);
-				string response = await _apiService.PostAsync("api/leaderboard", payload, _auth0Client.AccessToken);
-			} catch
-			(Exception e)
+				string response = await apiService.PostAsync("api/leaderboard", payload, auth0Client.AccessToken);
+			}
+			catch (Exception e)
 			{
-				//display allert the highscore could not be submitted due to connection issues
 				await DisplayAlert("Connection Error", "Your highscore could not be submitted, are you connected to the internet?", "OK");
 			}
 		}
-
 
 		return;
 	}
 
 	private async void OnCanvasTapped(object sender, EventArgs e)
 	{
-		if (_isRunning)
+		if (gameEngine.IsRunning)
 		{
 			var player = AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("jump.mp3"));
 			player.Play();
 
-			_flappy.Jump();
+			flappy.Jump();
 		}
 	}
 
 	private async void OnStartClicked(object sender, EventArgs e)
 	{
-		_isRunning = true;
-		_score = 0;
-		_flappy = new Flappy(_width / 2, _height / 2, Colors.Yellow);
-		_pipes = new List<GreenPipe>();
-		_pipes.Add(new GreenPipe(_width, 200, _height));
-		canvas.Drawable = new GameCanvas() { flappy = _flappy, _greenPipes = _pipes };
+		gameEngine.IsRunning = true;
+		gameEngine.ResetScore();
+		flappy = new Flappy(gameEngine.Width / 2, gameEngine.Height / 2, Colors.Yellow);
+		pipes = new List<GreenPipe>();
+		pipes.Add(new GreenPipe(gameEngine.Width, 200, gameEngine.Height));
+		canvas.Drawable = new GameCanvas() { Flappy = flappy, GreenPipes = pipes };
 		RunGameLoop();
 	}
 
 	private async void OnShakeDetected(object sender, EventArgs e)
 	{
-		if (_isRunning)
+		if (gameEngine.IsRunning)
 		{
 			var player = AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("jump.mp3"));
 			player.Play();
 
-			_flappy.Jump();
+			flappy.Jump();
 		}
 	}
-
 
 	private async void OnStartMatchmaking(object sender, EventArgs e)
 	{
 		isMatchMaking.IsVisible = true;
-		await _connection.InvokeAsync("StartMatchmaking");
+		await connection.InvokeAsync("StartMatchmaking");
 	}
 
 	private async void OnCancelMatchmakingClicked(object sender, EventArgs e)
 	{
-		await _connection.InvokeAsync("CancelMatchmaking");
+		await connection.InvokeAsync("CancelMatchmaking");
 		isMatchMaking.IsVisible = false;
 	}
-}
-
-public class PlayerMatchInfo
-{
-	public string ConnectionId { get; set; }
-	public int Y { get; set; }
-	public int Score { get; set; }
 }
