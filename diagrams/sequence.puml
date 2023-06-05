@@ -1,0 +1,73 @@
+@startuml
+
+actor User
+participant "User" as User
+participant "LeaderboardEntryController" as Controller
+participant "MultiFlapDbContext" as DbContext
+participant "IMemoryCache" as MemoryCache
+participant "LeaderboardEntry" as Entry
+participant "LeaderboardEntryDTO" as DTO
+
+User -> Controller: GET /api/leaderboard
+activate Controller
+Controller -> DbContext: Retrieve leaderboard entries
+activate DbContext
+DbContext -> DbContext: Include user data
+DbContext -> DbContext: Order by score
+DbContext -> DbContext: Select required fields
+DbContext --> Controller: Retrieve leaderboard
+deactivate DbContext
+Controller --> User: Return leaderboard
+deactivate Controller
+
+User -> Controller: GET /api/leaderboard/me
+activate Controller
+Controller -> MemoryCache: Get user's Auth0 ID
+activate MemoryCache
+MemoryCache --> Controller: User's Auth0 ID
+deactivate MemoryCache
+Controller -> DbContext: Retrieve user from ID
+activate DbContext
+DbContext --> Controller: User object
+deactivate DbContext
+Controller -> DbContext: Retrieve user's highscore
+activate DbContext
+DbContext -> DbContext: Order by score
+DbContext -> DbContext: Select highscore
+DbContext --> Controller: Highscore
+deactivate DbContext
+Controller --> User: Return highscore
+deactivate Controller
+
+User -> Controller: GET /api/leaderboard/{id}
+activate Controller
+Controller -> DbContext: Retrieve leaderboard entry by ID
+activate DbContext
+DbContext --> Controller: Leaderboard entry
+deactivate DbContext
+Controller --> User: Return leaderboard entry
+deactivate Controller
+
+User -> Controller: POST /api/leaderboard
+activate Controller
+Controller -> MemoryCache: Get user's Auth0 ID
+activate MemoryCache
+MemoryCache --> Controller: User's Auth0 ID
+deactivate MemoryCache
+Controller -> DbContext: Retrieve user from ID
+activate DbContext
+DbContext --> Controller: User object
+deactivate DbContext
+Controller -> LeaderboardEntry: Create new leaderboard entry
+activate Entry
+Entry --> Controller: New leaderboard entry
+deactivate Entry
+Controller -> DbContext: Add leaderboard entry to database
+activate DbContext
+DbContext -> DbContext: Save changes
+DbContext --> Controller: Saved leaderboard entry
+deactivate DbContext
+Controller --> User: Return created leaderboard entry
+deactivate Controller
+
+@enduml

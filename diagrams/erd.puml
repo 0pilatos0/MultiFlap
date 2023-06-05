@@ -1,0 +1,46 @@
+@startuml
+entity Achievement {
+  + Id : int
+  Name : string
+  IsCompleted : bool
+  UserId : int
+}
+
+entity LeaderboardEntry {
+  + Id : int
+  Score : int
+  DateAchieved : DateTime
+  UserId : int
+}
+
+entity PowerUpItem {
+  + Id : int
+  Name : string
+  Quantity : int
+  UserId : int
+}
+
+entity User {
+  + Id : int
+  Auth0Identifier : string
+  Email : string
+}
+
+entity UserSettings {
+  + Id : int
+  UserId : int
+  Language : string
+  ReceiveNotifications : bool
+  DisplayName : string
+  SoundEnabled : bool
+  ShakeEnabled : bool
+}
+
+User "1" --o{ UserSettings : Composition
+User "1" --{ Achievement
+User "1" --{ LeaderboardEntry
+User "1" --{ PowerUpItem
+LeaderboardEntry "0..*" --{ User
+PowerUpItem "0..*" --{ User
+Achievement "0..*" --{ User
+@enduml
