@@ -1,0 +1,22 @@
+- Als gebruiker wil ik mijn weergavenaam kunnen invoeren op de instellingenpagina.
+- Ik wil als gebruiker een taal kunnen selecteren uit de beschikbare opties op de instellingenpagina.
+- Ik wil als gebruiker de optie om meldingen te ontvangen kunnen inschakelen op de instellingenpagina.
+- Ik wil als gebruiker het geluid aan/uit kunnen zetten op de instellingenpagina.
+- Ik wil als gebruiker de jump shaking-functie aan/uit kunnen zetten op de instellingenpagina.
+- Als gebruiker wil ik mijn instellingen kunnen opslaan door op de knop "Opslaan" te klikken op de instellingenpagina.
+- Als gebruiker wil ik mijn score weergegeven zien tijdens het spelen.
+- Als gebruiker wil ik dat het aantal online spelers wordt weergegeven tijdens het spelen.
+- Als gebruiker wil ik een solospel kunnen starten door op de knop "Solo" te klikken.
+- Als gebruiker wil ik een spel met meerdere spelers kunnen starten door op de knop "Multiplayer" te klikken.
+- Als gebruiker wil ik een matchmaking-overlay zien terwijl het multiplayerspel wordt opgezet.
+- Als gebruiker wil ik het matchmakingproces kunnen annuleren door op de knop "Annuleren" te klikken.
+- Als gebruiker wil ik de leaderboard-pagina zien met een lijst van leaderboard-deelnemers.
+- Als gebruiker wil ik het leaderboard kunnen vernieuwen door het scherm omlaag te trekken.
+- Als gebruiker wil ik een bericht zien dat aangeeft dat er nog geen leaderboard-items zijn als het leaderboard leeg is.
+- Als gebruiker wil ik een inlogpagina zien met een inlogknop.
+- Als gebruiker wil ik kunnen inloggen door op de inlogknop te klikken.
+- Als gebruiker wil ik een activiteitsindicator zien terwijl het inlogproces bezig is.
+- Als gebruiker wil ik het spel kunnen starten door op de knop "Spel starten" te klikken.
+- Als gebruiker wil ik mijn highscore weergegeven zien op de hoofdpagina.
+- Als gebruiker wil ik naar de instellingenpagina kunnen gaan door op de knop "Instellingen" te klikken.
+- Als gebruiker wil ik kunnen uitloggen door op de knop "Logout" te klikken.
