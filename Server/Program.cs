@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Server;
 using Server.Hubs;
+using Server.Services;
 using System.Text.Json;
 
 
@@ -69,6 +70,8 @@ builder.Services.AddDbContext<MultiFlapDbContext>(options =>
 
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
+
+builder.Services.AddScoped<IGameService, GameService>();
 
 
 
