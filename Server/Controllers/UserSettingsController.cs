@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Server.Models;
+using Shared.DTOs;
 using System.Threading.Tasks;
 
 namespace Server.Controllers
@@ -111,12 +112,5 @@ namespace Server.Controllers
 		}
 	}
 
-	public class UserSettingsDTO
-	{
-		public string Language { get; set; }
-		public bool ReceiveNotifications { get; set; }
-		public string DisplayName { get; set; }
-		public bool SoundEnabled { get; set; }
-		public bool ShakeEnabled { get; set; }
-	}
+	
 }

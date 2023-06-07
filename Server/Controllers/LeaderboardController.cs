@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Server.Models;
+using Shared.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,11 +115,5 @@ namespace Server.Controllers
 		}
 	}
 
-	public class LeaderboardEntryDTO
-	{
-		public int Id { get; set; }
-		public int Score { get; set; }
-		public DateTime DateAchieved { get; set; }
-		public string? DisplayName { get; set; }
-	}
+
 }

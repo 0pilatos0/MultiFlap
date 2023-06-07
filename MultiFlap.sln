@@ -5,7 +5,9 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "App\App.csproj", "{0D911FFE-9B43-4B91-96B1-B21A620FA782}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{780CC5E7-21D4-4A89-B546-395DD9CCA1BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{780CC5E7-21D4-4A89-B546-395DD9CCA1BF}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{E21890AF-9FF8-4E29-9349-423EA3C52662}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,5 +30,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D1B30A56-D705-435A-BE01-98BA9316D42C}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\Shared.projitems*{0d911ffe-9b43-4b91-96b1-b21a620fa782}*SharedItemsImports = 5
+		Shared\Shared.projitems*{780cc5e7-21d4-4a89-b546-395dd9cca1bf}*SharedItemsImports = 5
+		Shared\Shared.projitems*{e21890af-9ff8-4e29-9349-423ea3c52662}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
