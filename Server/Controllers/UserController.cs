@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Server.Models;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace Server.Controllers
 	{
 		private readonly MultiFlapDbContext _context;
 
-		public UserController(MultiFlapDbContext context)
+		public UserController(MultiFlapDbContext context, IMemoryCache memoryCache, IHttpClientFactory httpClientFactory) : base(httpClientFactory, memoryCache)
 		{
 			_context = context;
 		}

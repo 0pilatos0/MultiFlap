@@ -13,8 +13,17 @@ namespace Server.Controllers
 	// Base controller class for common functionalities
 	public class BaseController : ControllerBase
 	{
+		private readonly HttpClient _httpClient;
+		private readonly IMemoryCache _memoryCache;
+
+		public BaseController(IHttpClientFactory httpClientFactory, IMemoryCache memoryCache)
+		{
+			_httpClient = httpClientFactory.CreateClient();
+			_memoryCache = memoryCache;
+		}
+
 		// Retrieves the Auth0 ID from the authorized request using the provided memory cache
-		protected async Task<string> GetAuth0IdFromAuthorizedRequestAsync(IMemoryCache memoryCache)
+		protected async Task<string> GetAuth0IdFromAuthorizedRequestAsync()
 		{
 			// Retrieve the authorization header from the request
 			var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
@@ -24,16 +33,14 @@ namespace Server.Controllers
 				var token = authorizationHeader.Substring("Bearer ".Length);
 
 				// Check if the user ID is already cached
-				if (memoryCache.TryGetValue(token, out string userId))
+				if (_memoryCache.TryGetValue(token, out string userId))
 				{
 					return userId;
 				}
 
 				// Make a request to Auth0's userinfo endpoint to get the user ID
-				var httpClient = new HttpClient();
-				httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-				var response = await httpClient.GetAsync("https://dev-84ref6m25ippcu2o.us.auth0.com/userinfo");
+				_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+				var response = await _httpClient.GetAsync("https://dev-84ref6m25ippcu2o.us.auth0.com/userinfo");
 
 				if (response.IsSuccessStatusCode)
 				{
@@ -44,7 +51,7 @@ namespace Server.Controllers
 					if (userId != null)
 					{
 						// Cache the user ID for future use
-						memoryCache.Set(token, userId, TimeSpan.FromMinutes(10)); // Cache for 10 minutes
+						_memoryCache.Set(token, userId, TimeSpan.FromMinutes(10)); // Cache for 10 minutes
 						return userId;
 					}
 				}

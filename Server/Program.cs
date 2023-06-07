@@ -67,6 +67,9 @@ builder.Services.AddDbContext<MultiFlapDbContext>(options =>
 });
 
 builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient();
+
+
 
 var app = builder.Build();
 

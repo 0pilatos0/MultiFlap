@@ -13,19 +13,17 @@ namespace Server.Controllers
 	public class UserSettingsController : BaseController
 	{
 		private readonly MultiFlapDbContext _context;
-		private readonly IMemoryCache _memoryCache;
 
-		public UserSettingsController(MultiFlapDbContext context, IMemoryCache memoryCache)
+		public UserSettingsController(MultiFlapDbContext context, IMemoryCache memoryCache, IHttpClientFactory httpClientFactory) : base(httpClientFactory, memoryCache)
 		{
 			_context = context;
-			_memoryCache = memoryCache;
 		}
 
 		// GET api/users/settings
 		[HttpGet]
 		public async Task<ActionResult<UserSettingsDTO>> GetUserSettings()
 		{
-			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
+			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync();
 			var user = await GetUserFromIdAsync(_context, userAuth0Id);
 
 			if (user == null)
@@ -40,21 +38,20 @@ namespace Server.Controllers
 				return NotFound();
 			}
 
-			return new UserSettingsDTO
-			{
-				Language = userSettings.Language,
-				ReceiveNotifications = userSettings.ReceiveNotifications,
-				DisplayName = userSettings.DisplayName,
-				SoundEnabled = userSettings.SoundEnabled,
-				ShakeEnabled = userSettings.ShakeEnabled
-			};
+			var userSettingsDto = MapToUserSettingsDto(userSettings);
+			return userSettingsDto;
 		}
 
 		// PUT api/users/settings
 		[HttpPut]
 		public async Task<IActionResult> UpdateUserSettings(UserSettingsDTO updatedUserSettings)
 		{
-			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
+			if (updatedUserSettings == null)
+			{
+				return BadRequest();
+			}
+
+			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync();
 			var user = await GetUserFromIdAsync(_context, userAuth0Id);
 
 			if (user == null)
@@ -99,6 +96,18 @@ namespace Server.Controllers
 		private bool UserSettingsExists(int userId)
 		{
 			return _context.UserSettings.Any(us => us.UserId == userId);
+		}
+
+		private static UserSettingsDTO MapToUserSettingsDto(UserSettings userSettings)
+		{
+			return new UserSettingsDTO
+			{
+				Language = userSettings.Language,
+				ReceiveNotifications = userSettings.ReceiveNotifications,
+				DisplayName = userSettings.DisplayName,
+				SoundEnabled = userSettings.SoundEnabled,
+				ShakeEnabled = userSettings.ShakeEnabled
+			};
 		}
 	}
 

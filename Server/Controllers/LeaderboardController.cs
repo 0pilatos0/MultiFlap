@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json.Linq;
 using Server.Models;
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,8 @@ namespace Server.Controllers
 		private readonly MultiFlapDbContext _context;
 		private readonly IMemoryCache _memoryCache;
 
-		public LeaderboardEntryController(MultiFlapDbContext context, IMemoryCache memoryCache)
+		public LeaderboardEntryController(MultiFlapDbContext context, IMemoryCache memoryCache, IHttpClientFactory httpClientFactory)
+			: base(httpClientFactory, memoryCache)
 		{
 			_context = context;
 			_memoryCache = memoryCache;
@@ -29,7 +29,6 @@ namespace Server.Controllers
 		[HttpGet]
 		public ActionResult<IEnumerable<LeaderboardEntryDTO>> GetLeaderboard()
 		{
-			// Retrieve leaderboard entries with associated user data and order by score
 			var leaderboard = _context.LeaderboardEntries
 				.Include(le => le.User)
 				.OrderByDescending(le => le.Score)
@@ -48,9 +47,14 @@ namespace Server.Controllers
 		[HttpGet("me")]
 		public async Task<ActionResult<int>> GetOwnHighscore()
 		{
-			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
+			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync();
 
-			User? user = await GetUserFromIdAsync(_context, userAuth0Id);
+			var user = await GetUserFromIdAsync(_context, userAuth0Id);
+
+			if (user == null)
+			{
+				return NotFound();
+			}
 
 			var highscore = _context.LeaderboardEntries
 				.Where(le => le.User == user)
@@ -61,6 +65,7 @@ namespace Server.Controllers
 			return Ok(highscore);
 		}
 
+		[HttpGet("{id}")]
 		public async Task<ActionResult<LeaderboardEntry>> GetLeaderboardEntry(int id)
 		{
 			var leaderboardEntry = await _context.LeaderboardEntries.FindAsync(id);
@@ -73,26 +78,30 @@ namespace Server.Controllers
 			return leaderboardEntry;
 		}
 
-		// POST api/leaderboard
 		[HttpPost]
 		public async Task<ActionResult<LeaderboardEntry>> AddLeaderboardEntry(LeaderboardEntryDTO newLeaderboardEntry)
 		{
-			// Get the user's Auth0 ID from the authorized request
-			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync(_memoryCache);
+			if (newLeaderboardEntry == null)
+			{
+				return BadRequest();
+			}
 
-			// Check if the user exists, otherwise create it
-			User? user = await GetUserFromIdAsync(_context, userAuth0Id);
+			var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync();
 
-			LeaderboardEntry leaderboardEntry = new LeaderboardEntry
+			var user = await GetUserFromIdAsync(_context, userAuth0Id);
+
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			var leaderboardEntry = new LeaderboardEntry
 			{
 				User = user,
 				Score = newLeaderboardEntry.Score,
 				DateAchieved = DateTime.Now
 			};
 
-			Console.WriteLine($"Adding leaderboard entry for user {user.Id} with score {newLeaderboardEntry.Score}");
-
-			// Add the leaderboard entry to the database
 			_context.LeaderboardEntries.Add(leaderboardEntry);
 			await _context.SaveChangesAsync();
 

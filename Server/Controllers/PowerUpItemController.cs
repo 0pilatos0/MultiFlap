@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Server.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Server.Controllers
 	{
 		private readonly MultiFlapDbContext _context;
 
-		public PowerUpItemController(MultiFlapDbContext context)
+		public PowerUpItemController(MultiFlapDbContext context, IMemoryCache memoryCache, IHttpClientFactory httpClientFactory) : base(httpClientFactory, memoryCache)
 		{
 			_context = context;
 		}
