@@ -71,9 +71,7 @@ builder.Services.AddDbContext<MultiFlapDbContext>(options =>
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
 
-builder.Services.AddScoped<IGameService, GameService>();
-
-
+builder.Services.AddSingleton<IGameService, GameService>();
 
 var app = builder.Build();
 
