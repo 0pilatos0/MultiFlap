@@ -82,14 +82,6 @@ namespace Server.Services
             _logger.LogInformation($"Player {connectionId} started matchmaking");
             _logger.LogInformation($"Player count: {_players.Count}");
 
-            //log all players
-            foreach (var plsayer in _players)
-            {
-                _logger.LogInformation(
-                    $"Player {plsayer.Key} is looking for match: {plsayer.Value.IsLookingForMatch}"
-                );
-            }
-
             if (_players.TryGetValue(connectionId, out var player))
             {
                 player.MatchId = null;
@@ -99,7 +91,7 @@ namespace Server.Services
 
                 var match = FindMatch(player);
 
-                if (match == null)
+                if (match.Players.Count == 1)
                 {
                     _logger.LogInformation($"Matchmaking started for player {player.ConnectionId}");
                     await SendToClientAsync(connectionId, "MatchmakingStarted");
