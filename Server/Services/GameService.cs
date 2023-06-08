@@ -265,5 +265,15 @@ namespace Server.Services
             _matches.TryAdd(newMatch.Id, newMatch);
             return newMatch;
         }
+
+        public ConcurrentDictionary<string, Player> Players
+        {
+            get { return _players; }
+        }
+
+        public ConcurrentDictionary<string, Match> Matches
+        {
+            get { return _matches; }
+        }
     }
 }
