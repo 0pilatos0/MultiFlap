@@ -91,7 +91,11 @@ namespace Server.Services
 
                 var match = FindMatch(player);
 
-                if (match.Players.Count == 1)
+                if (
+                    match != null
+                    && match.Players.Count == 1
+                    && match.Players[0].ConnectionId == player.ConnectionId
+                )
                 {
                     _logger.LogInformation($"Matchmaking started for player {player.ConnectionId}");
                     await SendToClientAsync(connectionId, "MatchmakingStarted");
