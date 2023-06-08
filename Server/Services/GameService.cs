@@ -206,8 +206,12 @@ namespace Server.Services
 
         private async Task UpdateOnlinePlayersCountAsync()
         {
-            await SendToAllClientsAsync("UpdateOnlinePlayers", _players.Count);
+            if (_hubContext.Clients != null) // Add null check
+            {
+                await SendToAllClientsAsync("UpdateOnlinePlayers", _players.Count);
+            }
         }
+
 
         private async Task SendToClientAsync(
             string connectionId,
