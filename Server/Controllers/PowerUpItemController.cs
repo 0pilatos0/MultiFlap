@@ -9,105 +9,161 @@ using System.Threading.Tasks;
 
 namespace Server.Controllers
 {
-	[ApiController]
-	[Authorize]
-	[Route("api/users/{userId}/powerups")]
-	public class PowerUpItemController : BaseController
-	{
-		private readonly MultiFlapDbContext _context;
+    [ApiController]
+    [Authorize]
+    [Route("api/powerups")]
+    public class PowerUpItemController : BaseController
+    {
+        private readonly MultiFlapDbContext _context;
 
-		public PowerUpItemController(MultiFlapDbContext context, IMemoryCache memoryCache, IHttpClientFactory httpClientFactory) : base(httpClientFactory, memoryCache)
-		{
-			_context = context;
-		}
+        public PowerUpItemController(
+            MultiFlapDbContext context,
+            IMemoryCache memoryCache,
+            IHttpClientFactory httpClientFactory
+        )
+            : base(httpClientFactory, memoryCache)
+        {
+            _context = context;
+        }
 
-		// GET api/users/{userId}/powerups
-		[HttpGet]
-		public ActionResult<IEnumerable<PowerUpItem>> GetPowerUpItems(int userId)
-		{
-			var powerUpItems = _context.PowerUpItems
-				.Where(pu => pu.UserId == userId)
-				.ToList();
+        // GET api/powerups
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PowerUpItem>>> GetPowerUpItems()
+        {
+            var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync();
+            var user = await GetUserFromIdAsync(_context, userAuth0Id);
 
-			return powerUpItems;
-		}
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-		// POST api/users/{userId}/powerups
-		[HttpPost]
-		public async Task<ActionResult<PowerUpItem>> AddPowerUpItem(int userId, PowerUpItem powerUpItem)
-		{
-			powerUpItem.UserId = userId;
+            var powerUpItems = await _context.PowerUpItems
+                .Where(pu => pu.UserId == user.Id)
+                .ToListAsync();
 
-			_context.PowerUpItems.Add(powerUpItem);
-			await _context.SaveChangesAsync();
+            return powerUpItems;
+        }
 
-			return CreatedAtAction(nameof(GetPowerUpItem), new { userId = powerUpItem.UserId, id = powerUpItem.Id }, powerUpItem);
-		}
+        // POST api/powerups
+        [HttpPost]
+        public async Task<ActionResult<PowerUpItem>> AddPowerUpItem(PowerUpItem powerUpItem)
+        {
+            var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync();
+            var user = await GetUserFromIdAsync(_context, userAuth0Id);
 
-		// PUT api/users/{userId}/powerups/{id}
-		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdatePowerUpItem(int userId, int id, PowerUpItem updatedPowerUpItem)
-		{
-			if (userId != updatedPowerUpItem.UserId || id != updatedPowerUpItem.Id)
-			{
-				return BadRequest();
-			}
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-			_context.Entry(updatedPowerUpItem).State = EntityState.Modified;
+            powerUpItem.UserId = user.Id;
 
-			try
-			{
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!PowerUpItemExists(userId, id))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
-			}
+            _context.PowerUpItems.Add(powerUpItem);
+            await _context.SaveChangesAsync();
 
-			return NoContent();
-		}
+            return CreatedAtAction(
+                nameof(GetPowerUpItem),
+                new { userId = powerUpItem.UserId, id = powerUpItem.Id },
+                powerUpItem
+            );
+        }
 
-		// DELETE api/users/{userId}/powerups/{id}
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeletePowerUpItem(int userId, int id)
-		{
-			var powerUpItem = await _context.PowerUpItems.FindAsync(id);
+        // PUT api/powerups/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePowerUpItem(int id, PowerUpItem updatedPowerUpItem)
+        {
+            if (id != updatedPowerUpItem.Id)
+            {
+                return BadRequest();
+            }
 
-			if (powerUpItem == null || powerUpItem.UserId != userId)
-			{
-				return NotFound();
-			}
+            var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync();
+            var user = await GetUserFromIdAsync(_context, userAuth0Id);
 
-			_context.PowerUpItems.Remove(powerUpItem);
-			await _context.SaveChangesAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-			return NoContent();
-		}
+            if (user.Id != updatedPowerUpItem.UserId)
+            {
+                return BadRequest();
+            }
 
-		// GET api/users/{userId}/powerups/{id}
-		[HttpGet("{id}")]
-		private ActionResult<PowerUpItem> GetPowerUpItem(int userId, int id)
-		{
-			var powerUpItem = _context.PowerUpItems.FirstOrDefault(pu => pu.UserId == userId && pu.Id == id);
+            _context.Entry(updatedPowerUpItem).State = EntityState.Modified;
 
-			if (powerUpItem == null)
-			{
-				return NotFound();
-			}
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PowerUpItemExists(updatedPowerUpItem.UserId, id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-			return powerUpItem;
-		}
+            return NoContent();
+        }
 
-		private bool PowerUpItemExists(int userId, int id)
-		{
-			return _context.PowerUpItems.Any(pu => pu.UserId == userId && pu.Id == id);
-		}
-	}
+        // DELETE api/powerups/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePowerUpItem(int id)
+        {
+            var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync();
+            var user = await GetUserFromIdAsync(_context, userAuth0Id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var powerUpItem = await _context.PowerUpItems.FindAsync(id);
+
+            if (powerUpItem == null || powerUpItem.UserId != user.Id)
+            {
+                return NotFound();
+            }
+
+            _context.PowerUpItems.Remove(powerUpItem);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // GET api/powerups/{id}
+        [HttpGet("{id}")]
+        private async Task<ActionResult<PowerUpItem>> GetPowerUpItem(int id)
+        {
+            var userAuth0Id = await GetAuth0IdFromAuthorizedRequestAsync();
+            var user = await GetUserFromIdAsync(_context, userAuth0Id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var powerUpItem = await _context.PowerUpItems.FirstOrDefaultAsync(
+                pu => pu.UserId == user.Id && pu.Id == id
+            );
+
+            if (powerUpItem == null)
+            {
+                return NotFound();
+            }
+
+            return powerUpItem;
+        }
+
+        private bool PowerUpItemExists(int userId, int id)
+        {
+            return _context.PowerUpItems.Any(pu => pu.UserId == userId && pu.Id == id);
+        }
+    }
 }
