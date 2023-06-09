@@ -135,5 +135,64 @@ namespace App.ViewModels
 				Console.WriteLine("An error occurred: " + ex.Message);
 			}
 		}
-	}
+
+        // Command for deleting the user account and logging out
+        private RelayCommand _deleteCommand;
+        public RelayCommand DeleteCommand
+        {
+            get
+            {
+                if (_deleteCommand == null)
+                {
+                    _deleteCommand = new RelayCommand(async () => await DeleteAccount());
+                }
+                return _deleteCommand;
+            }
+        }
+
+        private async Task DeleteAccount()
+        {
+            try
+            {
+                // Display a confirmation dialog to the user
+                bool answer = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to delete your account?", "Yes", "No");
+
+                if (answer)
+                {
+                    // Get the access token from the Auth0Client
+                    string accessToken = _auth0Client.AccessToken; // Replace with your actual method to retrieve the access token
+
+                    // Define the API endpoint URL for deleting the user account
+                    string apiUrl = "api/users"; // Replace with the appropriate endpoint URL
+
+                    // Send a DELETE request to the API endpoint to delete the user account
+                    string response = await _apiService.DeleteAsync(apiUrl, accessToken);
+
+                    // Check if the request was successful
+                    if (!string.IsNullOrEmpty(response))
+                    {
+                        // User account deleted successfully
+
+                        // Log out the user
+                        await _auth0Client.LogoutAsync(); // Replace with your actual logout method
+
+                        // Navigate to the login page or any other appropriate page
+                        // Example:
+                        //await Application.Current.MainPage.Navigation.PushAsync();
+                    }
+                    else
+                    {
+                        // Handle the error response from the API
+                        Console.WriteLine("Error deleting user account: " + response);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any exception that occurred during the API request
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
+
+    }
 }
