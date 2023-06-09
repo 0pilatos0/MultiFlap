@@ -1,4 +1,4 @@
-<ContentPage
+﻿<ContentPage
     x:Class="App.Game"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -95,6 +95,37 @@
                     WidthRequest="150" />
             </StackLayout>
         </StackLayout>
+
+        <!-- Countdown overlay -->
+        <StackLayout
+            x:Name="isCountDown"
+            BackgroundColor="#80000000"
+            VerticalOptions="FillAndExpand"
+            HorizontalOptions="FillAndExpand"
+            Padding="20"
+            IsVisible="False">
+            <ActivityIndicator
+                IsRunning="True"
+                Color="White"
+                VerticalOptions="CenterAndExpand" />
+            <Label
+                x:Name="CountdownLabel"
+                TextColor="White"
+                FontSize="48"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                VerticalOptions="CenterAndExpand"
+                Margin="0,20">
+                <Label.FontFamily>
+                    <OnPlatform x:TypeArguments="x:String">
+                        <On Platform="iOS" Value="Arial-BoldMT" />
+                        <On Platform="Android" Value="sans-serif-condensed" />
+                        <On Platform="UWP" Value="Assets/Fonts/arialbd.ttf#Arial" />
+                    </OnPlatform>
+                </Label.FontFamily>
+            </Label>
+        </StackLayout>
+
 
         <!-- Matchmaking overlay -->
         <StackLayout

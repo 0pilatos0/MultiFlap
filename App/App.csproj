@@ -74,6 +74,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
         <PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="7.0.86" />
         <PackageReference Include="Plugin.Maui.Audio" Version="1.0.0" />
+        <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.31.0" />
     </ItemGroup>
 
     <ItemGroup>
