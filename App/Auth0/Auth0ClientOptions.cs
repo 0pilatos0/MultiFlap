@@ -1,4 +1,4 @@
-﻿namespace MauiAuth0App.Auth0;
+﻿namespace App.Auth0;
 
 public class Auth0ClientOptions
 {

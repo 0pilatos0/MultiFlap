@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Plugin.Maui.Audio;
-using MauiAuth0App.Auth0;
+using App.Auth0;
 using CommunityToolkit.Maui;
 using App.Views;
 using App.ViewModels;

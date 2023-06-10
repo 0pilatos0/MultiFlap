@@ -2,7 +2,7 @@
 using System.Text.Json;
 using App.Models;
 using App.Services;
-using MauiAuth0App.Auth0;
+using App.Auth0;
 using System.Windows.Input;
 
 namespace App.ViewModels

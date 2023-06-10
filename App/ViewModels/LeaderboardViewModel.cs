@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 using App.Services;
-using MauiAuth0App.Auth0;
+using App.Auth0;
 using App.Models;
 using System.Windows.Input;
 

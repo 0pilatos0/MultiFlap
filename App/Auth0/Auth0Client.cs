@@ -2,7 +2,7 @@
 using IdentityModel.OidcClient;
 using IdentityModel.OidcClient.Browser;
 
-namespace MauiAuth0App.Auth0;
+namespace App.Auth0;
 
 public class Auth0Client
 {

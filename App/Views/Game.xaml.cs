@@ -1,5 +1,5 @@
 using App.Services;
-using MauiAuth0App.Auth0;
+using App.Auth0;
 using Microsoft.AspNetCore.SignalR.Client;
 using Plugin.Maui.Audio;
 using System;

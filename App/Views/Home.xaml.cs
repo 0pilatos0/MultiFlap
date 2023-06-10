@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
-using MauiAuth0App.Auth0;
+using App.Auth0;
 using System.Net.Http.Headers;
 using App.Views;
 using App.Models;

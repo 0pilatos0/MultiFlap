@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using App.Models;
 using CommunityToolkit.Mvvm.Input;
-using MauiAuth0App.Auth0;
+using App.Auth0;
 using App.Services;
 using App.Views;
 
