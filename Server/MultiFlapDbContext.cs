@@ -34,17 +34,89 @@ namespace Server
                         UserId = 1,
                         Language = "English",
                         ReceiveNotifications = true,
-                        DisplayName = "Admin1",
+                        DisplayName = "Johndogamer",
                         SoundEnabled = false
                     },
                     new UserSettings
                     {
                         Id = 2,
                         UserId = 2,
-                        Language = "French",
-                        ReceiveNotifications = false,
-                        DisplayName = "Admin2",
-                        SoundEnabled = true
+                        Language = "English",
+                        ReceiveNotifications = true,
+                        DisplayName = "Janedogamer",
+                        SoundEnabled = false
+                    },
+                    new UserSettings
+                    {
+                        Id = 3,
+                        UserId = 3,
+                        Language = "English",
+                        ReceiveNotifications = true,
+                        DisplayName = "Markdogamer",
+                        SoundEnabled = false
+                    },
+                    new UserSettings
+                    {
+                        Id = 4,
+                        UserId = 4,
+                        Language = "English",
+                        ReceiveNotifications = true,
+                        DisplayName = "Amydogamer",
+                        SoundEnabled = false
+                    },
+                    new UserSettings
+                    {
+                        Id = 5,
+                        UserId = 5,
+                        Language = "English",
+                        ReceiveNotifications = true,
+                        DisplayName = "Michaeldogamer",
+                        SoundEnabled = false
+                    },
+                    new UserSettings
+                    {
+                        Id = 6,
+                        UserId = 6,
+                        Language = "English",
+                        ReceiveNotifications = true,
+                        DisplayName = "Emilydogamer",
+                        SoundEnabled = false
+                    },
+                    new UserSettings
+                    {
+                        Id = 7,
+                        UserId = 7,
+                        Language = "English",
+                        ReceiveNotifications = true,
+                        DisplayName = "Jacobdogamer",
+                        SoundEnabled = false
+                    },
+                    new UserSettings
+                    {
+                        Id = 8,
+                        UserId = 8,
+                        Language = "English",
+                        ReceiveNotifications = true,
+                        DisplayName = "Oliviadogamer",
+                        SoundEnabled = false
+                    },
+                    new UserSettings
+                    {
+                        Id = 9,
+                        UserId = 9,
+                        Language = "English",
+                        ReceiveNotifications = true,
+                        DisplayName = "Williamdogamer",
+                        SoundEnabled = false
+                    },
+                    new UserSettings
+                    {
+                        Id = 10,
+                        UserId = 10,
+                        Language = "English",
+                        ReceiveNotifications = true,
+                        DisplayName = "Sophiadogamer",
+                        SoundEnabled = false
                     }
                 );
 
