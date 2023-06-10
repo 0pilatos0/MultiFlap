@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace App.Models
 {
     public class Achievement
@@ -10,4 +11,3 @@ namespace App.Models
         public int UserId { get; set; }
     }
 }
-

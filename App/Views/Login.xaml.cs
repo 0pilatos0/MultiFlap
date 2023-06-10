@@ -5,67 +5,76 @@ namespace App.Views;
 
 public partial class LoginPage : ContentPage
 {
-	private readonly Auth0Client auth0Client;
-	public LoginPage(Auth0Client client)
-	{
-		InitializeComponent();
-		auth0Client = client;
-	}
+    private readonly Auth0Client auth0Client;
 
-	private async void OnLoginClicked(object sender, EventArgs e)
-	{
-		if (Preferences.Get("IsLoggedIn", false))
-		{
-			await LogoutAsync();
-		}
-		else
-		{
-			await LoginAsync();
-		}
-	}
+    public LoginPage(Auth0Client client)
+    {
+        InitializeComponent();
+        auth0Client = client;
+    }
 
-	private async Task LoginAsync()
-	{
-		LoginButton.IsEnabled = false;
-		LoggingIn.IsVisible = true;
+    private async void OnLoginClicked(object sender, EventArgs e)
+    {
+        if (Preferences.Get("IsLoggedIn", false))
+        {
+            await LogoutAsync();
+        }
+        else
+        {
+            await LoginAsync();
+        }
+    }
 
-		var loggingInResult = await auth0Client.LoginAsync();
+    private async Task LoginAsync()
+    {
+        LoginButton.IsEnabled = false;
+        LoggingIn.IsVisible = true;
 
-		LoggingIn.IsVisible = false;
+        var loggingInResult = await auth0Client.LoginAsync();
 
-		if (loggingInResult.IsError)
-		{
-			await App.Current.MainPage.DisplayAlert("Error", "Something went wrong logging you in. Please try again.", "OK");
-			LoginButton.IsEnabled = true;
-			LoggingIn.IsVisible = false;
-		}
-		else // user is logged in
-		{
-			await Navigation.PopToRootAsync();
-		}
-	}
+        LoggingIn.IsVisible = false;
 
-	private async Task LogoutAsync()
-	{
-		LoginButton.IsEnabled = false;
-		LoggingIn.IsVisible = true;
+        if (loggingInResult.IsError)
+        {
+            await App.Current.MainPage.DisplayAlert(
+                "Error",
+                "Something went wrong logging you in. Please try again.",
+                "OK"
+            );
+            LoginButton.IsEnabled = true;
+            LoggingIn.IsVisible = false;
+        }
+        else // user is logged in
+        {
+            await Navigation.PopToRootAsync();
+        }
+    }
 
-		var loggingOutResult = await auth0Client.LogoutAsync();
+    private async Task LogoutAsync()
+    {
+        LoginButton.IsEnabled = false;
+        LoggingIn.IsVisible = true;
 
-		LoggingIn.IsVisible = false;
+        var loggingOutResult = await auth0Client.LogoutAsync();
 
-		if (loggingOutResult.IsError)
-		{
-			await App.Current.MainPage.DisplayAlert("Error", "Something went wrong logging you out. Please try again.", "OK");
-			LoginButton.IsEnabled = true;
-			LoggingIn.IsVisible = false;
-		}
-		else // user is logged out
-		{
-			Preferences.Clear();
-			Preferences.Set("IsLoggedIn", false);
-			Preferences.Set("UserName", String.Empty);
-			await Navigation.PopModalAsync();
-		}
-	}
+        LoggingIn.IsVisible = false;
+
+        if (loggingOutResult.IsError)
+        {
+            await App.Current.MainPage.DisplayAlert(
+                "Error",
+                "Something went wrong logging you out. Please try again.",
+                "OK"
+            );
+            LoginButton.IsEnabled = true;
+            LoggingIn.IsVisible = false;
+        }
+        else // user is logged out
+        {
+            Preferences.Clear();
+            Preferences.Set("IsLoggedIn", false);
+            Preferences.Set("UserName", String.Empty);
+            await Navigation.PopModalAsync();
+        }
+    }
 }

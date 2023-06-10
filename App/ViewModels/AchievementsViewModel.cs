@@ -4,7 +4,6 @@ using App.Models;
 using App.Services;
 using MauiAuth0App.Auth0;
 using System.Windows.Input;
-using System.Threading.Tasks;
 
 namespace App.ViewModels
 {
@@ -65,7 +64,10 @@ namespace App.ViewModels
                     };
 
                     // Deserialize the response JSON to a list of Achievement objects
-                    var newAchievements = JsonSerializer.Deserialize<List<Achievement>>(response, options);
+                    var newAchievements = JsonSerializer.Deserialize<List<Achievement>>(
+                        response,
+                        options
+                    );
 
                     // Clear the existing achievements and add the new ones
                     Achievements.Clear();
@@ -91,14 +93,13 @@ namespace App.ViewModels
             }
         }
 
-
-
-        public ICommand RefreshCommand => _refreshCommand ??= new Command(async () =>
-        {
-            IsRefreshing = true;
-            await LoadAchievements();
-            IsRefreshing = false;
-        });
+        public ICommand RefreshCommand =>
+            _refreshCommand ??= new Command(async () =>
+            {
+                IsRefreshing = true;
+                await LoadAchievements();
+                IsRefreshing = false;
+            });
 
         public bool IsRefreshing
         {

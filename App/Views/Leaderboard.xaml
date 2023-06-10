@@ -31,7 +31,8 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <Label Text="No leaderboard items yet" IsVisible="{Binding HasNoItems}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+                    <Label Text="No leaderboard items yet" IsVisible="{Binding HasNoItems}"
+                        HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
                 </StackLayout>
             </ScrollView>
         </RefreshView>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ContentPage
     x:Class="App.Views.EditUserSettings"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -10,7 +10,8 @@
         <ScrollView>
             <StackLayout Padding="20" Spacing="20">
                 <Label Text="Display Name" FontSize="Title" FontAttributes="Bold" />
-                <Entry Text="{Binding UserSettings.DisplayName}" Placeholder="Enter your display name" />
+                <Entry Text="{Binding UserSettings.DisplayName}"
+                    Placeholder="Enter your display name" />
 
                 <Label Text="Language" FontSize="Title" FontAttributes="Bold" />
                 <Picker Title="Select language" SelectedItem="{Binding UserSettings.Language}">
@@ -34,13 +35,15 @@
                 <Label Text="Jump Shaking" FontSize="Title" FontAttributes="Bold" />
                 <Switch IsToggled="{Binding UserSettings.ShakeEnabled}" />
 
-                <!--<Label Text="Vibration" FontSize="Title" FontAttributes="Bold" />
+                <!--<Label
+                Text="Vibration" FontSize="Title" FontAttributes="Bold" />
                 <Switch IsToggled="{Binding UserSettings.VibrationEnabled}" /> -->
-                
-                
 
-                <Button Command="{Binding DeleteCommand}" Text="Delete Account" HorizontalOptions="Center" WidthRequest="200" />
-                <Button Command="{Binding SaveCommand}" Text="Save" HorizontalOptions="Center" WidthRequest="200" />
+
+                <Button Command="{Binding DeleteCommand}" Text="Delete Account"
+                    HorizontalOptions="Center" WidthRequest="200" />
+                <Button Command="{Binding SaveCommand}" Text="Save" HorizontalOptions="Center"
+                    WidthRequest="200" />
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

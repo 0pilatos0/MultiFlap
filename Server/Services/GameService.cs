@@ -212,7 +212,6 @@ namespace Server.Services
             }
         }
 
-
         private async Task SendToClientAsync(
             string connectionId,
             string methodName,

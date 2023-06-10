@@ -1,13 +1,8 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using App.Models;
 using CommunityToolkit.Mvvm.Input;
 using MauiAuth0App.Auth0;
 using App.Services;
-using IdentityModel.OidcClient;
 using App.Views;
 
 namespace App.ViewModels
@@ -176,43 +171,43 @@ namespace App.ViewModels
                     string response = await _apiService.DeleteAsync(apiUrl, accessToken);
 
                     // Check if the request was successful
-                   
-                        // User account deleted successfully
 
-                        // Log out the user
-                        await _auth0Client.LogoutAsync(); // Replace with your actual logout method
+                    // User account deleted successfully
 
-                        /*var logoutResult = await _auth0Client.LogoutAsync();
+                    // Log out the user
+                    await _auth0Client.LogoutAsync(); // Replace with your actual logout method
 
-                        if (!logoutResult.IsError)
-                        {
-                            await Navigation.PushAsync(new LoginPage(_auth0Client));
-                        }
-                        else
-                        {
-                            await DisplayAlert("Error", logoutResult.ErrorDescription, "OK");
-                        } */
+                    /*var logoutResult = await _auth0Client.LogoutAsync();
 
-                        var logoutResult = await _auth0Client.LogoutAsync();
+                    if (!logoutResult.IsError)
+                    {
+                        await Navigation.PushAsync(new LoginPage(_auth0Client));
+                    }
+                    else
+                    {
+                        await DisplayAlert("Error", logoutResult.ErrorDescription, "OK");
+                    } */
 
-                        if (!logoutResult.IsError)
-                        {
-                            await Application.Current.MainPage.Navigation.PushAsync(
-                                new LoginPage(_auth0Client)
-                            );
-                        }
-                        else
-                        {
-                            await Application.Current.MainPage.DisplayAlert(
-                                "Error",
-                                logoutResult.ErrorDescription,
-                                "OK"
-                            );
-                        }
+                    var logoutResult = await _auth0Client.LogoutAsync();
 
-                        // Navigate to the login page or any other appropriate page
-                        // Example:
-                        //await Application.Current.MainPage.Navigation.PushAsync();
+                    if (!logoutResult.IsError)
+                    {
+                        await Application.Current.MainPage.Navigation.PushAsync(
+                            new LoginPage(_auth0Client)
+                        );
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert(
+                            "Error",
+                            logoutResult.ErrorDescription,
+                            "OK"
+                        );
+                    }
+
+                    // Navigate to the login page or any other appropriate page
+                    // Example:
+                    //await Application.Current.MainPage.Navigation.PushAsync();
                 }
             }
             catch (Exception ex)

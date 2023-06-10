@@ -70,7 +70,7 @@
                                 FontFamily="Arial"
                                 Text="Leaderboard"
                                 TextColor="White" />
-                             <Button
+                            <Button
                                 Margin="0,0,10,0"
                                 BackgroundColor="#2C2C2C"
                                 Clicked="OnAchievementsClicked"

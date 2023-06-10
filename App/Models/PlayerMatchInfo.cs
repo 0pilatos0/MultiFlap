@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace App.Models
 {
-public class PlayerMatchInfo
-{
-	public string ConnectionId { get; set; }
-	public int Y { get; set; }
-	public int Score { get; set; }
-}
+    public class PlayerMatchInfo
+    {
+        public string ConnectionId { get; set; }
+        public int Y { get; set; }
+        public int Score { get; set; }
+    }
 }

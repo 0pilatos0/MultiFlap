@@ -2,23 +2,23 @@
 
 public class Auth0ClientOptions
 {
-	public Auth0ClientOptions()
-	{
-		Scope = "openid";
-		RedirectUri = "multiflap://callback";
-		Browser = new WebBrowserAuthenticator();
-		Audience = "";
-	}
+    public Auth0ClientOptions()
+    {
+        Scope = "openid";
+        RedirectUri = "multiflap://callback";
+        Browser = new WebBrowserAuthenticator();
+        Audience = "";
+    }
 
-	public string Domain { get; set; }
+    public string Domain { get; set; }
 
-	public string ClientId { get; set; }
+    public string ClientId { get; set; }
 
-	public string RedirectUri { get; set; }
+    public string RedirectUri { get; set; }
 
-	public string Scope { get; set; }
+    public string Scope { get; set; }
 
-	public string Audience { get; set; }
+    public string Audience { get; set; }
 
-	public IdentityModel.OidcClient.Browser.IBrowser Browser { get; set; }
+    public IdentityModel.OidcClient.Browser.IBrowser Browser { get; set; }
 }

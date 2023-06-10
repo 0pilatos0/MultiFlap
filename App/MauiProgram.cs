@@ -17,43 +17,45 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
-            {  
+            {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
-
-		
-
 
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
         //Pages
-		builder.Services.AddTransient<MainPage>();
-		builder.Services.AddTransient<Game>();
-		builder.Services.AddTransient<LoginPage>();
-		builder.Services.AddTransient<EditUserSettings>();
-		builder.Services.AddTransient<Leaderboard>();
-		builder.Services.AddTransient<Achievements>();
+        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<Game>();
+        builder.Services.AddTransient<LoginPage>();
+        builder.Services.AddTransient<EditUserSettings>();
+        builder.Services.AddTransient<Leaderboard>();
+        builder.Services.AddTransient<Achievements>();
 
-		//ViewModels
-		builder.Services.AddSingleton<UserSettingsViewModel>();
-		builder.Services.AddSingleton<LeaderboardViewModel>();
-		builder.Services.AddSingleton<AchievementsViewModel>();
+        //ViewModels
+        builder.Services.AddSingleton<UserSettingsViewModel>();
+        builder.Services.AddSingleton<LeaderboardViewModel>();
+        builder.Services.AddSingleton<AchievementsViewModel>();
 
-		//Services
-		builder.Services.AddSingleton<IApiService, ApiService>();
-		builder.Services.AddSingleton(AudioManager.Current);
+        //Services
+        builder.Services.AddSingleton<IApiService, ApiService>();
+        builder.Services.AddSingleton(AudioManager.Current);
         builder.Services.AddSingleton<IPreferences>(Preferences.Default);
-		builder.Services.AddSingleton(new Auth0Client(new()
-		{
-			Domain = "dev-84ref6m25ippcu2o.us.auth0.com",
-			ClientId = "ChftVfAPQaAIncpXAxI9ir2opzb61Srw",
-			Scope = "openid profile",
-			RedirectUri = "multiflap://callback",
-			Audience = "161.97.97.200",
-		}, Preferences.Default));
+        builder.Services.AddSingleton(
+            new Auth0Client(
+                new()
+                {
+                    Domain = "dev-84ref6m25ippcu2o.us.auth0.com",
+                    ClientId = "ChftVfAPQaAIncpXAxI9ir2opzb61Srw",
+                    Scope = "openid profile",
+                    RedirectUri = "multiflap://callback",
+                    Audience = "161.97.97.200",
+                },
+                Preferences.Default
+            )
+        );
 
-		return builder.Build();
+        return builder.Build();
     }
 }
