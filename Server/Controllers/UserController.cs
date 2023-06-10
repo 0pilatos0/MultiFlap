@@ -36,6 +36,31 @@ namespace Server.Controllers
                 return NotFound();
             }
 
+            //Delete achievements from user
+            var userAchievements = await _context.Achievements
+                .Where(ua => ua.UserId == user.Id)
+                .ToListAsync();
+            _context.Achievements.RemoveRange(userAchievements);
+
+            //Delete users LeaderboardEntries
+            var userLeaderboardEntries = await _context.LeaderboardEntries
+                .Where(ul => ul.UserId == user.Id)
+                .ToListAsync();
+            _context.LeaderboardEntries.RemoveRange(userLeaderboardEntries);
+
+            //Delete users usersettings
+            var userSettings = await _context.UserSettings
+                .Where(us => us.UserId == user.Id)
+                .ToListAsync();
+            _context.UserSettings.RemoveRange(userSettings);
+
+            //Delete users powerups
+            var userPowerups = await _context.PowerUpItems
+                .Where(up => up.UserId == user.Id)
+                .ToListAsync();
+            _context.PowerUpItems.RemoveRange(userPowerups);
+
+            //Delete user
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
