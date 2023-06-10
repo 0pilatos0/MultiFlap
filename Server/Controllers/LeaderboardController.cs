@@ -127,7 +127,7 @@ namespace Server.Controllers
                 {
                     Name = "First Score",
                     Description = "You got your first score!",
-                    UserId = user.Id
+                    User = user
                 };
 
                 _context.Achievements.Add(userAchievement);
