@@ -70,6 +70,14 @@
                                 FontFamily="Arial"
                                 Text="Leaderboard"
                                 TextColor="White" />
+                             <Button
+                                Margin="0,0,10,0"
+                                BackgroundColor="#2C2C2C"
+                                Clicked="OnAchievementsClicked"
+                                CornerRadius="8"
+                                FontFamily="Arial"
+                                Text="Achievements"
+                                TextColor="White" />
                             <Button
                                 Margin="10,0,0,0"
                                 BackgroundColor="#2C2C2C"

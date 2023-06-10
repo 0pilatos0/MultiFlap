@@ -1,0 +1,38 @@
+﻿<ContentPage
+    x:Class="App.Views.Achievements"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:App.ViewModels"
+    Title="Achievements">
+    <ContentPage.Content>
+        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <ScrollView>
+                <StackLayout>
+                    <ListView ItemsSource="{Binding Achievements}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout
+                                        Padding="10"
+                                        HorizontalOptions="FillAndExpand"
+                                        Orientation="Horizontal"
+                                        Spacing="10">
+                                        <StackLayout HorizontalOptions="StartAndExpand">
+                                            <Label
+                                                FontSize="Medium"
+                                                Text="{Binding Name}" />
+                                            <Label
+                                                FontSize="Small"
+                                                Text="{Binding Description}" />
+                                        </StackLayout>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <Label Text="No achievements yet" IsVisible="{Binding HasNoItems}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+                </StackLayout>
+            </ScrollView>
+        </RefreshView>
+    </ContentPage.Content>
+</ContentPage>
