@@ -91,72 +91,72 @@ namespace Server.Migrations
                         new
                         {
                             Id = 1,
-                            DateAchieved = new DateTime(2023, 6, 10, 16, 6, 18, 12, DateTimeKind.Local).AddTicks(8568),
-                            Score = 100,
+                            DateAchieved = new DateTime(2023, 6, 10, 20, 15, 52, 289, DateTimeKind.Local).AddTicks(9601),
+                            Score = 700,
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
-                            DateAchieved = new DateTime(2023, 6, 10, 16, 6, 18, 12, DateTimeKind.Local).AddTicks(8663),
-                            Score = 200,
+                            DateAchieved = new DateTime(2023, 6, 10, 20, 15, 52, 289, DateTimeKind.Local).AddTicks(9684),
+                            Score = 450,
                             UserId = 2
                         },
                         new
                         {
                             Id = 3,
-                            DateAchieved = new DateTime(2023, 6, 10, 16, 6, 18, 12, DateTimeKind.Local).AddTicks(8670),
-                            Score = 150,
-                            UserId = 1
+                            DateAchieved = new DateTime(2023, 6, 10, 20, 15, 52, 289, DateTimeKind.Local).AddTicks(9691),
+                            Score = 900,
+                            UserId = 3
                         },
                         new
                         {
                             Id = 4,
-                            DateAchieved = new DateTime(2023, 6, 10, 16, 6, 18, 12, DateTimeKind.Local).AddTicks(8676),
-                            Score = 180,
-                            UserId = 2
+                            DateAchieved = new DateTime(2023, 6, 10, 20, 15, 52, 289, DateTimeKind.Local).AddTicks(9697),
+                            Score = 350,
+                            UserId = 4
                         },
                         new
                         {
                             Id = 5,
-                            DateAchieved = new DateTime(2023, 6, 10, 16, 6, 18, 12, DateTimeKind.Local).AddTicks(8684),
-                            Score = 220,
-                            UserId = 1
+                            DateAchieved = new DateTime(2023, 6, 10, 20, 15, 52, 289, DateTimeKind.Local).AddTicks(9704),
+                            Score = 600,
+                            UserId = 5
                         },
                         new
                         {
                             Id = 6,
-                            DateAchieved = new DateTime(2023, 6, 10, 16, 6, 18, 12, DateTimeKind.Local).AddTicks(8691),
-                            Score = 300,
-                            UserId = 2
+                            DateAchieved = new DateTime(2023, 6, 10, 20, 15, 52, 289, DateTimeKind.Local).AddTicks(9709),
+                            Score = 800,
+                            UserId = 6
                         },
                         new
                         {
                             Id = 7,
-                            DateAchieved = new DateTime(2023, 6, 10, 16, 6, 18, 12, DateTimeKind.Local).AddTicks(8696),
+                            DateAchieved = new DateTime(2023, 6, 10, 20, 15, 52, 289, DateTimeKind.Local).AddTicks(9716),
                             Score = 250,
-                            UserId = 1
+                            UserId = 7
                         },
                         new
                         {
                             Id = 8,
-                            DateAchieved = new DateTime(2023, 6, 10, 16, 6, 18, 12, DateTimeKind.Local).AddTicks(8703),
-                            Score = 190,
-                            UserId = 2
+                            DateAchieved = new DateTime(2023, 6, 10, 20, 15, 52, 289, DateTimeKind.Local).AddTicks(9722),
+                            Score = 550,
+                            UserId = 8
                         },
                         new
                         {
                             Id = 9,
-                            DateAchieved = new DateTime(2023, 6, 10, 16, 6, 18, 12, DateTimeKind.Local).AddTicks(8711),
-                            Score = 280,
-                            UserId = 1
+                            DateAchieved = new DateTime(2023, 6, 10, 20, 15, 52, 289, DateTimeKind.Local).AddTicks(9727),
+                            Score = 950,
+                            UserId = 9
                         },
                         new
                         {
                             Id = 10,
-                            DateAchieved = new DateTime(2023, 6, 10, 16, 6, 18, 12, DateTimeKind.Local).AddTicks(8716),
-                            Score = 230,
-                            UserId = 2
+                            DateAchieved = new DateTime(2023, 6, 10, 20, 15, 52, 289, DateTimeKind.Local).AddTicks(9733),
+                            Score = 400,
+                            UserId = 10
                         });
                 });
 
@@ -224,12 +224,52 @@ namespace Server.Migrations
                         new
                         {
                             Id = 1,
-                            Email = "admin1@example.com"
+                            Email = "john.doe@example.com"
                         },
                         new
                         {
                             Id = 2,
-                            Email = "admin2@example.com"
+                            Email = "jane.smith@example.com"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Email = "mark.johnson@example.com"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Email = "amy.wilson@example.com"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Email = "michael.brown@example.com"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Email = "emily.davis@example.com"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Email = "jacob.miller@example.com"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Email = "olivia.jones@example.com"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Email = "william.moore@example.com"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Email = "sophia.taylor@example.com"
                         });
                 });
 
@@ -272,7 +312,7 @@ namespace Server.Migrations
                         new
                         {
                             Id = 1,
-                            DisplayName = "Admin1",
+                            DisplayName = "Johndogamer",
                             Language = "English",
                             ReceiveNotifications = true,
                             ShakeEnabled = false,
@@ -282,12 +322,92 @@ namespace Server.Migrations
                         new
                         {
                             Id = 2,
-                            DisplayName = "Admin2",
-                            Language = "French",
-                            ReceiveNotifications = false,
+                            DisplayName = "Janedogamer",
+                            Language = "English",
+                            ReceiveNotifications = true,
                             ShakeEnabled = false,
-                            SoundEnabled = true,
+                            SoundEnabled = false,
                             UserId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DisplayName = "Markdogamer",
+                            Language = "English",
+                            ReceiveNotifications = true,
+                            ShakeEnabled = false,
+                            SoundEnabled = false,
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DisplayName = "Amydogamer",
+                            Language = "English",
+                            ReceiveNotifications = true,
+                            ShakeEnabled = false,
+                            SoundEnabled = false,
+                            UserId = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DisplayName = "Michaeldogamer",
+                            Language = "English",
+                            ReceiveNotifications = true,
+                            ShakeEnabled = false,
+                            SoundEnabled = false,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            DisplayName = "Emilydogamer",
+                            Language = "English",
+                            ReceiveNotifications = true,
+                            ShakeEnabled = false,
+                            SoundEnabled = false,
+                            UserId = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            DisplayName = "Jacobdogamer",
+                            Language = "English",
+                            ReceiveNotifications = true,
+                            ShakeEnabled = false,
+                            SoundEnabled = false,
+                            UserId = 7
+                        },
+                        new
+                        {
+                            Id = 8,
+                            DisplayName = "Oliviadogamer",
+                            Language = "English",
+                            ReceiveNotifications = true,
+                            ShakeEnabled = false,
+                            SoundEnabled = false,
+                            UserId = 8
+                        },
+                        new
+                        {
+                            Id = 9,
+                            DisplayName = "Williamdogamer",
+                            Language = "English",
+                            ReceiveNotifications = true,
+                            ShakeEnabled = false,
+                            SoundEnabled = false,
+                            UserId = 9
+                        },
+                        new
+                        {
+                            Id = 10,
+                            DisplayName = "Sophiadogamer",
+                            Language = "English",
+                            ReceiveNotifications = true,
+                            ShakeEnabled = false,
+                            SoundEnabled = false,
+                            UserId = 10
                         });
                 });
 
