@@ -4,34 +4,41 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewModels="clr-namespace:App.ViewModels"
     Title="Achievements">
+
     <ContentPage.Content>
         <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-            <ScrollView>
-                <StackLayout>
-                    <ListView ItemsSource="{Binding Achievements}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <StackLayout
-                                        Padding="10"
-                                        HorizontalOptions="FillAndExpand"
-                                        Orientation="Vertical"
-                                        Spacing="10">
-                                        <Label
-                                            FontSize="Medium"
-                                            Text="{Binding Name}" />
-                                        <Label
-                                            FontSize="Small"
-                                            Text="{Binding Description}" />
-                                        <BoxView HeightRequest="1" Color="LightGray" />
-                                    </StackLayout>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <Label Text="No achievements yet" IsVisible="{Binding HasNoItems}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
-                </StackLayout>
-            </ScrollView>
+            <StackLayout>
+                <Label Text="No achievements yet" IsVisible="{Binding HasNoItems}"
+                    HorizontalOptions="Center" VerticalOptions="Center" TextColor="Gray" />
+
+                <ScrollView IsVisible="{Binding HasItems}" VerticalOptions="FillAndExpand">
+                    <StackLayout>
+                        <ListView ItemsSource="{Binding Achievements}" SeparatorVisibility="None"
+                            VerticalOptions="FillAndExpand">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <Grid Padding="10" BackgroundColor="White">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="1" />
+                                            </Grid.RowDefinitions>
+                                            <Label Grid.Row="0" FontSize="18" Text="{Binding Name}"
+                                                TextColor="Black" />
+                                            <Label Grid.Row="1" FontSize="14"
+                                                Text="{Binding Description}" TextColor="Gray" />
+                                            <BoxView Grid.Row="2" HeightRequest="1"
+                                                BackgroundColor="LightGray" />
+                                        </Grid>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackLayout>
+                </ScrollView>
+            </StackLayout>
         </RefreshView>
     </ContentPage.Content>
+
 </ContentPage>

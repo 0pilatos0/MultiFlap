@@ -133,6 +133,22 @@ namespace Server.Controllers
                 _context.Achievements.Add(userAchievement);
             }
 
+            //if score was bigger than 1000, give them the achievement "1000+ Score" if they dont have it
+            if (leaderboardEntry.Score >= 1000)
+            {
+                if (!userAchievements.Any(ua => ua.Name == "1000+ Score"))
+                {
+                    var userAchievement = new Achievement
+                    {
+                        Name = "1000+ Score",
+                        Description = "You got a score of 1000 or more!",
+                        User = user
+                    };
+
+                    _context.Achievements.Add(userAchievement);
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(
