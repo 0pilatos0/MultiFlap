@@ -10,6 +10,7 @@ public partial class Achievements : ContentPage
     {
         InitializeComponent();
         _achievementsViewModel = achievementsViewModel;
+        BindingContext = achievementsViewModel;
     }
 
     protected override void OnAppearing()

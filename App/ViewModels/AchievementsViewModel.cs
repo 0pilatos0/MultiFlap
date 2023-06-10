@@ -65,8 +65,19 @@ namespace App.ViewModels
                     };
 
                     // Deserialize the response JSON to a list of Achievement objects
-                    Achievements = JsonSerializer.Deserialize<ObservableCollection<Achievement>>(response, options);
+                    var newAchievements = JsonSerializer.Deserialize<List<Achievement>>(response, options);
+
+                    // Clear the existing achievements and add the new ones
+                    Achievements.Clear();
+                    foreach (var achievement in newAchievements)
+                    {
+                        Achievements.Add(achievement);
+                    }
+
                     Console.WriteLine("Achievements loaded successfully!");
+
+                    OnPropertyChanged(nameof(HasItems));
+                    OnPropertyChanged(nameof(HasNoItems));
                 }
                 else
                 {
@@ -78,10 +89,9 @@ namespace App.ViewModels
                 // Handle any exception that occurred during the API request
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
-
-            OnPropertyChanged(nameof(HasItems));
-            OnPropertyChanged(nameof(HasNoItems));
         }
+
+
 
         public ICommand RefreshCommand => _refreshCommand ??= new Command(async () =>
         {
