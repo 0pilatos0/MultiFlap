@@ -15,16 +15,15 @@
                                     <StackLayout
                                         Padding="10"
                                         HorizontalOptions="FillAndExpand"
-                                        Orientation="Horizontal"
+                                        Orientation="Vertical"
                                         Spacing="10">
-                                        <StackLayout HorizontalOptions="StartAndExpand">
-                                            <Label
-                                                FontSize="Medium"
-                                                Text="{Binding Name}" />
-                                            <Label
-                                                FontSize="Small"
-                                                Text="{Binding Description}" />
-                                        </StackLayout>
+                                        <Label
+                                            FontSize="Medium"
+                                            Text="{Binding Name}" />
+                                        <Label
+                                            FontSize="Small"
+                                            Text="{Binding Description}" />
+                                        <BoxView HeightRequest="1" Color="LightGray" />
                                     </StackLayout>
                                 </ViewCell>
                             </DataTemplate>
