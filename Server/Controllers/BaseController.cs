@@ -23,6 +23,7 @@ namespace Server.Controllers
         }
 
         // Retrieves the Auth0 ID from the authorized request using the provided memory cache
+        [NonAction]
         public async Task<string> GetAuth0IdFromAuthorizedRequestAsync()
         {
             // Retrieve the authorization header from the request
@@ -70,6 +71,7 @@ namespace Server.Controllers
         }
 
         // Retrieves a user from the provided Auth0 ID, creates a new user if not found
+        [NonAction]
         public async Task<User> GetUserFromIdAsync(MultiFlapDbContext context, string userAuth0Id)
         {
             var user = await context.Users.FirstOrDefaultAsync(
