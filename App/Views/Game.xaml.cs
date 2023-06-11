@@ -13,16 +13,17 @@ namespace App;
 
 public partial class Game : ContentPage
 {
-    private PowerUpItem activatedPowerUp;
-    private Flappy flappy;
-    private List<GreenPipe> pipes;
-
     private readonly HubConnection connection;
     private readonly IApiService apiService;
     private readonly Auth0Client auth0Client;
 
     private readonly GameEngine gameEngine;
 
+    private Flappy flappy;
+    private List<GreenPipe> pipes;
+    private PowerUpItem activatedPowerUp;
+
+    [Obsolete]
     public Game(IApiService apiService, Auth0Client auth0Client)
     {
         InitializeComponent();
@@ -140,6 +141,65 @@ public partial class Game : ContentPage
         }
     }
 
+    private async void OnCanvasTapped(object sender, EventArgs e)
+    {
+        if (gameEngine.IsRunning)
+        {
+            if (gameEngine.SoundEnabled)
+            {
+                var player = AudioManager.Current.CreatePlayer(
+                    await FileSystem.OpenAppPackageFileAsync("jump.mp3")
+                );
+                player.Play();
+            }
+
+            flappy.Jump();
+        }
+    }
+
+    private async void OnStartClicked(object sender, EventArgs e)
+    {
+        gameEngine.IsRunning = true;
+        gameEngine.ResetScore();
+        flappy = new Flappy(gameEngine.Width / 2, gameEngine.Height / 2, Colors.Yellow);
+        pipes = new List<GreenPipe>();
+        pipes.Add(new GreenPipe(gameEngine.Width, 200, gameEngine.Height));
+        canvas.Drawable = new GameCanvas() { Flappy = flappy, GreenPipes = pipes };
+        RunGameLoop();
+    }
+
+    private async void OnShakeDetected(object sender, EventArgs e)
+    {
+        if (gameEngine.IsRunning)
+        {
+            var player = AudioManager.Current.CreatePlayer(
+                await FileSystem.OpenAppPackageFileAsync("jump.mp3")
+            );
+            player.Play();
+
+            flappy.Jump();
+        }
+    }
+
+    private async void OnStartMatchmaking(object sender, EventArgs e)
+    {
+        isMatchMaking.IsVisible = true;
+        await connection.InvokeAsync("StartMatchmaking");
+    }
+
+    private async void OnCancelMatchmakingClicked(object sender, EventArgs e)
+    {
+        await connection.InvokeAsync("CancelMatchmaking");
+        isMatchMaking.IsVisible = false;
+    }
+
+    private void RemoveActivatedPowerUp()
+    {
+        activatedPowerUp = null;
+        gameEngine.ScoreMultiplier = 1.0f;
+        Preferences.Remove("ActivatedPowerUp");
+    }
+
     private void LoadActivatedPowerUpFromPreferences()
     {
         string powerUpJson = Preferences.Get("ActivatedPowerUp", null);
@@ -250,64 +310,5 @@ public partial class Game : ContentPage
         }
 
         return;
-    }
-
-    private async void OnCanvasTapped(object sender, EventArgs e)
-    {
-        if (gameEngine.IsRunning)
-        {
-            if (gameEngine.SoundEnabled)
-            {
-                var player = AudioManager.Current.CreatePlayer(
-                    await FileSystem.OpenAppPackageFileAsync("jump.mp3")
-                );
-                player.Play();
-            }
-
-            flappy.Jump();
-        }
-    }
-
-    private async void OnStartClicked(object sender, EventArgs e)
-    {
-        gameEngine.IsRunning = true;
-        gameEngine.ResetScore();
-        flappy = new Flappy(gameEngine.Width / 2, gameEngine.Height / 2, Colors.Yellow);
-        pipes = new List<GreenPipe>();
-        pipes.Add(new GreenPipe(gameEngine.Width, 200, gameEngine.Height));
-        canvas.Drawable = new GameCanvas() { Flappy = flappy, GreenPipes = pipes };
-        RunGameLoop();
-    }
-
-    private async void OnShakeDetected(object sender, EventArgs e)
-    {
-        if (gameEngine.IsRunning)
-        {
-            var player = AudioManager.Current.CreatePlayer(
-                await FileSystem.OpenAppPackageFileAsync("jump.mp3")
-            );
-            player.Play();
-
-            flappy.Jump();
-        }
-    }
-
-    private async void OnStartMatchmaking(object sender, EventArgs e)
-    {
-        isMatchMaking.IsVisible = true;
-        await connection.InvokeAsync("StartMatchmaking");
-    }
-
-    private async void OnCancelMatchmakingClicked(object sender, EventArgs e)
-    {
-        await connection.InvokeAsync("CancelMatchmaking");
-        isMatchMaking.IsVisible = false;
-    }
-
-    private void RemoveActivatedPowerUp()
-    {
-        activatedPowerUp = null;
-        gameEngine.ScoreMultiplier = 1.0f;
-        Preferences.Remove("ActivatedPowerUp");
     }
 }
