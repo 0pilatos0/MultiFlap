@@ -44,5 +44,10 @@ namespace Server.Hubs
         {
             await _gameService.CancelMatchmakingAsync(Context.ConnectionId);
         }
+
+        public async Task OnAppearing()
+        {
+            await _gameService.OnAppearingAsync(Context.ConnectionId);
+        }
     }
 }

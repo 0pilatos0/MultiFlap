@@ -18,6 +18,7 @@ namespace App
         private Leaderboard leaderboard;
         private Achievements achievements;
         private PowerUps powerUps;
+        private Game game;
 
         public MainPage(
             Auth0Client client,
@@ -25,7 +26,8 @@ namespace App
             EditUserSettings editUserSettingsPage,
             Leaderboard leaderboardPage,
             Achievements achievement,
-            PowerUps powerUps
+            PowerUps powerUps,
+            Game game
             
         )
         {
@@ -36,6 +38,8 @@ namespace App
             this.leaderboard = leaderboardPage;
             this.achievements = achievement;
             this.powerUps = powerUps;
+            this.game = game;
+
 
             SetHighScore();
         }
@@ -51,7 +55,7 @@ namespace App
 
         private void StartGameClicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new Game(_apiService, _auth0Client));
+            Navigation.PushAsync(game);
         }
 
         private async void OnLeaderboardClicked(object sender, EventArgs e)

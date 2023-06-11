@@ -9,5 +9,6 @@ namespace Server.Services
         Task StartMatchmakingAsync(string connectionId);
         Task GameOverAsync(string connectionId, int score);
         Task CancelMatchmakingAsync(string connectionId);
+        Task OnAppearingAsync(string connectionId);
     }
 }

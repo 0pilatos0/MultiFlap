@@ -127,12 +127,16 @@ public partial class Game : ContentPage
             Accelerometer.ShakeDetected += OnShakeDetected;
             Accelerometer.Start(SensorSpeed.Game);
         }
+
+        connection.InvokeAsync("OnAppearing");
     }
 
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
         gameEngine.IsRunning = false;
+
+        //dis
 
         if (gameEngine.ShakeEnabled)
         {

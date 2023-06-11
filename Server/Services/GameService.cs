@@ -269,6 +269,11 @@ namespace Server.Services
             return newMatch;
         }
 
+        public Task OnAppearingAsync(string connectionId)
+        {
+            return UpdateOnlinePlayersCountAsync();
+        }
+
         public ConcurrentDictionary<string, Player> Players
         {
             get { return _players; }
