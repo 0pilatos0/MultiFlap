@@ -1,46 +1,50 @@
-@startuml
-entity Achievement {
-  + Id : int
-  Name : string
-  IsCompleted : bool
-  UserId : int
-}
+@startuml ERD
+!define ENTITY_DOMAIN(version="2.0", DIAMOND_COLOR="#FFFFFF", DIAMOND_TEXT_COLOR="#000000")
 
-entity LeaderboardEntry {
-  + Id : int
-  Score : int
-  DateAchieved : DateTime
-  UserId : int
-}
+package "Server.Models" {
+    class User {
+        +Id: int
+        +Auth0Identifier: string?
+        +Email: string
+    }
 
-entity PowerUpItem {
-  + Id : int
-  Name : string
-  Quantity : int
-  UserId : int
-}
+    class UserSettings {
+        +Id: int
+        +UserId: int
+        +Language: string
+        +ReceiveNotifications: bool
+        +DisplayName: string
+        +SoundEnabled: bool
+        +ShakeEnabled: bool
+    }
 
-entity User {
-  + Id : int
-  Auth0Identifier : string
-  Email : string
-}
+    class Achievement {
+        +Id: int
+        +Name: string
+        +Description: string
+        +UserId: int
+    }
 
-entity UserSettings {
-  + Id : int
-  UserId : int
-  Language : string
-  ReceiveNotifications : bool
-  DisplayName : string
-  SoundEnabled : bool
-  ShakeEnabled : bool
-}
+    class LeaderboardEntry {
+        +Id: int
+        +Score: int
+        +DateAchieved: DateTime
+        +UserId: int
+    }
 
-User "1" --o{ UserSettings : Composition
-User "1" --{ Achievement
-User "1" --{ LeaderboardEntry
-User "1" --{ PowerUpItem
-LeaderboardEntry "0..*" --{ User
-PowerUpItem "0..*" --{ User
-Achievement "0..*" --{ User
+    class PowerUpItem {
+        +Id: int
+        +Name: string
+        +Quantity: int
+        +UserId: int
+    }
+
+    User "1" -- "1" UserSettings : Has
+    User *-- Achievement : Has
+    User *-- LeaderboardEntry : Has
+    User *-- PowerUpItem : Has
+    LeaderboardEntry *-- User : Belongs to
+    PowerUpItem *-- User : Belongs to
+    Achievement *-- User : Belongs to
+}
 @enduml

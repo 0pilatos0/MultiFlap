@@ -1,0 +1,51 @@
+@startuml
+package Server.Controllers {
+    class AchievementController
+    class BaseController
+    class LeaderboardEntryController
+    class PowerUpItemController
+    class UserController
+    class UserSettingsController
+}
+
+package Server.Hubs {
+    class GameHub
+}
+
+package Server.Models.Game {
+    class Match
+    class Player
+    class PlayerMatchInfo
+}
+
+package Server.Models {
+    class Achievement
+    class LeaderboardEntry
+    class PowerUpItem
+    class User
+    class UserSettings
+}
+
+package Server.Services {
+    interface IGameService
+    class GameService
+}
+
+Server.Controllers.AchievementController --|> Server.Controllers.BaseController
+Server.Controllers.LeaderboardEntryController --|> Server.Controllers.BaseController
+Server.Controllers.PowerUpItemController --|> Server.Controllers.BaseController
+Server.Controllers.UserController --|> Server.Controllers.BaseController
+Server.Controllers.UserSettingsController --|> Server.Controllers.BaseController
+Server.Hubs.GameHub --|> Server.Controllers.BaseController
+Server.Models.Game.Match "1" --> "*" Server.Models.Game.Player
+Server.Models.Game.Match "1" --> "*" Server.Models.Game.PlayerMatchInfo
+Server.Models.User "1" --> "*" Server.Models.Achievement
+Server.Models.User "1" --> "*" Server.Models.LeaderboardEntry
+Server.Models.User "1" --> "*" Server.Models.PowerUpItem
+Server.Models.User "1" --> "1" Server.Models.UserSettings
+Server.Models.UserSettings "1" --> "1" Server.Models.User
+Server.Services.IGameService <|.. Server.Services.GameService
+Server.Hubs.GameHub --> Server.Services.IGameService
+Server.Services.GameService --> Server.Models.Game.Player
+Server.Services.GameService --> Server.Models.Game.Match
+@enduml
