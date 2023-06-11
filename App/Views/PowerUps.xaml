@@ -13,31 +13,23 @@
                 <ScrollView IsVisible="{Binding HasItems}" VerticalOptions="FillAndExpand">
                     <StackLayout>
                         <ListView ItemsSource="{Binding PowerUps}"
-                            SelectedItem="{Binding SelectedPowerUp}" SeparatorVisibility="None"
+                            SelectedItem="{Binding SelectedPowerUp}"
+                            SeparatorVisibility="None"
                             VerticalOptions="FillAndExpand">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <ViewCell>
-                                        <Grid Padding="10" BackgroundColor="White">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="1" />
-                                            </Grid.RowDefinitions>
-                                            <Label Grid.Row="0" FontSize="18" Text="{Binding Name}"
-                                                TextColor="Black" />
-                                            <Label Grid.Row="1" FontSize="14"
-                                                Text="{Binding Quantity, StringFormat='Quantity: {0}'}"
-                                                TextColor="Gray" />
-                                            <BoxView Grid.Row="2" HeightRequest="1"
-                                                BackgroundColor="LightGray" />
-                                        </Grid>
-                                    </ViewCell>
+                                    <TextCell>
+                                        <TextCell.Text>
+                                            <Binding Path="Name" />
+                                        </TextCell.Text>
+                                        <TextCell.Detail>
+                                            <Binding Path="Quantity" StringFormat="Quantity: {0}" />
+                                        </TextCell.Detail>
+                                    </TextCell>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
                         <Button Text="Activate Power-Up" Command="{Binding ActivateCommand}"
-                            IsEnabled="{Binding CanActivate}"
                             HorizontalOptions="Center" Margin="10" />
                     </StackLayout>
                 </ScrollView>

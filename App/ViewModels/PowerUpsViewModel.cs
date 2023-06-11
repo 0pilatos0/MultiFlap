@@ -48,8 +48,6 @@ namespace App.ViewModels
             }
         }
 
-        public bool CanActivate => SelectedPowerUp != null;
-
         public bool HasItems => PowerUps.Count > 0;
         public bool HasNoItems => !HasItems;
 
@@ -98,7 +96,6 @@ namespace App.ViewModels
 
                     OnPropertyChanged(nameof(HasItems));
                     OnPropertyChanged(nameof(HasNoItems));
-                    OnPropertyChanged(nameof(CanActivate));
                 }
                 else
                 {
@@ -132,7 +129,6 @@ namespace App.ViewModels
 
                         // Remove the consumed power-up from the collection
                         PowerUps.Remove(SelectedPowerUp);
-                        OnPropertyChanged(nameof(CanActivate));
 
                         Console.WriteLine("Power-up activated and consumed successfully!");
 
