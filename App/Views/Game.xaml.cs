@@ -13,6 +13,7 @@ namespace App;
 
 public partial class Game : ContentPage
 {
+    private PowerUpItem activatedPowerUp;
     private Flappy flappy;
     private List<GreenPipe> pipes;
 
@@ -33,6 +34,8 @@ public partial class Game : ContentPage
 
         this.apiService = apiService;
         this.auth0Client = auth0Client;
+
+        LoadActivatedPowerUpFromPreferences();
 
         connection = new HubConnectionBuilder()
             //.WithUrl("http://145.49.40.171:5076/game")
@@ -136,6 +139,21 @@ public partial class Game : ContentPage
         }
     }
 
+    private void LoadActivatedPowerUpFromPreferences()
+    {
+        string powerUpJson = Preferences.Get("ActivatedPowerUp", null);
+        if (!string.IsNullOrEmpty(powerUpJson))
+        {
+            activatedPowerUp = JsonSerializer.Deserialize<PowerUpItem>(powerUpJson);
+            // Apply the score multiplier if the power-up is set
+            if (activatedPowerUp != null)
+            {
+                //if name is "1.05 Multiplier" then multiplier is 1.05
+                gameEngine.ScoreMultiplier = float.Parse(activatedPowerUp.Name.Split(" ")[0]);
+            }
+        }
+    }
+
     private async void RunGameLoop()
     {
         isCountDown.IsVisible = true;
@@ -169,7 +187,8 @@ public partial class Game : ContentPage
                 return;
             }
 
-            gameEngine.Score++;
+            //gameEngine.Score++ with the multiplier rounded to whole int
+            gameEngine.Score += (int)Math.Round(gameEngine.ScoreMultiplier);
             ScoreLabel.Text = $"Score: {gameEngine.Score}";
 
             canvas.Invalidate();
@@ -183,6 +202,7 @@ public partial class Game : ContentPage
         //clear canvas
         canvas.Drawable = null;
 
+        RemoveActivatedPowerUp();
         gameEngine.IsRunning = false;
         var player2 = AudioManager.Current.CreatePlayer(
             await FileSystem.OpenAppPackageFileAsync("gameOver.mp3")
@@ -268,5 +288,12 @@ public partial class Game : ContentPage
     {
         await connection.InvokeAsync("CancelMatchmaking");
         isMatchMaking.IsVisible = false;
+    }
+
+    private void RemoveActivatedPowerUp()
+    {
+        activatedPowerUp = null;
+        gameEngine.ScoreMultiplier = 1.0f;
+        Preferences.Remove("ActivatedPowerUp");
     }
 }

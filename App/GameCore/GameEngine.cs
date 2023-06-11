@@ -14,6 +14,8 @@ namespace App.GameCore
         public bool OnlineMatch { get; set; } = false;
         public bool ShakeEnabled { get; set; } = true;
 
+        public float ScoreMultiplier { get; set; } = 1f;
+
         private const int PipeWidth = 100;
         private const int BirdSize = 20;
         private const int GameWindowLowerBound = 0;
