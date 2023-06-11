@@ -1,0 +1,299 @@
+@startuml
+
+namespace Server{
+    namespace Controllers {
+        class BaseController {
+            -_httpClient: HttpClient
+            -_memoryCache: IMemoryCache
+            +BaseController(httpClientFactory: IHttpClientFactory, memoryCache: IMemoryCache)
+            +GetAuth0IdFromAuthorizedRequestAsync(): Task<string>
+            +GetUserFromIdAsync(context: MultiFlapDbContext, userAuth0Id: string): Task<User>
+        }
+
+        class AchievementController {
+            -_context: MultiFlapDbContext
+            +AchievementController(context: MultiFlapDbContext, memoryCache: IMemoryCache, httpClientFactory: IHttpClientFactory)
+            +GetAchievements(): Task<ActionResult<IEnumerable<Achievement>>>
+            +AddAchievement(achievement: Achievement): Task<ActionResult<Achievement>>
+            +UpdateAchievement(id: int, updatedAchievement: Achievement): Task<IActionResult>
+            +DeleteAchievement(id: int): Task<IActionResult>
+            +GetAchievement(id: int): Task<ActionResult<Achievement>>
+            -AchievementExists(userId: int, id: int): bool
+        }
+
+        class LeaderboardEntryController {
+            -_context: MultiFlapDbContext
+            -_memoryCache: IMemoryCache
+            +LeaderboardEntryController(context: MultiFlapDbContext, memoryCache: IMemoryCache, httpClientFactory: IHttpClientFactory)
+            +GetLeaderboard(): ActionResult<IEnumerable<LeaderboardEntryDTO>>
+            +GetOwnHighscore(): Task<ActionResult<int>>
+            +GetLeaderboardEntry(id: int): Task<ActionResult<LeaderboardEntry>>
+            +AddLeaderboardEntry(newLeaderboardEntry: LeaderboardEntryDTO): Task<ActionResult<LeaderboardEntry>>
+            -LeaderboardEntryExists(id: int): bool
+        }
+
+        class PowerUpItemController {
+            -_context: MultiFlapDbContext
+            +PowerUpItemController(context: MultiFlapDbContext, memoryCache: IMemoryCache, httpClientFactory: IHttpClientFactory)
+            +GetPowerUpItems(): Task<ActionResult<IEnumerable<PowerUpItem>>>
+            +AddPowerUpItem(powerUpItem: PowerUpItem): Task<ActionResult<PowerUpItem>>
+            +UpdatePowerUpItem(id: int, updatedPowerUpItem: PowerUpItem): Task<IActionResult>
+            +DeletePowerUpItem(id: int): Task<IActionResult>
+            -GetPowerUpItem(id: int): Task<ActionResult<PowerUpItem>>
+            -PowerUpItemExists(userId: int, id: int): bool
+        }
+
+        class UserController {
+            -_context: MultiFlapDbContext
+            +UserController(context: MultiFlapDbContext, memoryCache: IMemoryCache, httpClientFactory: IHttpClientFactory)
+            +DeleteUser(): Task<IActionResult>
+            -UserExists(id: int): bool
+        }
+
+        class UserSettingsController {
+            -_context: MultiFlapDbContext
+            +UserSettingsController(context: MultiFlapDbContext, memoryCache: IMemoryCache, httpClientFactory: IHttpClientFactory)
+            +GetUserSettings(): Task<ActionResult<UserSettingsDTO>>
+            +UpdateUserSettings(updatedUserSettings: UserSettingsDTO): Task<IActionResult>
+            -UserSettingsExists(userId: int): bool
+            -MapToUserSettingsDto(userSettings: UserSettings): UserSettingsDTO
+        }
+
+        BaseController <|-- AchievementController
+        BaseController <|-- LeaderboardEntryController
+        BaseController <|-- PowerUpItemController
+        BaseController <|-- UserController
+        BaseController <|-- UserSettingsController
+    }
+
+    namespace Hubs {
+    class GameHub {
+            -_gameService: IGameService
+            -_logger: ILogger<GameHub>
+            +GameHub(gameService: IGameService, logger: ILogger<GameHub>)
+            +OnConnectedAsync(): Task
+            +OnDisconnectedAsync(exception: Exception?): Task
+            +StartMatchmaking(): Task
+            +GameOver(score: int): Task
+            +CancelMatchmaking(): Task
+            +OnAppearing(): Task
+        }
+    }
+
+    namespace Services {
+        class GameService {
+            -_players: ConcurrentDictionary<string, Player>
+            -_matches: ConcurrentDictionary<string, Match>
+            -_hubContext: IHubContext<GameHub>
+            -_logger: ILogger<GameService>
+            +GameService(hubContext: IHubContext<GameHub>, logger: ILogger<GameService>)
+            +AddPlayerAsync(connectionId: string): Task
+            +RemovePlayerAsync(connectionId: string): Task
+            +StartMatchmakingAsync(connectionId: string): Task
+            +GameOverAsync(connectionId: string, score: int): Task
+            +CancelMatchmakingAsync(connectionId: string): Task
+            +OnAppearingAsync(connectionId: string): Task
+            +Players: ConcurrentDictionary<string, Player>
+            +Matches: ConcurrentDictionary<string, Match>
+        }
+
+        interface IGameService {
+            + AddPlayerAsync(connectionId: string): Task
+            + RemovePlayerAsync(connectionId: string): Task
+            + StartMatchmakingAsync(connectionId: string): Task
+            + GameOverAsync(connectionId: string, score: int): Task
+            + CancelMatchmakingAsync(connectionId: string): Task
+            + OnAppearingAsync(connectionId: string): Task
+        }
+
+        IGameService <|.. GameService
+    }
+}
+
+namespace App{
+    namespace Auth0{
+        class Auth0Client {
+            - oidcClient: OidcClient
+            - audience: string
+            - preferences: IPreferences
+            + IsAuthenticated: bool
+            + CurrentUser: string
+            + AccessToken: string
+            + Auth0Client(options: Auth0ClientOptions, preferences: IPreferences)
+            + Browser: IBrowser
+            + LoginAsync(): Task<LoginResult>
+            + LogoutAsync(): Task<BrowserResult>
+        }
+
+        class Auth0ClientOptions {
+            - Domain: string
+            - ClientId: string
+            - Scope: string
+            - RedirectUri: string
+            - Browser: IBrowser
+            - Audience: string
+        }
+
+        class WebBrowserAuthenticator {
+            + InvokeAsync(options: BrowserOptions, cancellationToken: CancellationToken): Task<BrowserResult>
+        }
+    }
+
+    namespace Services{
+         class ApiService {
+            - httpClient: HttpClient
+            + ApiUrl: string
+            + ApiService()
+            + GetAsync(endpoint: string, accessToken: string): Task<string>
+            + PostAsync(endpoint: string, body: string, accessToken: string): Task<string>
+            + PutAsync(endpoint: string, body: string, accessToken: string): Task<string>
+            + DeleteAsync(endpoint: string, accessToken: string): Task<string>
+            + PatchAsync(endpoint: string, body: string, accessToken: string): Task<string>
+        }
+
+        interface IApiService {
+            + ApiUrl: string
+            + GetAsync(endpoint: string, accessToken: string): Task<string>
+            + PostAsync(endpoint: string, body: string, accessToken: string): Task<string>
+            + PutAsync(endpoint: string, body: string, accessToken: string): Task<string>
+            + DeleteAsync(endpoint: string, accessToken: string): Task<string>
+            + PatchAsync(endpoint: string, body: string, accessToken: string): Task<string>
+        }
+
+        IApiService <|.. ApiService
+    }
+
+    namespace ViewModels {
+         class AchievementsViewModel {
+            - _achievements: ObservableCollection<Achievement>
+            - _apiService: IApiService
+            - _auth0Client: Auth0Client
+            - _refreshCommand: ICommand
+            - _isRefreshing: bool
+            + Achievements: ObservableCollection<Achievement>
+            + HasItems: bool
+            + HasNoItems: bool
+            + RefreshCommand: ICommand
+            + IsRefreshing: bool
+            + AchievementsViewModel(apiService: IApiService, auth0Client: Auth0Client)
+            + LoadAchievements(): Task
+        }
+
+        class BaseViewModel {
+            - PropertyChanged: event PropertyChangedEventHandler
+            - _title: string
+            - _isLoading: bool
+            - _isInitialized: bool
+            + Title: string
+            + IsLoading: bool
+            + IsInitialized: bool
+            + OnPropertyChanged([CallerMemberName] propertyName: string = ""): void
+        }
+
+        class LeaderboardViewModel {
+            - LeaderboardEntries: ObservableCollection<LeaderboardEntry>
+            - _apiService: IApiService
+            - _auth0Client: Auth0Client
+            - _refreshCommand: ICommand
+            - _isRefreshing: bool
+            + HasItems: bool
+            + HasNoItems: bool
+            + LoadLeaderboard(): Task
+            + RefreshCommand: ICommand
+            + IsRefreshing: bool
+            + LeaderboardViewModel(apiService: IApiService, auth0Client: Auth0Client)
+        }
+
+        class PowerUpsViewModel {
+            - PowerUps: ObservableCollection<PowerUpItem>
+            - SelectedPowerUp: PowerUpItem
+            - _apiService: IApiService
+            - _auth0Client: Auth0Client
+            - _activateCommand: ICommand
+            - _isRefreshing: bool
+            + HasItems: bool
+            + HasNoItems: bool
+            + LoadPowerUps(): Task
+            + ActivateCommand: ICommand
+            + IsRefreshing: bool
+            + PowerUpsViewModel(apiService: IApiService, auth0Client: Auth0Client)
+        }
+
+        class UserSettingsViewModel {
+            - _userSettings: UserSettings
+            - _apiService: IApiService
+            - _auth0Client: Auth0Client
+            + UserSettings: UserSettings
+            + LoadUserSettings(): Task
+            + SaveCommand: RelayCommand
+            + SaveUserSettings(): Task
+            + DeleteCommand: RelayCommand
+            + DeleteAccount(): Task
+            + UserSettingsViewModel(apiService: IApiService, auth0Client: Auth0Client)
+        }
+    }
+
+    namespace GameCore{
+        class GameEngine {
+        - IsRunning: bool
+        - Score: int
+        + Width: int
+        + Height: int
+        - OnlineMatch: bool
+        - ShakeEnabled: bool
+        + ScoreMultiplier: float
+        + SoundEnabled: bool
+        + ResetScore(): void
+        + CheckCollision(flappy: Flappy, pipes: List<GreenPipe>): bool
+    }
+        namespace GameObjects{
+              class Flappy {
+        - X: int
+        - Y: int
+        - Velocity: float
+        - Gravity: float
+        - JumpVelocity: int
+        - flappyImage: IImage
+        + Flappy(x: int, y: int, color: Color)
+        + UpdatePosition(): void
+        + Jump(): void
+        + Draw(canvas: ICanvas): void
+    }
+     class GameCanvas {
+        - _height: int
+        - _width: int
+        - _flappy: Flappy
+        - _greenPipes: List<GreenPipe>
+        + Flappy: Flappy
+        + GreenPipes: List<GreenPipe>
+        + Draw(canvas: ICanvas, dirtyRect: RectF): void
+    }
+
+    class GreenPipe {
+        - _speed: int
+        - _maxTopHeight: int
+        - _minTopHeight: int
+        - _minBottomHeight: int
+        - _maxBottomHeight: int
+        + X: int
+        + TopHeight: int
+        + BottomHeight: int
+        + GapSize: int
+        + GreenPipe(x: int, gapSize: int, maxBottomHeight: int)
+        + UpdatePosition(): void
+        + GenerateHeights(): void
+        + Draw(canvas: ICanvas): void
+    }
+    interface IGameObject {
+        + Draw(canvas: ICanvas): void
+    }
+
+    IGameObject <|.. Flappy
+    IGameObject <|.. GreenPipe
+
+        }
+    }
+}
+
+
+@enduml
