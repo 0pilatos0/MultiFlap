@@ -36,6 +36,7 @@ public partial class Game : ContentPage
         this.auth0Client = auth0Client;
 
         LoadActivatedPowerUpFromPreferences();
+        LoadSoundEnabledFromPreferences();
 
         connection = new HubConnectionBuilder()
             //.WithUrl("http://145.49.40.171:5076/game")
@@ -154,6 +155,12 @@ public partial class Game : ContentPage
         }
     }
 
+    private void LoadSoundEnabledFromPreferences()
+    {
+        bool soundEnabled = Preferences.Get("Sound", true);
+        gameEngine.SoundEnabled = soundEnabled;
+    }
+
     private async void RunGameLoop()
     {
         isCountDown.IsVisible = true;
@@ -204,10 +211,14 @@ public partial class Game : ContentPage
 
         RemoveActivatedPowerUp();
         gameEngine.IsRunning = false;
-        var player2 = AudioManager.Current.CreatePlayer(
-            await FileSystem.OpenAppPackageFileAsync("gameOver.mp3")
-        );
-        player2.Play();
+
+        if (gameEngine.SoundEnabled)
+        {
+            var player2 = AudioManager.Current.CreatePlayer(
+                await FileSystem.OpenAppPackageFileAsync("gameOver.mp3")
+            );
+            player2.Play();
+        }
 
         if (gameEngine.OnlineMatch)
         {
@@ -245,10 +256,13 @@ public partial class Game : ContentPage
     {
         if (gameEngine.IsRunning)
         {
-            var player = AudioManager.Current.CreatePlayer(
-                await FileSystem.OpenAppPackageFileAsync("jump.mp3")
-            );
-            player.Play();
+            if (gameEngine.SoundEnabled)
+            {
+                var player = AudioManager.Current.CreatePlayer(
+                    await FileSystem.OpenAppPackageFileAsync("jump.mp3")
+                );
+                player.Play();
+            }
 
             flappy.Jump();
         }

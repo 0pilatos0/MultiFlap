@@ -30,6 +30,15 @@ namespace App.ViewModels
                         Preferences.Set("Shake", false);
                     }
 
+                    if (_userSettings.SoundEnabled)
+                    {
+                        Preferences.Set("Sound", true);
+                    }
+                    else
+                    {
+                        Preferences.Set("Sound", false);
+                    }
+
                     OnPropertyChanged();
                 }
             }

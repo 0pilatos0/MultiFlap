@@ -1,6 +1,5 @@
 - Als gebruiker wil ik mijn weergavenaam kunnen invoeren op de instellingenpagina.
 - Ik wil als gebruiker een taal kunnen selecteren uit de beschikbare opties op de instellingenpagina.
-- Ik wil als gebruiker de optie om meldingen te ontvangen kunnen inschakelen op de instellingenpagina.
 - Ik wil als gebruiker het geluid aan/uit kunnen zetten op de instellingenpagina.
 - Ik wil als gebruiker de jump shaking-functie aan/uit kunnen zetten op de instellingenpagina.
 - Als gebruiker wil ik mijn instellingen kunnen opslaan door op de knop "Opslaan" te klikken op de instellingenpagina.
