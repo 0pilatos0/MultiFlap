@@ -25,12 +25,15 @@
 
   <ItemGroup>
     <None Remove="Auth0\" />
+    <None Remove="GameCore\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Auth0\" />
+    <Folder Include="GameCore\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\App\App.csproj" />
   </ItemGroup>
-  <Import Project="..\Shared\Shared.projitems" Label="Shared" Condition="Exists('..\Shared\Shared.projitems')" />
+  <Import Project="..\Shared\Shared.projitems" Label="Shared"
+    Condition="Exists('..\Shared\Shared.projitems')" />
 </Project>
