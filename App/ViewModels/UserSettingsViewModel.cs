@@ -32,11 +32,11 @@ namespace App.ViewModels
 
                     if (_userSettings.SoundEnabled)
                     {
-                        Preferences.Set("Sound", true);
+                        Preferences.Set("Sound", false);
                     }
                     else
                     {
-                        Preferences.Set("Sound", false);
+                        Preferences.Set("Sound", true);
                     }
 
                     OnPropertyChanged();
