@@ -1,0 +1,24 @@
+@startuml
+skinparam monochrome true
+actor User
+participant LeaderboardPage
+participant LeaderboardViewModel
+participant ApiService
+participant Auth0Client
+participant LeaderboardEntryController
+database "Database" as Database
+
+User -> LeaderboardPage: Navigates to Leaderboard page
+LeaderboardPage -> LeaderboardViewModel: Creates LeaderboardViewModel instance
+LeaderboardPage -> LeaderboardViewModel: Binds LeaderboardViewModel as the BindingContext
+LeaderboardViewModel -> LeaderboardViewModel: LoadLeaderboard()
+LeaderboardViewModel -> ApiService: GET /api/leaderboard
+ApiService -> Auth0Client: GetAccessToken()
+Auth0Client -> ApiService: Access Token
+ApiService -> LeaderboardEntryController: GET /api/leaderboard
+LeaderboardEntryController --> Database: Retrieve leaderboard entries
+Database --> LeaderboardEntryController: Leaderboard entries
+LeaderboardEntryController --> ApiService: Leaderboard entries
+ApiService --> LeaderboardViewModel: Leaderboard entries
+LeaderboardViewModel -> LeaderboardPage: Updates the leaderboard UI
+@enduml
