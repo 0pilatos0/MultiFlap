@@ -19,3 +19,6 @@
 - Als gebruiker wil ik mijn highscore weergegeven zien op de hoofdpagina.
 - Als gebruiker wil ik naar de instellingenpagina kunnen gaan door op de knop "Instellingen" te klikken.
 - Als gebruiker wil ik kunnen uitloggen door op de knop "Logout" te klikken.
+- Als gebruiker wil ik prestaties (achievements) kunnen behalen en deze kunnen bekijken op de prestatiepagina.
+- Als gebruiker wil ik een bericht zien dat aangeeft dat er nog geen prestaties zijn behaald als er nog geen prestaties zijn behaald.
+- Als gebruiker wil ik Power-Ups kunnen gebruiken tijdens het spelen. door deze te activeren op de Power-Up-pagina.
