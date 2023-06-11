@@ -149,6 +149,12 @@ namespace Server.Controllers
                 }
             }
 
+            if (leaderboardEntry.Score >= 200)
+            {
+                var powerUpItem = new PowerUpItem { Name = "1.05 Multiplier", User = user };
+                _context.PowerUpItems.Add(powerUpItem);
+            }
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(

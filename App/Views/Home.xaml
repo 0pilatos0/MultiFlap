@@ -81,6 +81,7 @@
                             <Button
                                 Margin="10,0,0,0"
                                 BackgroundColor="#2C2C2C"
+                                Clicked="OnLoadoutClicked"
                                 CornerRadius="8"
                                 FontFamily="Arial"
                                 Text="Loadout"

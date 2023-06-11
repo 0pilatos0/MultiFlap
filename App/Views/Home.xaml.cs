@@ -17,13 +17,16 @@ namespace App
         private EditUserSettings editUserSettings;
         private Leaderboard leaderboard;
         private Achievements achievements;
+        private PowerUps powerUps;
 
         public MainPage(
             Auth0Client client,
             IApiService apiService,
             EditUserSettings editUserSettingsPage,
             Leaderboard leaderboardPage,
-            Achievements achievement
+            Achievements achievement,
+            PowerUps powerUps
+            
         )
         {
             InitializeComponent();
@@ -32,6 +35,7 @@ namespace App
             this.editUserSettings = editUserSettingsPage;
             this.leaderboard = leaderboardPage;
             this.achievements = achievement;
+            this.powerUps = powerUps;
 
             SetHighScore();
         }
@@ -59,7 +63,11 @@ namespace App
         {
             await Navigation.PushAsync(achievements);
         }
-
+        private async void OnLoadoutClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(powerUps);
+        }
+        
         private async void OnLogoutClicked(object sender, EventArgs e)
         {
             var logoutResult = await _auth0Client.LogoutAsync();
