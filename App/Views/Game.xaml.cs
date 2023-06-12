@@ -288,6 +288,7 @@ public partial class Game : ContentPage
         {
             await connection.InvokeAsync("GameOver", score);
             gameEngine.OnlineMatch = false;
+            await DisplayAlert("Game Over", $"Score: {score}", "OK");
         }
         else
         {
