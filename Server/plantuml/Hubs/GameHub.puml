@@ -1,0 +1,12 @@
+@startuml
+class GameHub {
+    + GameHub(gameService:IGameService, logger:ILogger<GameHub>)
+    + <<override>> <<async>> OnConnectedAsync() : Task
+    + <<override>> <<async>> OnDisconnectedAsync(exception:Exception?) : Task
+    + <<async>> StartMatchmaking() : Task
+    + <<async>> GameOver(score:int) : Task
+    + <<async>> CancelMatchmaking() : Task
+    + <<async>> OnAppearing() : Task
+}
+Hub <|-- GameHub
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+class UserController {
+    + UserController(context:MultiFlapDbContext, memoryCache:IMemoryCache, httpClientFactory:IHttpClientFactory)
+    + <<async>> DeleteUser() : Task<IActionResult>
+}
+BaseController <|-- UserController
+@enduml

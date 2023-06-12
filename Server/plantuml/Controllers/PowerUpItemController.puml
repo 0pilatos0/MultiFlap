@@ -1,0 +1,10 @@
+@startuml
+class PowerUpItemController {
+    + PowerUpItemController(context:MultiFlapDbContext, memoryCache:IMemoryCache, httpClientFactory:IHttpClientFactory)
+    + <<async>> GetPowerUpItems() : Task<ActionResult<IEnumerable<PowerUpItem>>>
+    + <<async>> AddPowerUpItem(powerUpItem:PowerUpItem) : Task<ActionResult<PowerUpItem>>
+    + <<async>> UpdatePowerUpItem(id:int, updatedPowerUpItem:PowerUpItem) : Task<IActionResult>
+    + <<async>> DeletePowerUpItem(id:int) : Task<IActionResult>
+}
+BaseController <|-- PowerUpItemController
+@enduml

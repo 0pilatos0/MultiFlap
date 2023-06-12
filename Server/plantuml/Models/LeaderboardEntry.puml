@@ -1,0 +1,9 @@
+@startuml
+class LeaderboardEntry {
+    + Id : int <<get>> <<set>>
+    + Score : int <<get>> <<set>>
+    + UserId : int <<get>> <<set>>
+}
+LeaderboardEntry --> "DateAchieved" DateTime
+LeaderboardEntry --> "User" User
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+class MultiFlapDbContext {
+    + MultiFlapDbContext(options:DbContextOptions<MultiFlapDbContext>)
+}
+class "DbSet`1"<T> {
+}
+DbContext <|-- MultiFlapDbContext
+MultiFlapDbContext --> "Users<User>" "DbSet`1"
+MultiFlapDbContext --> "UserSettings<UserSettings>" "DbSet`1"
+MultiFlapDbContext --> "Achievements<Achievement>" "DbSet`1"
+MultiFlapDbContext --> "LeaderboardEntries<LeaderboardEntry>" "DbSet`1"
+MultiFlapDbContext --> "PowerUpItems<PowerUpItem>" "DbSet`1"
+@enduml

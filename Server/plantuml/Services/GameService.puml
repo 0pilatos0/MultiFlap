@@ -1,0 +1,16 @@
+@startuml
+class GameService {
+    + GameService(hubContext:IHubContext<GameHub>, logger:ILogger<GameService>)
+    + AddPlayerAsync(connectionId:string) : Task
+    + <<async>> RemovePlayerAsync(connectionId:string) : Task
+    + <<async>> StartMatchmakingAsync(connectionId:string) : Task
+    + <<async>> GameOverAsync(connectionId:string, score:int) : Task
+    + <<async>> CancelMatchmakingAsync(connectionId:string) : Task
+    + OnAppearingAsync(connectionId:string) : Task
+}
+class "ConcurrentDictionary`2"<T1,T2> {
+}
+IGameService <|-- GameService
+GameService --> "Players<string,Player>" "ConcurrentDictionary`2"
+GameService --> "Matches<string,Match>" "ConcurrentDictionary`2"
+@enduml

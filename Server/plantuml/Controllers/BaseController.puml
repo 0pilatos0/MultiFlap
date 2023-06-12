@@ -1,0 +1,8 @@
+@startuml
+class BaseController {
+    + BaseController(httpClientFactory:IHttpClientFactory, memoryCache:IMemoryCache)
+    + <<async>> GetAuth0IdFromAuthorizedRequestAsync() : Task<string>
+    + <<async>> GetUserFromIdAsync(context:MultiFlapDbContext, userAuth0Id:string) : Task<User>
+}
+ControllerBase <|-- BaseController
+@enduml

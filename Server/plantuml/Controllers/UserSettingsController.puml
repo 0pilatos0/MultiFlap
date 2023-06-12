@@ -1,0 +1,8 @@
+@startuml
+class UserSettingsController {
+    + UserSettingsController(context:MultiFlapDbContext, memoryCache:IMemoryCache, httpClientFactory:IHttpClientFactory)
+    + <<async>> GetUserSettings() : Task<ActionResult<UserSettingsDTO>>
+    + <<async>> UpdateUserSettings(updatedUserSettings:UserSettingsDTO) : Task<IActionResult>
+}
+BaseController <|-- UserSettingsController
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+class AchievementController {
+    + AchievementController(context:MultiFlapDbContext, memoryCache:IMemoryCache, httpClientFactory:IHttpClientFactory)
+    + <<async>> GetAchievements() : Task<ActionResult<IEnumerable<Achievement>>>
+    + <<async>> AddAchievement(achievement:Achievement) : Task<ActionResult<Achievement>>
+    + <<async>> UpdateAchievement(id:int, updatedAchievement:Achievement) : Task<IActionResult>
+    + <<async>> DeleteAchievement(id:int) : Task<IActionResult>
+    + <<async>> GetAchievement(id:int) : Task<ActionResult<Achievement>>
+}
+BaseController <|-- AchievementController
+@enduml

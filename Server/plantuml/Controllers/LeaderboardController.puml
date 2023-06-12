@@ -1,0 +1,10 @@
+@startuml
+class LeaderboardEntryController {
+    + LeaderboardEntryController(context:MultiFlapDbContext, memoryCache:IMemoryCache, httpClientFactory:IHttpClientFactory)
+    + GetLeaderboard() : ActionResult<IEnumerable<LeaderboardEntryDTO>>
+    + <<async>> GetOwnHighscore() : Task<ActionResult<int>>
+    + <<async>> GetLeaderboardEntry(id:int) : Task<ActionResult<LeaderboardEntry>>
+    + <<async>> AddLeaderboardEntry(newLeaderboardEntry:LeaderboardEntryDTO) : Task<ActionResult<LeaderboardEntry>>
+}
+BaseController <|-- LeaderboardEntryController
+@enduml
