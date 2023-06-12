@@ -10,9 +10,9 @@ namespace App.Services
 	{
 		private readonly HttpClient httpClient;
 
-		public ApiService()
+		public ApiService(HttpClient httpClient = null)
 		{
-			httpClient = new HttpClient();
+			this.httpClient = httpClient ?? new HttpClient();
 		}
 
 		public string ApiUrl { get; } = "http://161.97.97.200:5076";
