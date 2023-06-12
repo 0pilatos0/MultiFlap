@@ -1,0 +1,10 @@
+@startuml
+class GameCanvas {
+    + Draw(canvas:ICanvas, dirtyRect:RectF) : void
+}
+class "List`1"<T> {
+}
+IDrawable <|-- GameCanvas
+GameCanvas --> "Flappy" Flappy
+GameCanvas --> "GreenPipes<GreenPipe>" "List`1"
+@enduml

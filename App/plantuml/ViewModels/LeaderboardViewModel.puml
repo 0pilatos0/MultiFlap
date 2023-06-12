@@ -1,0 +1,14 @@
+@startuml
+class LeaderboardViewModel {
+    + HasItems : bool <<get>>
+    + HasNoItems : bool <<get>>
+    + LeaderboardViewModel(apiService:IApiService, auth0Client:Auth0Client)
+    + <<async>> LoadLeaderboard() : Task
+    + IsRefreshing : bool <<get>> <<set>>
+}
+class "ObservableCollection`1"<T> {
+}
+BaseViewModel <|-- LeaderboardViewModel
+LeaderboardViewModel --> "LeaderboardEntries<LeaderboardEntry>" "ObservableCollection`1"
+LeaderboardViewModel --> "RefreshCommand" ICommand
+@enduml

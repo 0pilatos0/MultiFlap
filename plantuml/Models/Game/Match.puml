@@ -1,0 +1,8 @@
+@startuml
+class Match {
+    + Id : string <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+Match --> "Players<PlayerMatchInfo>" "List`1"
+@enduml

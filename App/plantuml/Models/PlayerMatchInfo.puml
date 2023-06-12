@@ -1,0 +1,7 @@
+@startuml
+class PlayerMatchInfo {
+    + ConnectionId : string <<get>> <<set>>
+    + Y : int <<get>> <<set>>
+    + Score : int <<get>> <<set>>
+}
+@enduml

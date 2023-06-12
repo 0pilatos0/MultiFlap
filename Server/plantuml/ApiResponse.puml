@@ -1,0 +1,6 @@
+@startuml
+class ApiResponse {
+    + ApiResponse(message:string)
+    + Message : string <<get>> <<set>>
+}
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+class Flappy {
+    + X : int <<get>>
+    + Y : int <<get>>
+    + Velocity : float <<get>>
+    + Flappy(x:int, y:int, color:Color)
+    + UpdatePosition() : void
+    + Jump() : void
+    + Draw(canvas:ICanvas) : void
+}
+IGameObject <|-- Flappy
+@enduml

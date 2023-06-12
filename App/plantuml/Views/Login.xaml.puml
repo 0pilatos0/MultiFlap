@@ -1,0 +1,6 @@
+@startuml
+class LoginPage <<partial>> {
+    + LoginPage(client:Auth0Client)
+}
+ContentPage <|-- LoginPage
+@enduml

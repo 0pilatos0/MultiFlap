@@ -1,0 +1,121 @@
+@startuml
+class LeaderboardEntry {
+    + Id : int <<get>> <<set>>
+    + Score : int <<get>> <<set>>
+    + UserId : int <<get>> <<set>>
+}
+LeaderboardEntry --> "User" User
+class Achievement {
+    + Id : int <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + Description : string <<get>> <<set>>
+    + UserId : int <<get>> <<set>>
+}
+Achievement --> "User" User
+class UserSettings {
+    + Id : int <<get>> <<set>>
+    + UserId : int <<get>> <<set>>
+    + Language : string <<get>> <<set>>
+    + ReceiveNotifications : bool <<get>> <<set>>
+    + DisplayName : string <<get>> <<set>>
+    + SoundEnabled : bool <<get>> <<set>>
+    + ShakeEnabled : bool <<get>> <<set>>
+}
+UserSettings --> "User" User
+class User {
+    + Id : int <<get>> <<set>>
+    + Auth0Identifier : string? <<get>> <<set>>
+    + Email : string <<get>> <<set>>
+}
+
+User --> "UserSettings" UserSettings
+class PowerUpItem {
+    + Id : int <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + Quantity : int <<get>> <<set>>
+    + UserId : int <<get>> <<set>>
+}
+PowerUpItem --> "User" User
+class GameHub {
+    + GameHub(gameService:IGameService, logger:ILogger<GameHub>)
+    + <<override>> <<async>> OnConnectedAsync() : Task
+    + <<override>> <<async>> OnDisconnectedAsync(exception:Exception?) : Task
+    + <<async>> StartMatchmaking() : Task
+    + <<async>> GameOver(score:int) : Task
+    + <<async>> CancelMatchmaking() : Task
+    + <<async>> OnAppearing() : Task
+}
+class UserController {
+    + UserController(context:MultiFlapDbContext, memoryCache:IMemoryCache, httpClientFactory:IHttpClientFactory)
+    + <<async>> DeleteUser() : Task<IActionResult>
+}
+BaseController <|-- UserController
+class UserSettingsController {
+    + UserSettingsController(context:MultiFlapDbContext, memoryCache:IMemoryCache, httpClientFactory:IHttpClientFactory)
+    + <<async>> GetUserSettings() : Task<ActionResult<UserSettingsDTO>>
+    + <<async>> UpdateUserSettings(updatedUserSettings:UserSettingsDTO) : Task<IActionResult>
+}
+BaseController <|-- UserSettingsController
+class PowerUpItemController {
+    + PowerUpItemController(context:MultiFlapDbContext, memoryCache:IMemoryCache, httpClientFactory:IHttpClientFactory)
+    + <<async>> GetPowerUpItems() : Task<ActionResult<IEnumerable<PowerUpItem>>>
+    + <<async>> AddPowerUpItem(powerUpItem:PowerUpItem) : Task<ActionResult<PowerUpItem>>
+    + <<async>> UpdatePowerUpItem(id:int, updatedPowerUpItem:PowerUpItem) : Task<IActionResult>
+    + <<async>> DeletePowerUpItem(id:int) : Task<IActionResult>
+}
+BaseController <|-- PowerUpItemController
+class AchievementController {
+    + AchievementController(context:MultiFlapDbContext, memoryCache:IMemoryCache, httpClientFactory:IHttpClientFactory)
+    + <<async>> GetAchievements() : Task<ActionResult<IEnumerable<Achievement>>>
+    + <<async>> AddAchievement(achievement:Achievement) : Task<ActionResult<Achievement>>
+    + <<async>> UpdateAchievement(id:int, updatedAchievement:Achievement) : Task<IActionResult>
+    + <<async>> DeleteAchievement(id:int) : Task<IActionResult>
+    + <<async>> GetAchievement(id:int) : Task<ActionResult<Achievement>>
+}
+BaseController <|-- AchievementController
+class BaseController {
+    + BaseController(httpClientFactory:IHttpClientFactory, memoryCache:IMemoryCache)
+    + <<async>> GetAuth0IdFromAuthorizedRequestAsync() : Task<string>
+    + <<async>> GetUserFromIdAsync(context:MultiFlapDbContext, userAuth0Id:string) : Task<User>
+}
+class LeaderboardEntryController {
+    + LeaderboardEntryController(context:MultiFlapDbContext, memoryCache:IMemoryCache, httpClientFactory:IHttpClientFactory)
+    + GetLeaderboard() : ActionResult<IEnumerable<LeaderboardEntryDTO>>
+    + <<async>> GetOwnHighscore() : Task<ActionResult<int>>
+    + <<async>> GetLeaderboardEntry(id:int) : Task<ActionResult<LeaderboardEntry>>
+    + <<async>> AddLeaderboardEntry(newLeaderboardEntry:LeaderboardEntryDTO) : Task<ActionResult<LeaderboardEntry>>
+}
+BaseController <|-- LeaderboardEntryController
+class GameService {
+    + GameService(hubContext:IHubContext<GameHub>, logger:ILogger<GameService>)
+    + AddPlayerAsync(connectionId:string) : Task
+    + <<async>> RemovePlayerAsync(connectionId:string) : Task
+    + <<async>> StartMatchmakingAsync(connectionId:string) : Task
+    + <<async>> GameOverAsync(connectionId:string, score:int) : Task
+    + <<async>> CancelMatchmakingAsync(connectionId:string) : Task
+    + OnAppearingAsync(connectionId:string) : Task
+}
+
+IGameService <|-- GameService
+interface IGameService {
+}
+
+GameHub --> IGameService
+
+class PlayerMatchInfo {
+    + ConnectionId : string <<get>> <<set>>
+    + Y : int <<get>> <<set>>
+    + Score : int <<get>> <<set>>
+}
+class Match {
+    + Id : string <<get>> <<set>>
+}
+
+class Player {
+    + ConnectionId : string <<get>> <<set>>
+    + Y : int <<get>> <<set>>
+    + Score : int <<get>> <<set>>
+    + MatchId : string <<get>> <<set>>
+    + IsLookingForMatch : bool <<get>> <<set>>
+}
+@enduml

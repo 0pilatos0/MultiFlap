@@ -1,0 +1,177 @@
+@startuml
+class PowerUpsViewModel {
+    + HasItems : bool <<get>>
+    + HasNoItems : bool <<get>>
+    + PowerUpsViewModel(apiService:IApiService, auth0Client:Auth0Client)
+    + <<async>> LoadPowerUps() : Task
+    + IsRefreshing : bool <<get>> <<set>>
+}
+
+BaseViewModel <|-- PowerUpsViewModel
+PowerUpsViewModel --> "SelectedPowerUp" PowerUpItem
+class LeaderboardViewModel {
+    + HasItems : bool <<get>>
+    + HasNoItems : bool <<get>>
+    + LeaderboardViewModel(apiService:IApiService, auth0Client:Auth0Client)
+    + <<async>> LoadLeaderboard() : Task
+    + IsRefreshing : bool <<get>> <<set>>
+}
+LeaderboardViewModel --> LeaderboardEntry
+
+BaseViewModel <|-- LeaderboardViewModel
+class AchievementsViewModel {
+    + HasItems : bool <<get>>
+    + HasNoItems : bool <<get>>
+    + AchievementsViewModel(apiService:IApiService, auth0Client:Auth0Client)
+    + <<async>> LoadAchievements() : Task
+    + IsRefreshing : bool <<get>> <<set>>
+}
+AchievementsViewModel --> Achievement
+
+BaseViewModel <|-- AchievementsViewModel
+class BaseViewModel {
+    +  <<event>> PropertyChanged : PropertyChangedEventHandler 
+    + Title : string <<get>> <<set>>
+    + IsLoading : bool <<get>> <<set>>
+    + IsInitialized : bool <<get>> <<set>>
+}
+class UserSettingsViewModel {
+    + UserSettingsViewModel(apiService:IApiService, auth0Client:Auth0Client)
+    + <<async>> LoadUserSettings() : Task
+}
+BaseViewModel <|-- UserSettingsViewModel
+UserSettingsViewModel --> UserSettings
+
+class GameEngine {
+    + IsRunning : bool <<get>> <<set>>
+    + Score : int <<get>> <<set>>
+    + Width : int <<get>> = 350
+    + Height : int <<get>> = 500
+    + OnlineMatch : bool <<get>> <<set>> = false
+    + ShakeEnabled : bool <<get>> <<set>> = true
+    + ScoreMultiplier : float <<get>> <<set>> = 1f
+    + SoundEnabled : bool <<get>> <<set>> = true
+    + ResetScore() : void
+    + CheckCollision(flappy:Flappy, pipes:List<GreenPipe>) : bool
+}
+class LeaderboardEntry {
+    + Id : int <<get>> <<set>>
+    + Score : int <<get>> <<set>>
+    + DisplayName : string? <<get>> <<set>>
+}
+class Achievement {
+    + Id : int <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + Description : string <<get>> <<set>>
+    + UserId : int <<get>> <<set>>
+}
+class UserSettings {
+    + Language : string <<get>> <<set>>
+    + ReceiveNotifications : bool <<get>> <<set>>
+    + DisplayName : string <<get>> <<set>>
+    + SoundEnabled : bool <<get>> <<set>>
+    + ShakeEnabled : bool <<get>> <<set>>
+}
+class PowerUpItem {
+    + Id : int <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + Quantity : int <<get>> <<set>>
+    + UserId : int <<get>> <<set>>
+}
+class PlayerMatchInfo {
+    + ConnectionId : string <<get>> <<set>>
+    + Y : int <<get>> <<set>>
+    + Score : int <<get>> <<set>>
+}
+class Auth0ClientOptions {
+    + Auth0ClientOptions()
+    + Domain : string <<get>> <<set>>
+    + ClientId : string <<get>> <<set>>
+    + RedirectUri : string <<get>> <<set>>
+    + Scope : string <<get>> <<set>>
+    + Audience : string <<get>> <<set>>
+}
+
+class Auth0Client {
+    + IsAuthenticated : bool <<get>>
+    + CurrentUser : string <<get>>
+    + AccessToken : string <<get>>
+    + Auth0Client(options:Auth0ClientOptions, preferences:IPreferences)
+    + <<async>> LoginAsync() : Task<LoginResult>
+    + <<async>> LogoutAsync() : Task<BrowserResult>
+}
+class PowerUps <<partial>> {
+    + PowerUps(powerUpsViewModel:PowerUpsViewModel)
+}
+PowerUps --> PowerUpsViewModel
+class Game <<partial>> {
+    + Game(apiService:IApiService, auth0Client:Auth0Client)
+}
+class LoginPage <<partial>> {
+    + LoginPage(client:Auth0Client)
+}
+class Leaderboard <<partial>> {
+    + Leaderboard(leaderboardViewModel:LeaderboardViewModel)
+}
+Leaderboard --> LeaderboardViewModel
+class EditUserSettings <<partial>> {
+    + EditUserSettings(userSettingsViewModel:UserSettingsViewModel)
+}
+EditUserSettings --> UserSettingsViewModel
+class MainPage <<partial>> {
+    + MainPage(client:Auth0Client, apiService:IApiService, editUserSettingsPage:EditUserSettings, leaderboardPage:Leaderboard, achievement:Achievements, powerUps:PowerUps, game:Game)
+}
+class Achievements <<partial>> {
+    + Achievements(achievementsViewModel:AchievementsViewModel)
+}
+Achievements --> AchievementsViewModel
+
+class ApiService {
+    + ApiService()
+    + ApiUrl : string <<get>> = "http://161.97.97.200:5076"
+    + <<async>> GetAsync(endpoint:string, accessToken:string) : Task<string>
+    + <<async>> PostAsync(endpoint:string, body:string, accessToken:string) : Task<string>
+    + <<async>> PutAsync(endpoint:string, body:string, accessToken:string) : Task<string>
+    + <<async>> DeleteAsync(endpoint:string, accessToken:string) : Task<string>
+    + <<async>> PatchAsync(endpoint:string, body:string, accessToken:string) : Task<string>
+}
+IApiService <|-- ApiService
+interface IApiService {
+}
+
+
+class GameCanvas {
+    + Draw(canvas:ICanvas, dirtyRect:RectF) : void
+}
+
+class Flappy {
+    + X : int <<get>>
+    + Y : int <<get>>
+    + Velocity : float <<get>>
+    + Flappy(x:int, y:int, color:Color)
+    + UpdatePosition() : void
+    + Jump() : void
+    + Draw(canvas:ICanvas) : void
+}
+IGameObject <|-- Flappy
+interface IGameObject {
+    + Draw(canvas:ICanvas) : void
+}
+class GreenPipe {
+    + X : int <<get>>
+    + TopHeight : int <<get>>
+    + BottomHeight : int <<get>>
+    + GapSize : int <<get>>
+    + GreenPipe(x:int, gapSize:int, maxBottomHeight:int)
+    + UpdatePosition() : void
+    + Draw(canvas:ICanvas) : void
+}
+IGameObject <|-- GreenPipe
+
+Auth0ClientOptions --> Auth0Client
+
+Game --> GameCanvas
+Game --> GameEngine
+
+Game --> PlayerMatchInfo
+@enduml

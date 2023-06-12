@@ -1,0 +1,6 @@
+@startuml
+class MainPage <<partial>> {
+    + MainPage(client:Auth0Client, apiService:IApiService, editUserSettingsPage:EditUserSettings, leaderboardPage:Leaderboard, achievement:Achievements, powerUps:PowerUps, game:Game)
+}
+ContentPage <|-- MainPage
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+class User {
+    + Id : int <<get>> <<set>>
+    + Auth0Identifier : string? <<get>> <<set>>
+    + Email : string <<get>> <<set>>
+}
+class "ICollection`1"<T> {
+}
+User --> "UserSettings" UserSettings
+User --> "LeaderboardEntries<LeaderboardEntry>" "ICollection`1"
+User --> "PowerUpItems<PowerUpItem>" "ICollection`1"
+User --> "Achievements<Achievement>" "ICollection`1"
+@enduml

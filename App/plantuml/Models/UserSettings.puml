@@ -1,0 +1,9 @@
+@startuml
+class UserSettings {
+    + Language : string <<get>> <<set>>
+    + ReceiveNotifications : bool <<get>> <<set>>
+    + DisplayName : string <<get>> <<set>>
+    + SoundEnabled : bool <<get>> <<set>>
+    + ShakeEnabled : bool <<get>> <<set>>
+}
+@enduml

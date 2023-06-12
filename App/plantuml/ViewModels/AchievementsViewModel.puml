@@ -1,0 +1,14 @@
+@startuml
+class AchievementsViewModel {
+    + HasItems : bool <<get>>
+    + HasNoItems : bool <<get>>
+    + AchievementsViewModel(apiService:IApiService, auth0Client:Auth0Client)
+    + <<async>> LoadAchievements() : Task
+    + IsRefreshing : bool <<get>> <<set>>
+}
+class "ObservableCollection`1"<T> {
+}
+BaseViewModel <|-- AchievementsViewModel
+AchievementsViewModel --> "Achievements<Achievement>" "ObservableCollection`1"
+AchievementsViewModel --> "RefreshCommand" ICommand
+@enduml

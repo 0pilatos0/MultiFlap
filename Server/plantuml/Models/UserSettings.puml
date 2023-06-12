@@ -1,0 +1,12 @@
+@startuml
+class UserSettings {
+    + Id : int <<get>> <<set>>
+    + UserId : int <<get>> <<set>>
+    + Language : string <<get>> <<set>>
+    + ReceiveNotifications : bool <<get>> <<set>>
+    + DisplayName : string <<get>> <<set>>
+    + SoundEnabled : bool <<get>> <<set>>
+    + ShakeEnabled : bool <<get>> <<set>>
+}
+UserSettings --> "User" User
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+class PowerUpItem {
+    + Id : int <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + Quantity : int <<get>> <<set>>
+    + UserId : int <<get>> <<set>>
+}
+PowerUpItem --> "User" User
+@enduml

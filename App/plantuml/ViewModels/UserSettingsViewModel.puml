@@ -1,0 +1,10 @@
+@startuml
+class UserSettingsViewModel {
+    + UserSettingsViewModel(apiService:IApiService, auth0Client:Auth0Client)
+    + <<async>> LoadUserSettings() : Task
+}
+BaseViewModel <|-- UserSettingsViewModel
+UserSettingsViewModel --> "UserSettings" UserSettings
+UserSettingsViewModel --> "SaveCommand" RelayCommand
+UserSettingsViewModel --> "DeleteCommand" RelayCommand
+@enduml
