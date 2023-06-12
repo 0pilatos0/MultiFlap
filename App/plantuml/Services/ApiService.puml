@@ -1,0 +1,12 @@
+@startuml
+class ApiService {
+    + ApiService()
+    + ApiUrl : string <<get>> = "http://161.97.97.200:5076"
+    + <<async>> GetAsync(endpoint:string, accessToken:string) : Task<string>
+    + <<async>> PostAsync(endpoint:string, body:string, accessToken:string) : Task<string>
+    + <<async>> PutAsync(endpoint:string, body:string, accessToken:string) : Task<string>
+    + <<async>> DeleteAsync(endpoint:string, accessToken:string) : Task<string>
+    + <<async>> PatchAsync(endpoint:string, body:string, accessToken:string) : Task<string>
+}
+IApiService <|-- ApiService
+@enduml

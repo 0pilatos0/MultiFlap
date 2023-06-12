@@ -1,0 +1,14 @@
+@startuml
+class GameEngine {
+    + IsRunning : bool <<get>> <<set>>
+    + Score : int <<get>> <<set>>
+    + Width : int <<get>> = 350
+    + Height : int <<get>> = 500
+    + OnlineMatch : bool <<get>> <<set>> = false
+    + ShakeEnabled : bool <<get>> <<set>> = true
+    + ScoreMultiplier : float <<get>> <<set>> = 1f
+    + SoundEnabled : bool <<get>> <<set>> = true
+    + ResetScore() : void
+    + CheckCollision(flappy:Flappy, pipes:List<GreenPipe>) : bool
+}
+@enduml

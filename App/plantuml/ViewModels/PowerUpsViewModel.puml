@@ -1,0 +1,15 @@
+@startuml
+class PowerUpsViewModel {
+    + HasItems : bool <<get>>
+    + HasNoItems : bool <<get>>
+    + PowerUpsViewModel(apiService:IApiService, auth0Client:Auth0Client)
+    + <<async>> LoadPowerUps() : Task
+    + IsRefreshing : bool <<get>> <<set>>
+}
+class "ObservableCollection`1"<T> {
+}
+BaseViewModel <|-- PowerUpsViewModel
+PowerUpsViewModel --> "PowerUps<PowerUpItem>" "ObservableCollection`1"
+PowerUpsViewModel --> "SelectedPowerUp" PowerUpItem
+PowerUpsViewModel --> "ActivateCommand" ICommand
+@enduml

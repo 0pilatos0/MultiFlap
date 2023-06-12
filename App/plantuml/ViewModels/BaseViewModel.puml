@@ -1,0 +1,9 @@
+@startuml
+class BaseViewModel {
+    +  <<event>> PropertyChanged : PropertyChangedEventHandler 
+    + Title : string <<get>> <<set>>
+    + IsLoading : bool <<get>> <<set>>
+    + IsInitialized : bool <<get>> <<set>>
+}
+INotifyPropertyChanged <|-- BaseViewModel
+@enduml

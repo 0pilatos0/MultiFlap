@@ -1,0 +1,6 @@
+@startuml
+class MainApplication {
+    + MainApplication(handle:IntPtr, ownership:JniHandleOwnership)
+}
+MauiApplication <|-- MainApplication
+@enduml

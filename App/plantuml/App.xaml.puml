@@ -1,0 +1,6 @@
+@startuml
+class App <<partial>> {
+    + App(mainPage:MainPage)
+}
+Application <|-- App
+@enduml

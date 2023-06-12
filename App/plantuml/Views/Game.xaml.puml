@@ -1,0 +1,6 @@
+@startuml
+class Game <<partial>> {
+    + Game(apiService:IApiService, auth0Client:Auth0Client)
+}
+ContentPage <|-- Game
+@enduml

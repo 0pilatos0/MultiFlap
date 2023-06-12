@@ -1,0 +1,5 @@
+@startuml
+class AppDelegate {
+}
+MauiUIApplicationDelegate <|-- AppDelegate
+@enduml

@@ -1,0 +1,5 @@
+@startuml
+interface IGameObject {
+    + Draw(canvas:ICanvas) : void
+}
+@enduml

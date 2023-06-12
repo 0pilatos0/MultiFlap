@@ -1,0 +1,6 @@
+@startuml
+class Leaderboard <<partial>> {
+    + Leaderboard(leaderboardViewModel:LeaderboardViewModel)
+}
+ContentPage <|-- Leaderboard
+@enduml

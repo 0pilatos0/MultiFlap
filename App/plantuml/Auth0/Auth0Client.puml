@@ -1,0 +1,10 @@
+@startuml
+class Auth0Client {
+    + IsAuthenticated : bool <<get>>
+    + CurrentUser : string <<get>>
+    + AccessToken : string <<get>>
+    + Auth0Client(options:Auth0ClientOptions, preferences:IPreferences)
+    + <<async>> LoginAsync() : Task<LoginResult>
+    + <<async>> LogoutAsync() : Task<BrowserResult>
+}
+@enduml

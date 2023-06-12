@@ -1,0 +1,10 @@
+@startuml
+class Auth0ClientOptions {
+    + Auth0ClientOptions()
+    + Domain : string <<get>> <<set>>
+    + ClientId : string <<get>> <<set>>
+    + RedirectUri : string <<get>> <<set>>
+    + Scope : string <<get>> <<set>>
+    + Audience : string <<get>> <<set>>
+}
+@enduml

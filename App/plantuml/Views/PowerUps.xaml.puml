@@ -1,0 +1,6 @@
+@startuml
+class PowerUps <<partial>> {
+    + PowerUps(powerUpsViewModel:PowerUpsViewModel)
+}
+ContentPage <|-- PowerUps
+@enduml

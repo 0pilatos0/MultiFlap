@@ -1,0 +1,5 @@
+@startuml
+class WebBrowserAuthenticator {
+    + <<async>> InvokeAsync(options:BrowserOptions, cancellationToken:CancellationToken) : Task<BrowserResult>
+}
+@enduml

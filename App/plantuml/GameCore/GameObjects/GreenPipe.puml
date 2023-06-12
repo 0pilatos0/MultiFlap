@@ -1,0 +1,12 @@
+@startuml
+class GreenPipe {
+    + X : int <<get>>
+    + TopHeight : int <<get>>
+    + BottomHeight : int <<get>>
+    + GapSize : int <<get>>
+    + GreenPipe(x:int, gapSize:int, maxBottomHeight:int)
+    + UpdatePosition() : void
+    + Draw(canvas:ICanvas) : void
+}
+IGameObject <|-- GreenPipe
+@enduml
